@@ -24,7 +24,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     window = UIWindow(frame: UIScreen.main.bounds)
 
     factory.startReactNative(
-      withModuleName: "signApp",
+      withModuleName: "auraApp",
       in: window,
       launchOptions: launchOptions
     )

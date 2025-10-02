@@ -1,4 +1,4 @@
-package com.signapp
+package com.auraapp
 
 import android.app.Application
 import com.facebook.react.PackageList
