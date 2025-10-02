@@ -46,14 +46,21 @@ cd 2025.2-Inti
 
 Escolha o comando correspondente ao seu sistema operacional. O comando cobrirá desde a instalação de dependências dentro do Docker até a inicialização do app.
 
-##### 🐧 Para Linux ou macOS:
+##### 🐧 Para Linux ou macOS no **Emulador**:
 
 ```bash
 npm install
-npm run dev:start:unix
+ANDROID_HOME="/home/$(whoami)/Android/Sdk" npm run dev:start:unix
 ```
 
-##### 💻 Para Windows (usando CMD ou PowerShell):
+##### 🐧 Para Linux ou macOS no Dispositivo USB:
+
+```bash
+npm install
+ANDROID_HOME="/home/$(whoami)/Android/Sdk" npm run dev:start:unix device
+```
+
+##### 💻 Para Windows (usando CMD ou PowerShell) no **Emulador**:
 
 ```bash
 npm install
