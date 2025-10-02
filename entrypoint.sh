@@ -1,5 +1,5 @@
 #!/bin/bash
-
+set -e
 # Define cores para os logs
 GREEN='\033[0;32m'
 NC='\033[0m' # No Color
@@ -61,6 +61,7 @@ adb reverse tcp:8081 tcp:8081
 
 # PASSO 8: Build e Instalação via Gradle (a forma confiável)
 log "Compilando o app com Gradle (assembleDebug)..."
+chmod +x android/gradlew
 (cd android && ./gradlew assembleDebug)
 
 log "Instalando o app no emulador (installDebug)..."
