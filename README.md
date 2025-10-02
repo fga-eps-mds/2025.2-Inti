@@ -49,12 +49,14 @@ Escolha o comando correspondente ao seu sistema operacional. O comando cobrirá 
 ##### 🐧 Para Linux ou macOS:
 
 ```bash
+npm install
 npm run dev:start:unix
 ```
 
 ##### 💻 Para Windows (usando CMD ou PowerShell):
 
 ```bash
+npm install
 npm run dev:start:win
 ```
 
