@@ -25,9 +25,8 @@ export PATH=$PATH:$ANDROID_HOME/emulator:$ANDROID_HOME/platform-tools
 log "Iniciando o container Docker com docker-compose..."
 docker-compose up -d --build
 
-# PASSO 3: Aguardar a PORTA 8081 ficar pronta (USANDO CAMINHO ABSOLUTO)
+# PASSO 3: Aguardar a PORTA 8081 ficar pronta
 log "Aguardando a porta 8081 ficar pronta..."
-# Usando o caminho absoluto /usr/bin/nc para evitar conflitos de PATH do npm
 until /usr/bin/nc -zvw1 127.0.0.1 8081 &> /dev/null; do
   echo -n "."
   sleep 2
@@ -60,8 +59,17 @@ log "Emulador pronto!"
 log "Configurando 'adb reverse' para a porta 8081..."
 adb reverse tcp:8081 tcp:8081
 
-# PASSO 8: Instalar e iniciar o aplicativo
-log "Instalando e iniciando o app no emulador..."
-npx react-native run-android --port 8081
+# PASSO 8: Build e Instalação via Gradle (a forma confiável)
+log "Compilando o app com Gradle (assembleDebug)..."
+(cd android && ./gradlew assembleDebug)
 
-log "Setup concluído! O app deve estar rodando no emulador."
+log "Instalando o app no emulador (installDebug)..."
+(cd android && ./gradlew installDebug)
+
+# Confirme o nome do pacote em 'android/app/src/main/AndroidManifest.xml'
+PACKAGE_NAME="com.auraapp" 
+
+log "Iniciando o app ($PACKAGE_NAME) no emulador..."
+adb shell am start -n "$PACKAGE_NAME/$PACKAGE_NAME.MainActivity"
+
+log "Setup concluído! O app deve estar iniciando no emulador."
