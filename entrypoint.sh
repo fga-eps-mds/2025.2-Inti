@@ -9,7 +9,7 @@ log() {
   echo -e "\n${GREEN}[INFO]${NC} $1"
 }
 
-# PASSO 0: Derrubar containers antigos para garantir um ambiente limpo
+# PASSO 0: Derrubar containers antigos
 log "Garantindo que containers antigos estao parados e removidos..."
 docker-compose down
 log "Ambiente Docker limpo."
@@ -21,26 +21,22 @@ if [ -z "$ANDROID_HOME" ]; then
 fi
 export PATH=$PATH:$ANDROID_HOME/emulator:$ANDROID_HOME/platform-tools
 
-# ==================================================================
-# MUDANÇA DE LÓGICA A PARTIR DAQUI
-# ==================================================================
-
 # PASSO 2: Iniciar o container Docker com o Metro Bundler PRIMEIRO
 log "Iniciando o container Docker com docker-compose..."
 docker-compose up -d --build
 
-# PASSO 3: Aguardar o Metro Bundler do Docker ficar pronto
-log "Aguardando o servidor Metro na porta 8081 ficar pronto..."
-until nc -zvw1 127.0.0.1 8081 &> /dev/null; do
+# PASSO 3: Aguardar a PORTA 8081 ficar pronta (USANDO CAMINHO ABSOLUTO)
+log "Aguardando a porta 8081 ficar pronta..."
+# Usando o caminho absoluto /usr/bin/nc para evitar conflitos de PATH do npm
+until /usr/bin/nc -zvw1 127.0.0.1 8081 &> /dev/null; do
   echo -n "."
   sleep 2
 done
-log "Servidor Metro detectado! Prosseguindo..."
+log "Porta 8081 detectada! Prosseguindo..."
 
 # PASSO 4: Encontrar o emulador disponível
 log "Procurando por emuladores (AVDs)..."
 AVD_NAME=$(emulator -list-avds | head -n 1)
-
 if [ -z "$AVD_NAME" ]; then
   echo "Erro: Nenhum emulador (AVD) encontrado."
   exit 1
@@ -54,7 +50,6 @@ nohup emulator -avd "$AVD_NAME" > /dev/null 2>&1 &
 # PASSO 6: Esperar o emulador carregar completamente
 log "Aguardando o emulador inicializar por completo..."
 adb wait-for-device
-
 until [[ "$(adb shell getprop sys.boot_completed | tr -d '\r\n')" == "1" ]]; do
   echo -n "."
   sleep 2
