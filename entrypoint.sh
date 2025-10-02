@@ -55,14 +55,15 @@ log "Iniciando o container Docker com docker-compose..."
 docker-compose up -d --build
 
 # ==================================================================
-# PASSO 5.5: Aguardar o Metro Bundler do Docker ficar pronto
+# PASSO 5.5: Aguardar a PORTA 8081 ficar pronta (usando nc)
 # ==================================================================
-log "Aguardando o servidor Metro na porta 8081 ficar pronto..."
-until curl --output /dev/null --silent --head --fail http://localhost:8081; do
+log "Aguardando a porta 8081 ficar pronta..."
+# Usando 'nc' para uma verificação de porta TCP pura, mais robusta que o curl.
+until nc -zvw1 127.0.0.1 8081 &> /dev/null; do
   echo -n "."
   sleep 2
 done
-log "Servidor Metro detectado! Prosseguindo..."
+log "Porta 8081 detectada! Prosseguindo..."
 
 # Passo 6: Configurar o redirecionamento de porta
 log "Configurando 'adb reverse' para a porta 8081..."
