@@ -8,7 +8,7 @@
     "lint": "eslint .",
     "start": "react-native start",
     "test": "jest",
-    "dev:start:unix": "chmod +x ./entrypoint.sh",
+    "dev:start:unix": "chmod +x ./entrypoint.sh && ./entrypoint.sh",
     "dev:start:win": "cmd.exe /c entrypoint.bat"
   },
   "dependencies": {
