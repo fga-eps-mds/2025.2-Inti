@@ -1,28 +1,68 @@
-# template-repository - Branch Main
+# Como Rodar o Projeto com Docker
 
-Template de Repositório para a matéria de Métodos de Desenvolvimento de Software lecionado pelo professor Ricardo Ajax.
+## Visão Geral da Arquitetura
 
-Essa Branch deve ser usada exclusivamente para a versão de produção dos softwares da equipe.
+Este projeto utiliza uma arquitetura baseada em microsserviços, composta por:
 
-O repositório conta com mais 3 branchs:
-* docs: Usada para armazenar a documentação do projeto.
-* developer: usada como um intermediário antes do código chegar realmente para produção. É o ambiente ideal para realizar os últimos testes antes das apresentações.
-* gh-pages: Local dos arquivos estáticos de deploy da documentação. (Para deploy da documentação, consultar seu monitor)
+- **Backend (Java Spring Boot):** Responsável pela lógica de negócio e API REST.
+- **Banco de Dados (PostgreSQL):** Armazena os dados da aplicação.
+- **Docker Compose:** Orquestra os containers do backend e do banco de dados, facilitando o desenvolvimento e a execução local.
 
-## Especificações Técnicas do Repositório
+## Pré-requisitos
 
-Este repositório é planejado e estruturado para que seja realizado documentações de software. Caso haja outra necessidades, deve-se consultar a professora.
+- ![Docker](https://www.docker.com/sites/default/files/d8/2019-07/Moby-logo.png) [Docker](https://www.docker.com/)
+- ![Docker Compose](https://seeklogo.com/images/D/docker-compose-logo-6B6C1D8C18-seeklogo.com.png) [Docker Compose](https://docs.docker.com/compose/)
 
-Atualmente se usa a ferramenta MkDocs para gerar sua documentação baseado nos seus arquivos markdowns, vocês podem achar mais instruções sobre o MkDocs através do link da documentação da ferramenta: [https://www.mkdocs.org/](https://www.mkdocs.org/).
+## Como Executar o Projeto
 
-Também é usado uma "sub-ferramenta" do MkDocs para sua estilização, o Material Theme, que pode ser consultado através do link: [https://squidfunk.github.io/mkdocs-material/](https://squidfunk.github.io/mkdocs-material/).
+1. **Clone o repositório:**
+   ```sh
+   git clone <URL_DO_REPOSITORIO>
+   cd <nome_da_pasta>
+   ```
 
-Este repositório também conta com uma pipeline de automatização de deploy do seu conteúdo MkDocs, para que a cada commit feito na main, a pipeline gere uma versão atualizada da sua documentação em minutos. Vale ressaltar que é importante realizar uma configuração para que tudo funcione da forma correta, as instruções são as seguintes:
+2. **Construa e suba os containers:**
+   ```sh
+   docker compose up --build
+   ```
 
-* Acesse as configurações do repositório;
-* Procure a aba de "Pages"
-* Em "Source" escolha a opção "Deploy from a branch";
-* Em "Branch" escolha "gh-pages";
-* Clique em salvar e pronto;
+   Isso irá:
+   - Construir a imagem do backend (Java Spring Boot) usando o Maven.
+   - Baixar a imagem do PostgreSQL.
+   - Subir ambos os containers e garantir que o backend consiga se conectar ao banco de dados.
 
-Após essas etapas de configuração, o seu GitPages deve funcionar normalmente.
+3. **Acessando a aplicação:**
+   - O backend estará disponível em: `http://localhost:8080`
+   - O banco de dados estará acessível na porta padrão `5432` (caso precise conectar via cliente externo).
+
+## Estrutura dos Arquivos Importantes
+
+- `docker-compose.yml`: Define os serviços (backend e banco de dados), redes e volumes.
+- `Dockerfile`: Responsável por construir a imagem do backend.
+- `src/`: Código-fonte do backend (Java Spring Boot).
+- `docker-entrypoint.sh`: Script de inicialização customizado (se aplicável).
+
+## Variáveis de Ambiente
+
+Você pode configurar variáveis de ambiente no `docker-compose.yml` para customizar usuário, senha e nome do banco de dados PostgreSQL.
+
+Exemplo:
+```yaml
+environment:
+  POSTGRES_USER: usuario
+  POSTGRES_PASSWORD: senha
+  POSTGRES_DB: nome_do_banco
+```
+
+## Parando os Containers
+
+Para parar e remover os containers, execute:
+```sh
+docker compose down
+```
+
+## Observações
+
+- Certifique-se de que as portas `8080` (backend) e `5432` (PostgreSQL) estejam livres.
+- O backend irá aguardar o banco de dados estar pronto antes de iniciar.
+- Logs dos serviços podem ser acompanhados diretamente pelo terminal.
