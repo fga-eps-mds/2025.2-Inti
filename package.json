@@ -9,13 +9,14 @@
     "start": "react-native start",
     "test": "jest",
     "dev:start:unix": "chmod +x ./entrypoint.sh && ./entrypoint.sh",
+    "dev:start:unixdevice": "chmod +x ./entrypoint.sh && ./entrypoint.sh device",
     "dev:start:win": "cmd.exe /c entrypoint.bat"
   },
   "dependencies": {
     "react": "19.1.0",
     "react-native": "0.81.4",
     "@react-native/new-app-screen": "0.81.4",
-    "react-native-safe-area-context": "^5.5.2"
+    "react-native-safe-area-context": "^5.5.2"  
   },
   "devDependencies": {
     "@babel/core": "^7.25.2",
