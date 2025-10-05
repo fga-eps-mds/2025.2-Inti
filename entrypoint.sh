@@ -87,7 +87,7 @@ log "Compilando o app com Gradle (assembleDebug)..."
 (cd android && ./gradlew assembleDebug)
 log "Instalando o app no dispositivo (installDebug)..."
 (cd android && ./gradlew installDebug)
-PACKAGE_NAME="com.auraapp"
+PACKAGE_NAME="com.musa"
 log "Iniciando o app ($PACKAGE_NAME) no dispositivo..."
 adb shell am start -n "$PACKAGE_NAME/$PACKAGE_NAME.MainActivity"
 

@@ -15,9 +15,9 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "13B07F861A680F5B00A75B9A"
-               BuildableName = "auraApp.app"
-               BlueprintName = "auraApp"
-               ReferencedContainer = "container:auraApp.xcodeproj">
+               BuildableName = "musa.app"
+               BlueprintName = "musa"
+               ReferencedContainer = "container:musa.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
       </BuildActionEntries>
@@ -33,9 +33,9 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "00E356ED1AD99517003FC87E"
-               BuildableName = "auraAppTests.xctest"
-               BlueprintName = "auraAppTests"
-               ReferencedContainer = "container:auraApp.xcodeproj">
+               BuildableName = "musaTests.xctest"
+               BlueprintName = "musaTests"
+               ReferencedContainer = "container:musa.xcodeproj">
             </BuildableReference>
          </TestableReference>
       </Testables>
@@ -55,9 +55,9 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "13B07F861A680F5B00A75B9A"
-            BuildableName = "auraApp.app"
-            BlueprintName = "auraApp"
-            ReferencedContainer = "container:auraApp.xcodeproj">
+            BuildableName = "musa.app"
+            BlueprintName = "musa"
+            ReferencedContainer = "container:musa.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
    </LaunchAction>
@@ -72,9 +72,9 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "13B07F861A680F5B00A75B9A"
-            BuildableName = "auraApp.app"
-            BlueprintName = "auraApp"
-            ReferencedContainer = "container:auraApp.xcodeproj">
+            BuildableName = "musa.app"
+            BlueprintName = "musa"
+            ReferencedContainer = "container:musa.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
    </ProfileAction>
