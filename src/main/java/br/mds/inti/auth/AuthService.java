@@ -29,6 +29,8 @@ public class AuthService {
         Profile user = new Profile();
 
         user.setEmail(request.email());
+        user.setName(request.name());
+        user.setUsername(request.username());
         user.setPassword(passwordEncoder.encode(request.password()));
         user.setType(request.type() != null ? request.type() : ProfileType.USER);
 
