@@ -1,9 +1,13 @@
 package br.mds.inti.auth;
 
+import java.net.URI;
+
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import br.mds.inti.auth.dto.LoginRequest;
+import br.mds.inti.auth.dto.ProfileResponse;
 import br.mds.inti.auth.dto.RegisterRequest;
 import br.mds.inti.models.Profile;
 
@@ -18,8 +22,13 @@ public class AuthController {
     }
 
     @PostMapping("/register")
-    public ResponseEntity<String> register(@RequestBody RegisterRequest request) {
-        return ResponseEntity.ok(authService.register(request));
+    public ResponseEntity<ProfileResponse> register(@RequestBody RegisterRequest request) {
+        ProfileResponse response = authService.register(request);
+        URI uri = ServletUriComponentsBuilder.fromCurrentRequest()
+                .path("/{id}")
+                .buildAndExpand(response.id())
+                .toUri();
+        return ResponseEntity.created(uri).body(response);
     }
 
     @PostMapping("/login")

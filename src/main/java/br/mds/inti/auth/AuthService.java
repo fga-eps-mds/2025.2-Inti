@@ -7,6 +7,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import br.mds.inti.auth.dto.LoginRequest;
+import br.mds.inti.auth.dto.ProfileResponse;
 import br.mds.inti.auth.dto.RegisterRequest;
 import br.mds.inti.models.Profile;
 import br.mds.inti.models.ENUM.ProfileType;
@@ -24,21 +25,23 @@ public class AuthService {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
-    public String register(RegisterRequest request) {
-
+    public ProfileResponse register(RegisterRequest request) {
         Profile user = new Profile();
-
         user.setEmail(request.email());
         user.setName(request.name());
         user.setUsername(request.username());
         user.setPassword(passwordEncoder.encode(request.password()));
-        user.setType(request.type() != null ? request.type() : ProfileType.USER);
-
+        user.setType(request.type() != null ? request.type() : ProfileType.user);
         user.setCreatedAt(Instant.now());
-
         profileRepository.save(user);
 
-        return jwtService.generateToken(user.getEmail());
+        return new ProfileResponse(
+                user.getId(),
+                user.getUsername(),
+                user.getName(),
+                user.getEmail(),
+                user.getType(),
+                user.getCreatedAt());
     }
 
     public String login(LoginRequest request) {

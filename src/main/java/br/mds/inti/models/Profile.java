@@ -10,7 +10,9 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import br.mds.inti.models.ENUM.ProfileType;
+import br.mds.inti.models.ENUM.ProfileTypeConverter;
 import jakarta.persistence.Column;
+import jakarta.persistence.Convert;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
@@ -51,7 +53,7 @@ public class Profile implements UserDetails {
     private String publicEmail;
 
     @Enumerated(EnumType.STRING)
-    @Column(nullable = false, name = "type")
+    @Column(nullable = false, name = "type", length = 50)
     private ProfileType type;
 
     @Column(name = "followers_count", nullable = true)
@@ -63,7 +65,7 @@ public class Profile implements UserDetails {
     @Column(name = "created_at", nullable = false)
     private Instant createdAt;
 
-    @Column(name = "update_at", nullable = true)
+    @Column(name = "updated_at", nullable = true)
     private Instant updatedAt;
 
     @Column(name = "deleted_at", nullable = true)
@@ -98,7 +100,7 @@ public class Profile implements UserDetails {
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
 
-        if (type == ProfileType.ORGANIZATION)
+        if (type == ProfileType.organization)
             return List.of(new SimpleGrantedAuthority("ROLE_ORGANIZATION"));
         else
             return List.of(new SimpleGrantedAuthority("ROLE_USER"));
