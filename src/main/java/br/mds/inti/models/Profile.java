@@ -1,6 +1,7 @@
 package br.mds.inti.models;
 
 import java.time.Instant;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.UUID;
@@ -17,6 +18,7 @@ import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -68,6 +70,9 @@ public class Profile implements UserDetails {
 
     @Column(name = "deleted_at", nullable = true)
     private Instant deletedAt;
+
+    @OneToMany(mappedBy = "profile")
+    private List<EventParticipant> eventParticipants = new ArrayList<>();
 
     @Override
     public boolean isAccountNonExpired() {

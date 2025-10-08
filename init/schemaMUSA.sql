@@ -6,8 +6,8 @@ CREATE TYPE "profile_type" AS ENUM (
 CREATE TABLE "follows" (
   "follower_profile_id" uuid NOT NULL,
   "following_profile_id" uuid NOT NULL,
-  "created_at" timestamptz NOT NULL
-  PRIMARY KEY("follower_profile_id", "following_profile_id")
+  "created_at" timestamptz NOT NULL,
+  PRIMARY KEY ("follower_profile_id", "following_profile_id")
 );
 
 CREATE TABLE "profiles" (
