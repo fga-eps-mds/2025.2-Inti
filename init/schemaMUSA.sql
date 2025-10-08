@@ -4,10 +4,10 @@ CREATE TYPE "profile_type" AS ENUM (
 );
 
 CREATE TABLE "follows" (
-  "id" uuid PRIMARY KEY NOT NULL,
   "follower_profile_id" uuid NOT NULL,
   "following_profile_id" uuid NOT NULL,
-  "created_at" timestamptz
+  "created_at" timestamptz NOT NULL
+  PRIMARY KEY("follower_profile_id", "following_profile_id")
 );
 
 CREATE TABLE "profiles" (
@@ -36,7 +36,7 @@ CREATE TABLE "posts" (
 
 CREATE TABLE "events" (
   "id" uuid PRIMARY KEY NOT NULL,
-  "profile_id" uuid,
+  "profile_id" uuid NOT NULL,
   "title" varchar(255) NOT NULL,
   "img_link" varchar(255),
   "event_time" timestamptz NOT NULL,
@@ -46,10 +46,9 @@ CREATE TABLE "events" (
   "city" varchar(150),
   "state" varchar(150),
   "reference_point" varchar(255),
-  "latitude" decimal(10,8),
-  "longitude" decimal(10,8),
+  "latitude" decimal(10,6),
+  "longitude" decimal(11,6),
   "created_at" timestamptz NOT NULL,
-  "organizer_type" varchar,
   "finished_at" timestamptz
 );
 
@@ -79,7 +78,7 @@ CREATE TABLE "memberships" (
 CREATE TABLE "event_participants" (
   "profile_id" uuid,
   "event_id" uuid,
-  "created_at" timestamptz,
+  "created_at" timestamptz NOT NULL,
   PRIMARY KEY ("profile_id", "event_id")
 );
 
