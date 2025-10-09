@@ -31,11 +31,11 @@ public class Likes {
 
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = true)
-    private UUID user_id;
+    private Profile user_id;
 
     
     @Column(name = "post_id", nullable = true)
-    private UUID post_id;
+    private Posts post_id;
 
     @Column(name = "created_at", nullable = true)
     private Instant created_at;
