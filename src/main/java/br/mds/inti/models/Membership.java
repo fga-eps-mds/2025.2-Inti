@@ -23,24 +23,23 @@ import lombok.NoArgsConstructor;
 @Entity
 @Table(name = "memberships")
 public class Membership {
-    
+
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
 
     @ManyToOne
     @JoinColumn(name = "profile_id", nullable = false)
-    private Profile profileId;
+    private Profile profile;
 
     @ManyToOne
     @JoinColumn(name = "organization_id", nullable = false)
-    private Profile organizationId;
+    private Profile organization;
 
-    @Column(name ="role", nullable = true)
+    @Column(name = "role", nullable = true)
     private String role;
 
     @Column(name = "created_at", nullable = false)
     private Instant createdAt;
-
 
 }

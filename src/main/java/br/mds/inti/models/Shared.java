@@ -29,11 +29,11 @@ public class Shared {
 
     @ManyToOne
     @JoinColumn(name = "profile_sharing_id", nullable = false)
-    private Profile profileSharingId;
+    private Profile profileSharing;
 
     @ManyToOne
     @JoinColumn(name = "profile_shared_id", nullable = false)
-    private Profile profileSharedId;
+    private Profile profileShared;
 
     @ManyToOne
     @JoinColumn(name = "post_id", nullable = true)

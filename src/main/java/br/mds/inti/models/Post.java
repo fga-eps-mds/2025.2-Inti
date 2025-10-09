@@ -1,6 +1,8 @@
 package br.mds.inti.models;
 
 import java.time.Instant;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 import jakarta.persistence.Column;
@@ -10,6 +12,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -29,7 +32,7 @@ public class Post {
 
     @ManyToOne
     @JoinColumn(name = "profile_id", nullable = false)
-    private Profile profileID;
+    private Profile profile;
 
     @Column(name = "img_link", nullable = true, length = 255)
     private String imgLink;
@@ -42,4 +45,10 @@ public class Post {
 
     @Column(name = "created_at", nullable = false)
     private Instant createdAt;
+
+    @OneToMany(mappedBy = "post")
+    private List<Like> likes = new ArrayList<>();
+
+    @OneToMany(mappedBy = "postId")
+    private List<Shared> shareds = new ArrayList<>();
 }

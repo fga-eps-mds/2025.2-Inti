@@ -15,7 +15,6 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
-
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -29,7 +28,7 @@ public class Like {
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = true)
     @MapsId("userId")
-    private Profile user;
+    private Profile profile;
 
     @ManyToOne
     @JoinColumn(name = "post_id", nullable = true)
