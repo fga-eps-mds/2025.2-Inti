@@ -1,6 +1,7 @@
 package br.mds.inti.models;
 
 import java.time.Instant;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.UUID;
@@ -10,6 +11,7 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import br.mds.inti.models.ENUM.ProfileType;
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -17,6 +19,7 @@ import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -68,6 +71,36 @@ public class Profile implements UserDetails {
 
     @Column(name = "deleted_at", nullable = true)
     private Instant deletedAt;
+
+    @OneToMany(mappedBy = "profile", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Post> posts = new ArrayList<>();
+
+    @OneToMany(mappedBy = "profile")
+    private List<Membership> profiles = new ArrayList<>();
+
+    @OneToMany(mappedBy = "organization")
+    private List<Membership> organizations = new ArrayList<>();
+
+    @OneToMany(mappedBy = "profile")
+    private List<Like> likes = new ArrayList<>();
+
+    @OneToMany(mappedBy = "profileSharing")
+    private List<Shared> sharings = new ArrayList<>();
+
+    @OneToMany(mappedBy = "profileShared")
+    private List<Shared> shareds = new ArrayList<>();
+
+    @OneToMany(mappedBy = "profile")
+    private List<EventParticipant> eventParticipants = new ArrayList<>();
+
+    @OneToMany(mappedBy = "profile")
+    private List<ArtistProducts> artistProducts = new ArrayList<>();
+
+    @OneToMany(mappedBy = "followerProfile")
+    private List<Follow> followerProfiles = new ArrayList<>();
+
+    @OneToMany(mappedBy = "followingProfile")
+    private List<Follow> followingProfiles = new ArrayList<>();
 
     @Override
     public boolean isAccountNonExpired() {
