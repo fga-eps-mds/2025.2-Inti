@@ -90,7 +90,17 @@ public class Profile implements UserDetails {
     @OneToMany(mappedBy = "profileShared")
     private List<Shared> shareds = new ArrayList<>();
 
-    @OneToMany
+    @OneToMany(mappedBy = "profile")
+    private List<EventParticipant> eventParticipants = new ArrayList<>();
+
+    @OneToMany(mappedBy = "profile")
+    private List<ArtistProducts> artistProducts = new ArrayList<>();
+
+    @OneToMany(mappedBy = "followerProfile")
+    private List<Follow> followerProfiles = new ArrayList<>();
+
+    @OneToMany(mappedBy = "followingProfile")
+    private List<Follow> followingProfiles = new ArrayList<>();
 
     @Override
     public boolean isAccountNonExpired() {
