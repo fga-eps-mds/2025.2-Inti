@@ -36,7 +36,7 @@ public class Follow {
     @MapsId("followingProfileId")
     private Profile followingProfile;
 
-    @Column(name = "created_at", nullable = true)
+    @Column(name = "created_at", nullable = false)
     private Instant createdAt;
 
 }
