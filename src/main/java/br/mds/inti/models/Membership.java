@@ -21,7 +21,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @EqualsAndHashCode
 @Entity
-@Table(name = "membership")
+@Table(name = "memberships")
 public class Membership {
     
     @Id
@@ -29,18 +29,18 @@ public class Membership {
     private UUID id;
 
     @ManyToOne
-    @JoinColumn(name = "membership", nullable = false)
-    private Profile profile;
+    @JoinColumn(name = "profile_id", nullable = false)
+    private Profile profileId;
 
-
-    @Column(name = "organization_id", nullable = false)
-    private UUID organization_id;
+    @ManyToOne
+    @JoinColumn(name = "organization_id", nullable = false)
+    private Profile organizationId;
 
     @Column(name ="role", nullable = true)
-    private Membership role;
+    private String role;
 
-    @Column(name = "created_at", nullable = true)
-    private Instant created_at;
+    @Column(name = "created_at", nullable = false)
+    private Instant createdAt;
 
 
 }

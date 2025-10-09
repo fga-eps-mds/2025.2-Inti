@@ -16,28 +16,30 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
-
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode
 @Entity
-@Table(name = "likes")
-public class Likes {
-
+@Table(name = "posts")
+public class Post {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
 
     @ManyToOne
-    @JoinColumn(name = "user_id", nullable = true)
-    private Profile user_id;
+    @JoinColumn(name = "profile_id", nullable = false)
+    private Profile profileID;
 
-    
-    @Column(name = "post_id", nullable = true)
-    private Posts post_id;
+    @Column(name = "img_link", nullable = true, length = 255)
+    private String imgLink;
 
-    @Column(name = "created_at", nullable = true)
-    private Instant created_at;
+    @Column(name = "description", nullable = true)
+    private String description;
 
+    @Column(name = "likes_count", nullable = true)
+    private Integer likesCount;
+
+    @Column(name = "created_at", nullable = false)
+    private Instant createdAt;
 }

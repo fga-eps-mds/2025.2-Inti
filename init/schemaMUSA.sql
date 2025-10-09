@@ -31,7 +31,7 @@ CREATE TABLE "posts" (
   "img_link" varchar(255) DEFAULT null,
   "description" text,
   "likes_count" integer,
-  "created_at" timestamp
+  "created_at" timestamp NOT NULL
 );
 
 CREATE TABLE "events" (
@@ -56,7 +56,7 @@ CREATE TABLE "events" (
 CREATE TABLE "likes" (
   "user_id" uuid,
   "post_id" uuid,
-  "created_at" timestamptz,
+  "created_at" timestamptz NOT NULL,
   PRIMARY KEY ("user_id", "post_id")
 );
 
@@ -65,7 +65,7 @@ CREATE TABLE "shareds" (
   "profile_sharing_id" uuid NOT NULL,
   "profile_shared_id" uuid NOT NULL,
   "post_id" uuid,
-  "created_at" timestamptz
+  "created_at" timestamptz NOT NULL
 );
 
 CREATE TABLE "memberships" (
@@ -73,7 +73,7 @@ CREATE TABLE "memberships" (
   "profile_id" uuid NOT NULL,
   "organization_id" uuid NOT NULL,
   "role" varchar DEFAULT 'member',
-  "created_at" timestamptz
+  "created_at" timestamptz NOT NULL
 );
 
 CREATE TABLE "event_participants" (

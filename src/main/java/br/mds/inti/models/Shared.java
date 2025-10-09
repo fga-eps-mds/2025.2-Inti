@@ -4,6 +4,7 @@ import java.time.Instant;
 import java.util.UUID;
 
 import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -19,25 +20,25 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode
-@Table(name = "posts")
-public class Posts {
+@Entity
+@Table(name = "shareds")
+public class Shared {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
 
     @ManyToOne
-    @JoinColumn(name = "profile_id", nullable = false)
-    private Profile profileID;
+    @JoinColumn(name = "profile_sharing_id", nullable = false)
+    private Profile profileSharingId;
 
-    @Column(name = "img_link", nullable = true, length = 255)
-    private String imgLink;
+    @ManyToOne
+    @JoinColumn(name = "profile_shared_id", nullable = false)
+    private Profile profileSharedId;
 
-    @Column(name = "description", nullable = true)
-    private String description;
+    @ManyToOne
+    @JoinColumn(name = "post_id", nullable = true)
+    private Post postId;
 
-    @Column(name = "likes_count", nullable = true)
-    private Integer likesCount;
-
-    @Column(name = "created_at", nullable = true)
+    @Column(name = "created_at", nullable = false)
     private Instant createdAt;
 }

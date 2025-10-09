@@ -2,7 +2,7 @@ package br.mds.inti.models;
 
 import java.time.Instant;
 
-import br.mds.inti.models.pk.SharedsPk;
+import br.mds.inti.models.pk.LikePk;
 import jakarta.persistence.Column;
 import jakarta.persistence.EmbeddedId;
 import jakarta.persistence.Entity;
@@ -15,29 +15,28 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
+
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode
 @Entity
-@Table(name = "shareds")
-public class Shareds {
+@Table(name = "likes")
+public class Like {
     @EmbeddedId
-    private SharedsPk id;
+    private LikePk id;
 
     @ManyToOne
-    @JoinColumn(name = "profile_sharing_id", nullable = false)
-    @MapsId("profileSharingId")
-    private Profile profileSharingId;
+    @JoinColumn(name = "user_id", nullable = true)
+    @MapsId("userId")
+    private Profile user;
 
     @ManyToOne
-    @JoinColumn(name = "profile_shared_id", nullable = false)
-    @MapsId("profileSharedId")
-    private Profile profileSharedId;
-
-    @Column(name = "posts_id", nullable = true)
-    private Posts postId;
+    @JoinColumn(name = "post_id", nullable = true)
+    @MapsId("postId")
+    private Post post;
 
     @Column(name = "created_at", nullable = false)
     private Instant createdAt;
+
 }
