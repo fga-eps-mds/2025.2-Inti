@@ -1,4 +1,4 @@
-package br.mds.inti.models;
+package br.mds.inti.model;
 
 import java.time.Instant;
 import java.util.ArrayList;
@@ -10,7 +10,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import br.mds.inti.models.ENUM.ProfileType;
+import br.mds.inti.model.enums.ProfileType;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;

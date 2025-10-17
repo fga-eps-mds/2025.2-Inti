@@ -1,4 +1,4 @@
-package br.mds.inti.models.pk;
+package br.mds.inti.model.pk;
 
 import java.util.UUID;
 
@@ -13,8 +13,10 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @EqualsAndHashCode
 @Embeddable
-public class LikePk {
-    private UUID userId;
+public class EventParticipantPK {
 
-    private UUID postId;
+    private UUID profileId;
+
+    private UUID eventId;
+
 }

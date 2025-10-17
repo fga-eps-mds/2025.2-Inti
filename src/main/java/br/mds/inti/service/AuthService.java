@@ -1,4 +1,4 @@
-package br.mds.inti.auth;
+package br.mds.inti.service;
 
 import java.time.Instant;
 
@@ -6,11 +6,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import br.mds.inti.auth.dto.LoginRequest;
-import br.mds.inti.auth.dto.ProfileResponse;
-import br.mds.inti.auth.dto.RegisterRequest;
-import br.mds.inti.models.Profile;
-import br.mds.inti.models.ENUM.ProfileType;
+import br.mds.inti.model.dto.auth.LoginRequest;
+import br.mds.inti.model.dto.auth.ProfileResponse;
+import br.mds.inti.model.dto.auth.RegisterRequest;
+import br.mds.inti.model.Profile;
+import br.mds.inti.model.enums.ProfileType;
 import br.mds.inti.repositories.ProfileRepository;
 
 @Service

@@ -1,4 +1,4 @@
-package br.mds.inti.models;
+package br.mds.inti.model;
 
 import java.time.Instant;
 import java.util.UUID;

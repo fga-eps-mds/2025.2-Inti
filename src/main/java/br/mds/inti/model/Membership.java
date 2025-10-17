@@ -1,14 +1,15 @@
-package br.mds.inti.models;
+package br.mds.inti.model;
 
 import java.time.Instant;
+import java.util.UUID;
 
-import br.mds.inti.models.pk.LikePk;
 import jakarta.persistence.Column;
-import jakarta.persistence.EmbeddedId;
 import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
-import jakarta.persistence.MapsId;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -20,20 +21,23 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @EqualsAndHashCode
 @Entity
-@Table(name = "likes")
-public class Like {
-    @EmbeddedId
-    private LikePk id;
+@Table(name = "memberships")
+public class Membership {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.UUID)
+    private UUID id;
 
     @ManyToOne
-    @JoinColumn(name = "user_id", nullable = true)
-    @MapsId("userId")
+    @JoinColumn(name = "profile_id", nullable = false)
     private Profile profile;
 
     @ManyToOne
-    @JoinColumn(name = "post_id", nullable = true)
-    @MapsId("postId")
-    private Post post;
+    @JoinColumn(name = "organization_id", nullable = false)
+    private Profile organization;
+
+    @Column(name = "role", nullable = true)
+    private String role;
 
     @Column(name = "created_at", nullable = false)
     private Instant createdAt;

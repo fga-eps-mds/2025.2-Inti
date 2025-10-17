@@ -1,4 +1,4 @@
-package br.mds.inti.models;
+package br.mds.inti.model;
 
 import java.math.BigDecimal;
 import java.time.Instant;
