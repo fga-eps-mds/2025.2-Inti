@@ -43,7 +43,7 @@ public class SecurityConfig {
 
     @Bean
     public PasswordEncoder passwordEncoder() {
-        return new SCryptPasswordEncoder(16384, 8, 1, 32, 16);
+        return SCryptPasswordEncoder.defaultsForSpringSecurity_v5_8();
         // return new BCryptPasswordEncoder();
     }
 
