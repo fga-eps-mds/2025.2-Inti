@@ -1,0 +1,46 @@
+package br.mds.inti.service;
+
+import br.mds.inti.model.Post;
+import br.mds.inti.model.Profile;
+import br.mds.inti.repositories.PostRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.server.ResponseStatusException;
+
+import java.time.Instant;
+import java.util.Optional;
+import java.util.UUID;
+
+@Service
+public class PostService {
+
+    @Autowired
+    PostRepository postRepository;
+
+    public void createPost(Profile profile, MultipartFile image, String type, String title, String description) {
+        String imageUrl = "";
+
+        Post post = new Post();
+        post.setCreatedAt(Instant.now());
+        post.setDescription(description);
+        post.setImgLink(imageUrl);
+        post.setLikesCount(0);
+        post.setProfile(profile);
+
+        postRepository.save(post);
+    }
+
+    public void deletePost(Profile profile, UUID postId) {
+
+        Optional<Post> postOptional = postRepository.findById(postId);
+        if (postOptional.isEmpty()) throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Post not found");
+
+        Post post = postOptional.get();
+        if (post.getProfile().getId() != profile.getId())
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "User is not the owner of the post");
+
+        postRepository.softDeletePost(postId);
+    }
+}
