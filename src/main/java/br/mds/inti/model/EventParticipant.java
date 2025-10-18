@@ -1,8 +1,8 @@
-package br.mds.inti.models;
+package br.mds.inti.model;
 
 import java.time.Instant;
 
-import br.mds.inti.models.pk.FollowsPK;
+import br.mds.inti.model.pk.EventParticipantPK;
 import jakarta.persistence.Column;
 import jakarta.persistence.EmbeddedId;
 import jakarta.persistence.Entity;
@@ -20,23 +20,22 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @EqualsAndHashCode
 @Entity
-@Table(name = "follows")
-public class Follow {
+@Table(name = "event_participants")
+public class EventParticipant {
 
     @EmbeddedId
-    private FollowsPK id;
+    private EventParticipantPK id;
 
     @ManyToOne
-    @JoinColumn(name = "follower_profile_id", nullable = false)
-    @MapsId("followerProfileId")
-    private Profile followerProfile;
+    @MapsId("profileId")
+    @JoinColumn(name = "profile_id")
+    private Profile profile;
 
     @ManyToOne
-    @JoinColumn(name = "following_profile_id", nullable = false)
-    @MapsId("followingProfileId")
-    private Profile followingProfile;
+    @MapsId("eventId") // conex
+    @JoinColumn(name = "event_id")
+    private Event event;
 
     @Column(name = "created_at", nullable = false)
     private Instant createdAt;
-
 }

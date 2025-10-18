@@ -1,4 +1,4 @@
-package br.mds.inti.models.ENUM;
+package br.mds.inti.model.enums;
 
 public enum ProfileType {
     user,

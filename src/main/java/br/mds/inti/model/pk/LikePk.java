@@ -1,4 +1,4 @@
-package br.mds.inti.models.pk;
+package br.mds.inti.model.pk;
 
 import java.util.UUID;
 
@@ -9,14 +9,12 @@ import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
 @Data
-@AllArgsConstructor
 @NoArgsConstructor
+@AllArgsConstructor
 @EqualsAndHashCode
 @Embeddable
-public class FollowsPK {
+public class LikePk {
+    private UUID userId;
 
-    private UUID followerProfileId;
-
-    private UUID followingProfileId;
-
+    private UUID postId;
 }

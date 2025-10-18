@@ -1,7 +1,9 @@
-package br.mds.inti.auth;
+package br.mds.inti.config;
 
 import java.io.IOException;
 
+import br.mds.inti.service.JwtService;
+import br.mds.inti.service.UserDetailsServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;

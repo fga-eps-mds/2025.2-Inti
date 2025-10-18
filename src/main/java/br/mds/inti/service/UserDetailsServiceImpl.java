@@ -1,4 +1,4 @@
-package br.mds.inti.auth;
+package br.mds.inti.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;

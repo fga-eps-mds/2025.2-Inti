@@ -1,15 +1,16 @@
-package br.mds.inti.auth;
+package br.mds.inti.controller;
 
 import java.net.URI;
 
+import br.mds.inti.service.AuthService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
-import br.mds.inti.auth.dto.LoginRequest;
-import br.mds.inti.auth.dto.ProfileResponse;
-import br.mds.inti.auth.dto.RegisterRequest;
-import br.mds.inti.models.Profile;
+import br.mds.inti.model.dto.auth.LoginRequest;
+import br.mds.inti.model.dto.auth.ProfileResponse;
+import br.mds.inti.model.dto.auth.RegisterRequest;
+import br.mds.inti.model.Profile;
 
 @RestController
 @RequestMapping("/auth")

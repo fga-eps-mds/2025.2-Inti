@@ -1,9 +1,9 @@
-package br.mds.inti.auth.dto;
+package br.mds.inti.model.dto.auth;
 
 import java.time.Instant;
 import java.util.UUID;
 
-import br.mds.inti.models.ENUM.ProfileType;
+import br.mds.inti.model.enums.ProfileType;
 
 public record ProfileResponse(
         UUID id,

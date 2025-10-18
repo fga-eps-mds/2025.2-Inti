@@ -16,8 +16,7 @@ import org.springframework.security.crypto.scrypt.SCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
-import br.mds.inti.auth.JwtAuthenticationFilter;
-import br.mds.inti.auth.UserDetailsServiceImpl;
+import br.mds.inti.service.UserDetailsServiceImpl;
 
 @Configuration
 @EnableMethodSecurity
@@ -43,7 +42,7 @@ public class SecurityConfig {
 
     @Bean
     public PasswordEncoder passwordEncoder() {
-        return new SCryptPasswordEncoder(16384, 8, 1, 32, 16);
+        return SCryptPasswordEncoder.defaultsForSpringSecurity_v5_8();
         // return new BCryptPasswordEncoder();
     }
 
