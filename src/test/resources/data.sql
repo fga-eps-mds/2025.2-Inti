@@ -1,96 +1,91 @@
-CREATE TYPE "profile_type" AS ENUM (
-  'user',
-  'organization'
-);
-
 CREATE TABLE "follows" (
-  "follower_profile_id" uuid NOT NULL,
-  "following_profile_id" uuid NOT NULL,
-  "created_at" timestamptz NOT NULL,
+  "follower_profile_id" VARCHAR(36) NOT NULL,
+  "following_profile_id" VARCHAR(36) NOT NULL,
+  "created_at" TIMESTAMP NOT NULL,
   PRIMARY KEY ("follower_profile_id", "following_profile_id")
 );
 
 CREATE TABLE "profiles" (
-  "id" uuid PRIMARY KEY NOT NULL,
-  "username" varchar(50) UNIQUE,
-  "name" varchar(150),
-  "email" varchar(255) UNIQUE NOT NULL,
-  "password" varchar(255) NOT NULL,
-  "public_email" varchar(255) DEFAULT null,
-  "type" varchar(50) NOT NULL,
-  "followers_count" integer DEFAULT 0,
-  "following_count" integer DEFAULT 0,
-  "created_at" timestamptz NOT NULL,
-  "updated_at" timestamptz DEFAULT null,
-  "deleted_at" timestamptz DEFAULT null
+  "id" VARCHAR(36) PRIMARY KEY NOT NULL,
+  "username" VARCHAR(50) UNIQUE,
+  "name" VARCHAR(150),
+  "email" VARCHAR(255) UNIQUE NOT NULL,
+  "password" VARCHAR(255) NOT NULL,
+  "public_email" VARCHAR(255) DEFAULT NULL,
+  "type" VARCHAR(50) NOT NULL CHECK ("type" IN ('user', 'organization')),
+  "followers_count" INTEGER DEFAULT 0,
+  "following_count" INTEGER DEFAULT 0,
+  "created_at" TIMESTAMP NOT NULL,
+  "updated_at" TIMESTAMP DEFAULT NULL,
+  "deleted_at" TIMESTAMP DEFAULT NULL
 );
 
 CREATE TABLE "posts" (
-  "id" uuid PRIMARY KEY NOT NULL,
-  "profile_id" uuid NOT NULL,
-  "img_link" varchar(255) DEFAULT null,
-  "description" text,
-  "likes_count" integer,
-  "created_at" timestamptz NOT NULL,
-  "deleted_at" timestamptz DEFAULT null
+  "id" VARCHAR(36) PRIMARY KEY NOT NULL,
+  "profile_id" VARCHAR(36) NOT NULL,
+  "img_link" VARCHAR(255) DEFAULT NULL,
+  "description" TEXT,
+  "likes_count" INTEGER,
+  "created_at" TIMESTAMP NOT NULL,
+  "deleted_at" TIMESTAMP DEFAULT NULL
 );
 
 CREATE TABLE "events" (
-  "id" uuid PRIMARY KEY NOT NULL,
-  "profile_id" uuid NOT NULL,
-  "title" varchar(255) NOT NULL,
-  "img_link" varchar(255),
-  "event_time" timestamptz NOT NULL,
-  "description" text,
-  "street_address" varchar(150),
-  "administrative_region" varchar(150),
-  "city" varchar(150),
-  "state" varchar(150),
-  "reference_point" varchar(255),
-  "latitude" decimal(10,6),
-  "longitude" decimal(11,6),
-  "created_at" timestamptz NOT NULL,
-  "finished_at" timestamptz
+  "id" VARCHAR(36) PRIMARY KEY NOT NULL,
+  "profile_id" VARCHAR(36) NOT NULL,
+  "title" VARCHAR(255) NOT NULL,
+  "img_link" VARCHAR(255),
+  "event_time" TIMESTAMP NOT NULL,
+  "description" TEXT,
+  "street_address" VARCHAR(150),
+  "administrative_region" VARCHAR(150),
+  "city" VARCHAR(150),
+  "state" VARCHAR(150),
+  "reference_point" VARCHAR(255),
+  "latitude" DECIMAL(10,6),
+  "longitude" DECIMAL(11,6),
+  "created_at" TIMESTAMP NOT NULL,
+  "finished_at" TIMESTAMP
 );
 
 CREATE TABLE "likes" (
-  "user_id" uuid,
-  "post_id" uuid,
-  "created_at" timestamptz NOT NULL,
+  "user_id" VARCHAR(36),
+  "post_id" VARCHAR(36),
+  "created_at" TIMESTAMP NOT NULL,
   PRIMARY KEY ("user_id", "post_id")
 );
 
 CREATE TABLE "shareds" (
-  "id" uuid PRIMARY KEY NOT NULL,
-  "profile_sharing_id" uuid NOT NULL,
-  "profile_shared_id" uuid NOT NULL,
-  "post_id" uuid,
-  "created_at" timestamptz NOT NULL
+  "id" VARCHAR(36) PRIMARY KEY NOT NULL,
+  "profile_sharing_id" VARCHAR(36) NOT NULL,
+  "profile_shared_id" VARCHAR(36) NOT NULL,
+  "post_id" VARCHAR(36),
+  "created_at" TIMESTAMP NOT NULL
 );
 
 CREATE TABLE "memberships" (
-  "id" uuid PRIMARY KEY NOT NULL,
-  "profile_id" uuid NOT NULL,
-  "organization_id" uuid NOT NULL,
-  "role" varchar DEFAULT 'member',
-  "created_at" timestamptz NOT NULL
+  "id" VARCHAR(36) PRIMARY KEY NOT NULL,
+  "profile_id" VARCHAR(36) NOT NULL,
+  "organization_id" VARCHAR(36) NOT NULL,
+  "role" VARCHAR DEFAULT 'member',
+  "created_at" TIMESTAMP NOT NULL
 );
 
 CREATE TABLE "event_participants" (
-  "profile_id" uuid,
-  "event_id" uuid,
-  "created_at" timestamptz NOT NULL,
+  "profile_id" VARCHAR(36),
+  "event_id" VARCHAR(36),
+  "created_at" TIMESTAMP NOT NULL,
   PRIMARY KEY ("profile_id", "event_id")
 );
 
 CREATE TABLE "artist_products" (
-  "id" uuid PRIMARY KEY NOT NULL,
-  "profile_id" uuid NOT NULL,
-  "title" varchar(255) NOT NULL,
-  "img_link" varchar(255),
-  "price" decimal(10,2) NOT NULL,
-  "created_at" timestamptz NOT NULL,
-  "deleted_at" timestamptz
+  "id" VARCHAR(36) PRIMARY KEY NOT NULL,
+  "profile_id" VARCHAR(36) NOT NULL,
+  "title" VARCHAR(255) NOT NULL,
+  "img_link" VARCHAR(255),
+  "price" DECIMAL(10,2) NOT NULL,
+  "created_at" TIMESTAMP NOT NULL,
+  "deleted_at" TIMESTAMP
 );
 
 COMMENT ON COLUMN "follows"."follower_profile_id" IS 'quem esta seguindo';
