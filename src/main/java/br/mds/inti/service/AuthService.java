@@ -35,11 +35,13 @@ public class AuthService {
         user.setCreatedAt(Instant.now());
         profileRepository.save(user);
 
+        String jwt = jwtService.generateToken(user.getEmail());
         return new ProfileResponse(
                 user.getId(),
                 user.getUsername(),
                 user.getName(),
                 user.getEmail(),
+                jwt,
                 user.getType(),
                 user.getCreatedAt());
     }

@@ -18,6 +18,8 @@ CREATE TABLE "profiles" (
   "password" varchar(255) NOT NULL,
   "public_email" varchar(255) DEFAULT null,
   "type" varchar(50) NOT NULL,
+  "profile_picture_url" varchar(255) DEFAULT null,
+  "bio" varchar(255) DEFAULT null,
   "followers_count" integer DEFAULT 0,
   "following_count" integer DEFAULT 0,
   "created_at" timestamptz NOT NULL,
