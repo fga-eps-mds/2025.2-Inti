@@ -7,7 +7,7 @@ RUN mvn clean package -DskipTests
 # Production stage
 FROM openjdk:25 AS prod
 COPY --from=build /app/target/*.jar app.jar
-ENTRYPOINT ["java", "-Xmx2048M", "-jar", "/app.jar"]
+ENTRYPOINT ["java", "-Xmx2048M", "-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5005", "-jar", "/app.jar"]
 
 # Development stage NOT WORKING YET (trying to mess with hot reload from spring-boot-devtools)
 FROM maven:3-eclipse-temurin-25 AS dev

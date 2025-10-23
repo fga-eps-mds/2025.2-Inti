@@ -1,22 +1,30 @@
 package br.mds.inti.controller;
 
-import java.net.URI;
-
-import br.mds.inti.service.AuthService;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
-
 import br.mds.inti.model.dto.auth.LoginRequest;
 import br.mds.inti.model.dto.auth.ProfileResponse;
 import br.mds.inti.model.dto.auth.RegisterRequest;
-import br.mds.inti.model.Profile;
+import br.mds.inti.model.entity.Profile;
+import br.mds.inti.service.AuthService;
+import br.mds.inti.service.PostService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
+
+import java.net.URI;
 
 @RestController
 @RequestMapping("/auth")
 public class AuthController {
 
     private final AuthService authService;
+
+    @Autowired
+    PostService postService;
 
     public AuthController(AuthService authService) {
         this.authService = authService;

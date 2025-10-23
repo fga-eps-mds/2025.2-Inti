@@ -1,4 +1,4 @@
-package br.mds.inti.model;
+package br.mds.inti.model.entity;
 
 import br.mds.inti.model.enums.ProfileType;
 import jakarta.persistence.*;
@@ -110,7 +110,7 @@ public class Profile implements UserDetails {
 
     @Override
     public boolean isCredentialsNonExpired() {
-        return false;
+        return true;
     }
 
     @Override

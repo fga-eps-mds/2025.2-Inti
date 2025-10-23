@@ -1,7 +1,7 @@
 package br.mds.inti.service;
 
-import br.mds.inti.model.Post;
-import br.mds.inti.model.Profile;
+import br.mds.inti.model.entity.Post;
+import br.mds.inti.model.entity.Profile;
 import br.mds.inti.repositories.PostRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.io.IOException;
 import java.time.Instant;
 import java.util.Optional;
 import java.util.UUID;
@@ -19,8 +20,16 @@ public class PostService {
     @Autowired
     PostRepository postRepository;
 
-    public void createPost(Profile profile, MultipartFile image, String type, String title, String description) {
+    @Autowired
+    BlobService blobService;
+
+    public void createPost(Profile profile, MultipartFile image, String description) {
         String imageUrl = "";
+        try {
+            imageUrl = blobService.uploadImageWithDescription(image);
+        } catch (IOException e) {
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Failed to upload image");
+        }
 
         Post post = new Post();
         post.setCreatedAt(Instant.now());

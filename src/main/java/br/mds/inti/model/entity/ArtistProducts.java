@@ -1,4 +1,4 @@
-package br.mds.inti.model;
+package br.mds.inti.model.entity;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -6,9 +6,8 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
+import java.math.BigDecimal;
 import java.time.Instant;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.UUID;
 
 @Data
@@ -16,8 +15,9 @@ import java.util.UUID;
 @AllArgsConstructor
 @EqualsAndHashCode
 @Entity
-@Table(name = "posts")
-public class Post {
+@Table(name = "artist_products")
+public class ArtistProducts {
+
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
@@ -26,25 +26,19 @@ public class Post {
     @JoinColumn(name = "profile_id", nullable = false)
     private Profile profile;
 
+    @Column(name = "title", nullable = false, length = 255)
+    private String title;
+
     @Column(name = "img_link", nullable = true, length = 255)
     private String imgLink;
 
-    @Column(name = "description", nullable = true)
-    private String description;
-
-    @Column(name = "likes_count", nullable = true)
-    private Integer likesCount;
+    @Column(name = "price", nullable = false, precision = 10, scale = 2)
+    private BigDecimal price;
 
     @Column(name = "created_at", nullable = false)
     private Instant createdAt;
 
     @Column(name = "deleted_at", nullable = true)
     private Instant deletedAt;
-
-    @OneToMany(mappedBy = "post")
-    private List<Like> likes = new ArrayList<>();
-
-    @OneToMany(mappedBy = "postId")
-    private List<Shared> shareds = new ArrayList<>();
 
 }
