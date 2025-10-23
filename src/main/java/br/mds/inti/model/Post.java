@@ -46,4 +46,5 @@ public class Post {
 
     @OneToMany(mappedBy = "postId")
     private List<Shared> shareds = new ArrayList<>();
+
 }
