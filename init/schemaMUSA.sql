@@ -33,7 +33,9 @@ CREATE TABLE "posts" (
   "img_link" varchar(255) DEFAULT null,
   "description" text,
   "likes_count" integer,
-  "created_at" timestamptz NOT NULL
+  "created_at" timestamptz NOT NULL,
+  "deleted_at" timestamptz DEFAULT null
+
 );
 
 CREATE TABLE "events" (
