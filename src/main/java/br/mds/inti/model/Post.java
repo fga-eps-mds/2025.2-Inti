@@ -46,9 +46,13 @@ public class Post {
     @Column(name = "created_at", nullable = false)
     private Instant createdAt;
 
+    @Column(name = "deleted_at", nullable = true)
+    private Instant deletedAt;
+
     @OneToMany(mappedBy = "post")
     private List<Like> likes = new ArrayList<>();
 
     @OneToMany(mappedBy = "postId")
     private List<Shared> shareds = new ArrayList<>();
+
 }
