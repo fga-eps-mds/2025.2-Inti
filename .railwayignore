@@ -1,0 +1,4 @@
+echo "Dockerfile" >> .railwayignore
+echo "docker-compose.yml" >> .railwayignore  
+echo "docker-entrypoint.sh" >> .railwayignore
+echo ".dockerignore" >> .railwayignore
