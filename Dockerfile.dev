@@ -37,12 +37,3 @@ RUN groupadd -r spring && useradd -r -g spring spring
 USER spring:spring
 
 ENTRYPOINT ["java", "-Xmx2048M", "-jar", "app.jar"]
-
-# Development stage
-FROM maven:3-eclipse-temurin-25 AS dev
-WORKDIR /app
-RUN apt-get update && apt-get install -y inotify-tools
-COPY . .
-COPY docker-entrypoint.sh /docker-entrypoint.sh
-RUN chmod +x /docker-entrypoint.sh
-ENTRYPOINT ["/docker-entrypoint.sh"]

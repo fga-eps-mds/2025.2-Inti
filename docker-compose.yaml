@@ -19,6 +19,7 @@ services:
   app:
     build:
       context: .
+      dockerfile: Dockerfile.dev
       target: prod
     container_name: inti-backend
     depends_on:
