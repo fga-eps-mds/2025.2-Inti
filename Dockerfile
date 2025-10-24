@@ -36,7 +36,4 @@ COPY --from=build /app/target/*.jar app.jar
 RUN groupadd -r spring && useradd -r -g spring spring
 USER spring:spring
 
-# Use ENV para o profile ou deixe para ser passado no runtime
-ENV SPRING_PROFILES_ACTIVE=prod
-
 ENTRYPOINT ["java", "-Xmx2048M", "-jar", "app.jar"]
