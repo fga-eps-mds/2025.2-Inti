@@ -30,7 +30,7 @@ public class PostController {
     public ResponseEntity<String> createPost(@RequestPart MultipartFile image, @RequestPart String description) {
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        Profile profile = new Profile();//(Profile) authentication.getPrincipal();
+        Profile profile = (Profile) authentication.getPrincipal();
 
         postService.createPost(profile, image, description);
         return ResponseEntity.ok("Post created successfully!");

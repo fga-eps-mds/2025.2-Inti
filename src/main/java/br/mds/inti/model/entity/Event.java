@@ -31,8 +31,8 @@ public class Event {
     @Column(name = "title", nullable = false, length = 255)
     private String title;
 
-    @Column(name = "img_link", nullable = true, length = 255)
-    private String imgLink;
+    @Column(name = "blob_name", nullable = true, length = 255)
+    private String blobName;
 
     @Column(name = "event_time", nullable = false)
     private Instant eventTime;

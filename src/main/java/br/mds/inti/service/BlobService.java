@@ -6,8 +6,10 @@ import com.azure.storage.blob.BlobServiceClientBuilder;
 import jakarta.annotation.PostConstruct;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.io.IOException;
 
@@ -23,20 +25,8 @@ public class BlobService {
     @Value("${spring.cloud.azure.storage.blob.container-name}")
     private String containerName;
 
-    @Value("${azure.blob-storage.sas-token}")
-    private String sasToken;
-
     @PostConstruct
     public void init() {
-        log.info("CONNECTION STRING: " + connectionString);
-        log.info("CONTAINER NAME: " + containerName);
-
-        if (connectionString == null || connectionString.isBlank() ||
-            containerName == null || containerName.isBlank()) {
-            log.error("Azure Blob Storage configuration missing. Skipping BlobService initialization.");
-            return;
-        }
-
         try {
             blobServiceClient = new BlobServiceClientBuilder()
                     .connectionString(connectionString)
@@ -46,17 +36,36 @@ public class BlobService {
         }
     }
 
-    public String uploadImageWithDescription(MultipartFile image) throws IOException {
+    public String uploadImageWithDescription(MultipartFile file) throws IOException {
 
-        String blobFilename = image.getOriginalFilename();
+        if (!isImage(file)) throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "File is not an image");
+
+        String blobFilename = file.getOriginalFilename();
+        if (blobFilename == null) throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Image filename is null");
 
         BlobClient blobClient = blobServiceClient
                 .getBlobContainerClient(containerName)
                 .getBlobClient(blobFilename);
 
-        blobClient.upload(image.getInputStream(), image.getSize(), true);
+        blobClient.upload(file.getInputStream(), file.getSize(), true);
 
-        String imageUrl = blobClient.getBlobUrl();
-        return imageUrl;
+        String blobName = blobClient.getBlobName();
+        return blobName;
+    }
+
+    private boolean isImage(MultipartFile file) {
+        String contentType = file.getContentType();
+        return contentType != null &&
+                (contentType.equals("image/jpeg") ||
+                        contentType.equals("image/png") ||
+                        contentType.equals("image/webp"));
+    }
+
+    public void deleteImage(String blobName) {
+        BlobClient blobClient = blobServiceClient
+                .getBlobContainerClient(containerName)
+                .getBlobClient(blobName);
+
+        blobClient.delete();
     }
 }

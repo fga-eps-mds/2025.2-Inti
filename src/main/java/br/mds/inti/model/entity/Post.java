@@ -26,8 +26,8 @@ public class Post {
     @JoinColumn(name = "profile_id", nullable = false)
     private Profile profile;
 
-    @Column(name = "img_link", nullable = true, length = 255)
-    private String imgLink;
+    @Column(name = "blob_name", nullable = true, length = 255)
+    private String blobName;
 
     @Column(name = "description", nullable = true)
     private String description;

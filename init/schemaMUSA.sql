@@ -30,7 +30,7 @@ CREATE TABLE "profiles" (
 CREATE TABLE "posts" (
   "id" uuid PRIMARY KEY NOT NULL,
   "profile_id" uuid NOT NULL,
-  "img_link" varchar(255) DEFAULT null,
+  "blob_name" varchar(255) DEFAULT null,
   "description" text,
   "likes_count" integer,
   "created_at" timestamptz NOT NULL,
@@ -41,7 +41,7 @@ CREATE TABLE "events" (
   "id" uuid PRIMARY KEY NOT NULL,
   "profile_id" uuid NOT NULL,
   "title" varchar(255) NOT NULL,
-  "img_link" varchar(255),
+  "blob_name" varchar(255),
   "event_time" timestamptz NOT NULL,
   "description" text,
   "street_address" varchar(150),
@@ -89,7 +89,7 @@ CREATE TABLE "artist_products" (
   "id" uuid PRIMARY KEY NOT NULL,
   "profile_id" uuid NOT NULL,
   "title" varchar(255) NOT NULL,
-  "img_link" varchar(255),
+  "blob_name" varchar(255),
   "price" decimal(10,2) NOT NULL,
   "created_at" timestamptz NOT NULL,
   "deleted_at" timestamptz

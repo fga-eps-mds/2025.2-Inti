@@ -3,6 +3,7 @@ package br.mds.inti.service;
 import br.mds.inti.model.entity.Post;
 import br.mds.inti.model.entity.Profile;
 import br.mds.inti.repositories.PostRepository;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -14,6 +15,7 @@ import java.time.Instant;
 import java.util.Optional;
 import java.util.UUID;
 
+@Slf4j
 @Service
 public class PostService {
 
@@ -24,17 +26,18 @@ public class PostService {
     BlobService blobService;
 
     public void createPost(Profile profile, MultipartFile image, String description) {
-        String imageUrl = "";
+        String blobName = "";
         try {
-            imageUrl = blobService.uploadImageWithDescription(image);
+            blobName = blobService.uploadImageWithDescription(image);
         } catch (IOException e) {
+            log.error("error", e);
             throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Failed to upload image");
         }
 
         Post post = new Post();
         post.setCreatedAt(Instant.now());
         post.setDescription(description);
-        post.setImgLink(imageUrl);
+        post.setBlobName(blobName);
         post.setLikesCount(0);
         post.setProfile(profile);
 

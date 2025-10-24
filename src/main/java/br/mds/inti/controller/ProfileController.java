@@ -7,12 +7,20 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/feed")
-public class FeedController {
+@RequestMapping("/profiles")
+public class ProfileController {
 
-    @GetMapping("/organization")
-    @PreAuthorize("hasRole('ORGANIZATION')")
-    public String getOrganizationDashboard() {
-        return "Bem-vindo à área exclusiva de organizações!";
+    @GetMapping("/string/teste/user")
+    public ResponseEntity<String> getString() {
+
+        return ResponseEntity.ok("teste");
     }
+
+    @GetMapping("/string/teste/organization")
+    @PreAuthorize("hasRole('ORGANIZATION')")
+    public ResponseEntity<String> getStringOrg() {
+
+        return ResponseEntity.ok("teste");
+    }
+
 }

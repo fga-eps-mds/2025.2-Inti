@@ -23,7 +23,7 @@ CREATE TABLE "profiles" (
 CREATE TABLE "posts" (
   "id" VARCHAR(36) PRIMARY KEY NOT NULL,
   "profile_id" VARCHAR(36) NOT NULL,
-  "img_link" VARCHAR(255) DEFAULT NULL,
+  "blob_name" VARCHAR(255) DEFAULT NULL,
   "description" TEXT,
   "likes_count" INTEGER,
   "created_at" TIMESTAMP NOT NULL,
@@ -34,7 +34,7 @@ CREATE TABLE "events" (
   "id" VARCHAR(36) PRIMARY KEY NOT NULL,
   "profile_id" VARCHAR(36) NOT NULL,
   "title" VARCHAR(255) NOT NULL,
-  "img_link" VARCHAR(255),
+  "blob_name" VARCHAR(255),
   "event_time" TIMESTAMP NOT NULL,
   "description" TEXT,
   "street_address" VARCHAR(150),
@@ -82,7 +82,7 @@ CREATE TABLE "artist_products" (
   "id" VARCHAR(36) PRIMARY KEY NOT NULL,
   "profile_id" VARCHAR(36) NOT NULL,
   "title" VARCHAR(255) NOT NULL,
-  "img_link" VARCHAR(255),
+  "blob_name" VARCHAR(255),
   "price" DECIMAL(10,2) NOT NULL,
   "created_at" TIMESTAMP NOT NULL,
   "deleted_at" TIMESTAMP
