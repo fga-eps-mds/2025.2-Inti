@@ -1,8 +1,8 @@
 {
-  "$schema": "https://schema.up.railway.app/railway.json",
+  "$schema": "https://schema.up.railway.app/railway.json", 
   "build": {
     "builder": "NIXPACKS",
-    "buildCommand": "mvn clean package -DskipTests -Pprod"
+    "buildCommand": "mvn clean package -Dmaven.test.skip=true -Pprod"
   },
   "deploy": {
     "startCommand": "java -Xmx2048M -Dspring.profiles.active=prod -jar target/*.jar",
