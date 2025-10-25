@@ -30,8 +30,9 @@
 	<properties>
 		<java.version>25</java.version>
 		<maven.compiler.target>25</maven.compiler.target>
-        <spring-cloud-azure.version>6.0.0</spring-cloud-azure.version>
+		<!-- REMOVIDA a propriedade spring.profiles.active -->
 	</properties>
+
 	<dependencies>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
@@ -123,6 +124,19 @@
     </dependencyManagement>
 
     <build>
+	<profiles>
+		<profile>
+			<id>local</id>
+			<activation>
+				<activeByDefault>true</activeByDefault>
+			</activation>
+		</profile>
+		<profile>
+			<id>prod</id>
+		</profile>
+	</profiles>
+
+	<build>
 		<plugins>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
@@ -148,7 +162,8 @@
 					</excludes>
 				</configuration>
 			</plugin>
-		</plugins>
-	</build>
 
+		</plugins>
+
+	</build>
 </project>
