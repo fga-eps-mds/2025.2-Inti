@@ -30,7 +30,9 @@
 	<properties>
 		<java.version>25</java.version>
 		<maven.compiler.target>25</maven.compiler.target>
+		<!-- REMOVIDA a propriedade spring.profiles.active -->
 	</properties>
+
 	<dependencies>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
@@ -100,6 +102,18 @@
 		</dependency>
 	</dependencies>
 
+	<profiles>
+		<profile>
+			<id>local</id>
+			<activation>
+				<activeByDefault>true</activeByDefault>
+			</activation>
+		</profile>
+		<profile>
+			<id>prod</id>
+		</profile>
+	</profiles>
+
 	<build>
 		<plugins>
 			<plugin>
@@ -126,7 +140,8 @@
 					</excludes>
 				</configuration>
 			</plugin>
-		</plugins>
-	</build>
 
+		</plugins>
+
+	</build>
 </project>

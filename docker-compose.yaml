@@ -19,10 +19,13 @@ services:
   app:
     build:
       context: .
-      target: prod
     container_name: inti-backend
     depends_on:
         db:
             condition: service_healthy
     ports:
       - "8080:8080"
+    env_file:
+      - .env
+    environment:
+      - SPRING_PROFILES_ACTIVE=local
