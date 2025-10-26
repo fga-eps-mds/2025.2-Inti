@@ -15,10 +15,8 @@ import java.util.UUID;
 
 public interface PostRepository extends JpaRepository<Post, UUID> {
 
-    // @Query("select p from post p where p.profile.id = :profileId and p.deletedAt
-    // is null")
-    // @Param(value = "profileId")
-    Page<Post> findAllByProfileIdAndNotDeleted(UUID profileId, Pageable pageable);
+    @Query("select p from Post p where p.profile.id = :profileId and p.deletedAt is null")
+    Page<Post> findAllByProfileIdAndNotDeleted(@Param("profileId") UUID profileId, Pageable pageable);
 
     Optional<Post> findById(UUID id);
 

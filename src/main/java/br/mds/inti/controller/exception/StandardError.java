@@ -11,7 +11,7 @@ import lombok.Data;
 @AllArgsConstructor
 public class StandardError {
 
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss'Z'")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "uuuu-MM-dd'T'HH:mm:ss'Z'", timezone = "UTC")
     private Instant timeStamp;
 
     private Integer status;

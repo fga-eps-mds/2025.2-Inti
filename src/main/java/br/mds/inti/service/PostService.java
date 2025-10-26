@@ -4,7 +4,6 @@ import br.mds.inti.model.dto.PostResponse;
 import br.mds.inti.model.entity.Post;
 import br.mds.inti.model.entity.Profile;
 import br.mds.inti.repositories.PostRepository;
-import br.mds.inti.service.exceptions.PostNotFoundException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -66,14 +65,12 @@ public class PostService {
 
         Page<Post> postByprofile = postRepository.findAllByProfileIdAndNotDeleted(profileId, peageble);
 
-        if (!postByprofile.isEmpty()) {
-            return postByprofile.map(post -> new PostResponse(post.getId(),
-                    post.getBlobName(),
-                    post.getDescription(),
-                    post.getLikesCount(),
-                    post.getCreatedAt()));
-        }
-        throw new PostNotFoundException(profileId);
+        return postByprofile.map(post -> new PostResponse(post.getId(),
+                post.getBlobName(),
+                post.getDescription(),
+                post.getLikesCount(),
+                post.getCreatedAt().toString()));
+
     }
 
 }
