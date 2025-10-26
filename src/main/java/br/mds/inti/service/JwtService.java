@@ -10,7 +10,7 @@ import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.exceptions.JWTVerificationException;
 import com.auth0.jwt.interfaces.DecodedJWT;
 
-import br.mds.inti.model.Profile;
+import br.mds.inti.model.entity.Profile;
 
 @Service
 public class JwtService {
@@ -38,7 +38,7 @@ public class JwtService {
             DecodedJWT decodedJWT = JWT.require(Algorithm.HMAC256(secret))
                     .build()
                     .verify(token);
-            return decodedJWT.getSubject(); // ← Retorna o username
+            return decodedJWT.getSubject();
         } catch (JWTVerificationException e) {
             throw new RuntimeException("Token inválido ou expirado");
         }

@@ -4,10 +4,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import br.mds.inti.model.dto.auth.ProfileResponse;
+import br.mds.inti.model.dto.ProfileResponse;
 import br.mds.inti.service.ProfileService;
 
 @RestController
@@ -17,9 +19,14 @@ public class ProfileController {
     @Autowired
     private ProfileService profileService;
 
-    @GetMapping("/testando")
+    @GetMapping("/me")
     public ResponseEntity<ProfileResponse> getMe() {
         return ResponseEntity.ok().body(profileService.getProfile());
+    }
+
+    @GetMapping("/{username}")
+    public ResponseEntity<ProfileResponse> getPublicProfile(@PathVariable String username) {
+        return ResponseEntity.ok().body(profileService.getProfileByUsername(username));
     }
 
     @GetMapping("/string/teste/user")
