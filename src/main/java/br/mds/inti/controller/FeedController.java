@@ -10,11 +10,6 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/feed")
 public class FeedController {
 
-    @GetMapping("/hello")
-    public ResponseEntity<String> hello() {
-        return ResponseEntity.ok("Hello s");
-    }
-
     @GetMapping("/organization")
     @PreAuthorize("hasRole('ORGANIZATION')")
     public String getOrganizationDashboard() {

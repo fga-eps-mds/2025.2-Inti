@@ -1,24 +1,16 @@
-package br.mds.inti.model;
+package br.mds.inti.model.entity;
+
+import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
-
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToMany;
-import jakarta.persistence.Table;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
 
 @Data
 @NoArgsConstructor
@@ -39,8 +31,8 @@ public class Event {
     @Column(name = "title", nullable = false, length = 255)
     private String title;
 
-    @Column(name = "img_link", nullable = true, length = 255)
-    private String imgLink;
+    @Column(name = "blob_name", nullable = true, length = 255)
+    private String blobName;
 
     @Column(name = "event_time", nullable = false)
     private Instant eventTime;

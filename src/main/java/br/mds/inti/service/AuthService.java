@@ -1,17 +1,16 @@
 package br.mds.inti.service;
 
-import java.time.Instant;
-
+import br.mds.inti.model.dto.auth.LoginRequest;
+import br.mds.inti.model.dto.auth.ProfileResponse;
+import br.mds.inti.model.dto.auth.RegisterRequest;
+import br.mds.inti.model.entity.Profile;
+import br.mds.inti.model.enums.ProfileType;
+import br.mds.inti.repositories.ProfileRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import br.mds.inti.model.dto.auth.LoginRequest;
-import br.mds.inti.model.dto.auth.ProfileResponse;
-import br.mds.inti.model.dto.auth.RegisterRequest;
-import br.mds.inti.model.Profile;
-import br.mds.inti.model.enums.ProfileType;
-import br.mds.inti.repositories.ProfileRepository;
+import java.time.Instant;
 
 @Service
 public class AuthService {
