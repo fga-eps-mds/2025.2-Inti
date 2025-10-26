@@ -1,10 +1,15 @@
 package br.mds.inti.service;
 
+import br.mds.inti.model.dto.PostResponse;
 import br.mds.inti.model.entity.Post;
 import br.mds.inti.model.entity.Profile;
 import br.mds.inti.repositories.PostRepository;
+import br.mds.inti.service.exceptions.PostNotFoundException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -47,7 +52,8 @@ public class PostService {
     public void deletePost(Profile profile, UUID postId) {
 
         Optional<Post> postOptional = postRepository.findById(postId);
-        if (postOptional.isEmpty()) throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Post not found");
+        if (postOptional.isEmpty())
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Post not found");
 
         Post post = postOptional.get();
         if (post.getProfile().getId() != profile.getId())
@@ -55,4 +61,19 @@ public class PostService {
 
         postRepository.softDeletePost(postId);
     }
+
+    public Page<PostResponse> getPostByIdProfile(UUID profileId, Pageable peageble) {
+
+        Page<Post> postByprofile = postRepository.findAllByProfileIdAndNotDeleted(profileId, peageble);
+
+        if (!postByprofile.isEmpty()) {
+            return postByprofile.map(post -> new PostResponse(post.getId(),
+                    post.getBlobName(),
+                    post.getDescription(),
+                    post.getLikesCount(),
+                    post.getCreatedAt()));
+        }
+        throw new PostNotFoundException(profileId);
+    }
+
 }

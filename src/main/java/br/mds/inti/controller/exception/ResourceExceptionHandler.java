@@ -7,6 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
+import br.mds.inti.service.exceptions.PostNotFoundException;
 import br.mds.inti.service.exceptions.ProfileNotFoundException;
 import jakarta.servlet.http.HttpServletRequest;
 
@@ -24,4 +25,14 @@ public class ResourceExceptionHandler {
         return ResponseEntity.status(status).body(err);
     }
 
+    @ExceptionHandler(PostNotFoundException.class)
+    public ResponseEntity<StandardError> postNotFound(PostNotFoundException e, HttpServletRequest request) {
+
+        String error = "post not found";
+        HttpStatus status = HttpStatus.NOT_FOUND;
+        StandardError err = new StandardError(Instant.now(), status.value(), error, e.getMessage(),
+                request.getRequestURI());
+
+        return ResponseEntity.status(status).body(err);
+    }
 }

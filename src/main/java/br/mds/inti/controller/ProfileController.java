@@ -20,13 +20,15 @@ public class ProfileController {
     private ProfileService profileService;
 
     @GetMapping("/me")
-    public ResponseEntity<ProfileResponse> getMe() {
-        return ResponseEntity.ok().body(profileService.getProfile());
+    public ResponseEntity<ProfileResponse> getMe(@RequestParam("size") Integer size,
+            @RequestParam("page") Integer page) {
+        return ResponseEntity.ok().body(profileService.getProfile(page, size));
     }
 
     @GetMapping("/{username}")
-    public ResponseEntity<ProfileResponse> getPublicProfile(@PathVariable String username) {
-        return ResponseEntity.ok().body(profileService.getProfileByUsername(username));
+    public ResponseEntity<ProfileResponse> getPublicProfile(@PathVariable String username,
+            @RequestParam("size") Integer size, @RequestParam("page") Integer page) {
+        return ResponseEntity.ok().body(profileService.getProfileByUsername(username, page, size));
     }
 
     @GetMapping("/string/teste/user")
