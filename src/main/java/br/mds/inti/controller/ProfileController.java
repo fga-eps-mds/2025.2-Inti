@@ -1,14 +1,26 @@
 package br.mds.inti.controller;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import br.mds.inti.model.dto.auth.ProfileResponse;
+import br.mds.inti.service.ProfileService;
+
 @RestController
 @RequestMapping("/profiles")
 public class ProfileController {
+
+    @Autowired
+    private ProfileService profileService;
+
+    @GetMapping("/testando")
+    public ResponseEntity<ProfileResponse> getMe() {
+        return ResponseEntity.ok().body(profileService.getProfile());
+    }
 
     @GetMapping("/string/teste/user")
     public ResponseEntity<String> getString() {

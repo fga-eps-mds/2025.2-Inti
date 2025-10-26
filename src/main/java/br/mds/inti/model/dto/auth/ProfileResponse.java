@@ -1,19 +1,6 @@
 package br.mds.inti.model.dto.auth;
 
-import java.time.Instant;
-import java.util.UUID;
-
-import br.mds.inti.model.enums.ProfileType;
-
-public record ProfileResponse(
-                UUID id,
-                String username,
-                String name,
-                String email,
-                String jwt,
-                ProfileType type,
-                Instant createdAt
-
-) {
+public record ProfileResponse(String name, String username, String profile_picture_url, String bio,
+        Integer followersCount, Integer followingCount) {
 
 }

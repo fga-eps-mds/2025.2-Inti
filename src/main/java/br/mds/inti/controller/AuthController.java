@@ -1,7 +1,7 @@
 package br.mds.inti.controller;
 
 import br.mds.inti.model.dto.auth.LoginRequest;
-import br.mds.inti.model.dto.auth.ProfileResponse;
+import br.mds.inti.model.dto.auth.ProfileCreationResponse;
 import br.mds.inti.model.dto.auth.RegisterRequest;
 import br.mds.inti.model.entity.Profile;
 import br.mds.inti.service.AuthService;
@@ -31,8 +31,8 @@ public class AuthController {
     }
 
     @PostMapping("/register")
-    public ResponseEntity<ProfileResponse> register(@RequestBody RegisterRequest request) {
-        ProfileResponse response = authService.register(request);
+    public ResponseEntity<ProfileCreationResponse> register(@RequestBody RegisterRequest request) {
+        ProfileCreationResponse response = authService.register(request);
         URI uri = ServletUriComponentsBuilder.fromCurrentRequest()
                 .path("/{id}")
                 .buildAndExpand(response.id())

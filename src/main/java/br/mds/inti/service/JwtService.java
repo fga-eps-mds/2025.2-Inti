@@ -7,6 +7,10 @@ import org.springframework.stereotype.Service;
 
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
+import com.auth0.jwt.exceptions.JWTVerificationException;
+import com.auth0.jwt.interfaces.DecodedJWT;
+
+import br.mds.inti.model.Profile;
 
 @Service
 public class JwtService {
@@ -17,23 +21,26 @@ public class JwtService {
     private long expirationMillis = 1000L * 60 * 60 * 24 * 30;
     private Date expiresAt = new Date(System.currentTimeMillis() + expirationMillis);
 
-    public String generateToken(String email) {
+    public String generateToken(Profile profile) {
 
         return JWT.create()
-                .withSubject(email)
+                .withSubject(profile.getUsername())
                 .withExpiresAt(expiresAt)
                 .sign(Algorithm.HMAC256(secret));
     }
 
     public String validateToken(String token) {
+        return extractUsername(token);
+    }
+
+    private String extractUsername(String token) {
         try {
-            return JWT.require(Algorithm.HMAC256(secret)).build()
-                    .verify(token)
-                    .getSubject();
-
-        } catch (Exception e) {
-
-            return null;
+            DecodedJWT decodedJWT = JWT.require(Algorithm.HMAC256(secret))
+                    .build()
+                    .verify(token);
+            return decodedJWT.getSubject(); // ← Retorna o username
+        } catch (JWTVerificationException e) {
+            throw new RuntimeException("Token inválido ou expirado");
         }
     }
 
