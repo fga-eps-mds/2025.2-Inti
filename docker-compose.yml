@@ -1,0 +1,16 @@
+version: '3.8'
+
+services:
+
+  aura_mobile:
+    build: .
+    container_name: aura_mobile_app
+    ports:
+      - "8081:8081"
+    volumes:
+      - .:/app
+      - /app/node_modules
+
+volumes:
+  node_modules: {}
+
