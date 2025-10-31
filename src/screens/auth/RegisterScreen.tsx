@@ -15,7 +15,7 @@ export default function RegisterScreen({ navigation }: AuthScreenProps<'Register
     const hasNumber = /\d/;
     const hasUpper = /[A-Z]/;
 
-    
+
 
 
     const handleRegister = async () => {
@@ -24,19 +24,19 @@ export default function RegisterScreen({ navigation }: AuthScreenProps<'Register
             return;
         }
 
-        if (!emailRegex.test(email.trim())){ 
-          Alert.alert('Erro', 'Por favor insira um email válido.');
-          return;
+        if (!emailRegex.test(email.trim())) {
+            Alert.alert('Erro', 'Por favor insira um email válido.');
+            return;
         }
-        
-        if (!hasNumber.test(password)){
-          Alert.alert('Erro', 'A senha deve conter um número.');
-          return;
+
+        if (!hasNumber.test(password)) {
+            Alert.alert('Erro', 'A senha deve conter um número.');
+            return;
         }
-        
-        if (!hasUpper.test(password)){
-          Alert.alert('Erro', 'A senha deve conter uma letra maiúscula.');
-          return;
+
+        if (!hasUpper.test(password)) {
+            Alert.alert('Erro', 'A senha deve conter uma letra maiúscula.');
+            return;
         }
 
         if (password !== confirmPassword) {
@@ -56,52 +56,59 @@ export default function RegisterScreen({ navigation }: AuthScreenProps<'Register
         <View style={styles.container}>
             <Text style={styles.title}>Cadastro</Text>
 
-            <TextInput
-                style={styles.input}
-                placeholder="Username"
-                value={username}
-                onChangeText={setUsername}
-                autoCapitalize="none"
-            />
+            {/* <View style={styles.form}> */}
+                <Text>Username</Text>
+                <TextInput
+                    style={[
+                        styles.input,
+                    ]}
+                    placeholder="Ex: Musa UnB"
+                    value={username}
+                    onChangeText={setUsername}
+                    autoCapitalize="none"
+                />
 
-            <TextInput
-                style={styles.input}
-                placeholder="Email"
-                value={email}
-                onChangeText={setEmail}
-                keyboardType="email-address"
-                autoCapitalize="none"
-            />
-            <TextInput
-                style={styles.input}
-                placeholder="Senha"
-                value={password}
-                onChangeText={setPassword}
-                secureTextEntry={!showPassword}
-            />
-            <TextInput
-                style={styles.input}
-                placeholder="Confirmar Senha"
-                value={confirmPassword}
-                onChangeText={setConfirmPassword}
-                secureTextEntry={!showPassword}
-            />
+                <TextInput
+                    style={styles.input}
+                    placeholder="Email"
+                    value={email}
+                    onChangeText={setEmail}
+                    keyboardType="email-address"
+                    autoCapitalize="none"
+                />
+                <TextInput
+                    style={styles.input}
+                    placeholder="Senha"
+                    value={password}
+                    onChangeText={setPassword}
+                    secureTextEntry={!showPassword}
+                />
+                <TextInput
+                    style={styles.input}
+                    placeholder="Confirmar Senha"
+                    value={confirmPassword}
+                    onChangeText={setConfirmPassword}
+                    secureTextEntry={!showPassword}
+                />
+            {/* </View> */}
+
             <View style={styles.inputCheckbox}>
                 <Pressable
                     style={[
                         styles.checkbox,
                         showPassword && styles.checkboxChecked
                     ]}
-                    onPress={() => {setShowPassword(!showPassword)
-                    // console.log('showPassword:', !showPassword);
+                    onPress={() => {
+                        setShowPassword(!showPassword)
+                        // console.log('showPassword:', !showPassword);
 
-                  }}
+                    }}
                 />
 
-                <Text style = {styles.textCheckbox}>Mostrar senha</Text>
+                <Text style={styles.textCheckbox}>Mostrar senha</Text>
             </View>
 
-            <View style= {styles.inputCheckbox}>
+            <View style={styles.inputCheckbox}>
                 <Pressable
                     style={[
                         styles.checkbox,
@@ -109,7 +116,7 @@ export default function RegisterScreen({ navigation }: AuthScreenProps<'Register
                     ]}
                     onPress={() => setAccountType(!accountType)}
                 />
-                <Text style = {styles.textCheckbox}>Sua conta é organizacional?</Text>
+                <Text style={styles.textCheckbox}>Sua conta é organizacional?</Text>
             </View>
 
 
@@ -129,26 +136,38 @@ const styles = StyleSheet.create({
         flex: 1,
         justifyContent: 'flex-start',
         alignItems: 'center',
-        padding: 20,
+        padding: 30,
         backgroundColor: '#fff',
+        paddingTop: 104,
     },
     title: {
-        fontSize: 24,
+        fontSize: 48,
         fontWeight: 'bold',
         marginBottom: 20,
         color: '#592E83',
         alignItems: 'flex-start'
-        
+
     },
+    // form: {
+        
+    // },
     input: {
         width: '100%',
         height: 50,
         borderColor: 'gray',
-        borderWidth: 1,
-        borderRadius: 8,
+        borderRadius: 11,
         paddingHorizontal: 10,
         marginBottom: 15,
+        borderWidth: undefined,
+        backgroundColor: '#F2EBFB',
+        paddingLeft: 20,
     },
+
+    inputFocused: {
+        borderWidth: 1,
+        borderColor: '#592E83',
+    },
+
     linkText: {
         color: '#6200EE',
         marginTop: 20,
@@ -178,6 +197,6 @@ const styles = StyleSheet.create({
     },
 
     textCheckbox: {
-        
+
     },
 });
