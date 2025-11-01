@@ -27,7 +27,7 @@ export PATH=$PATH:$ANDROID_HOME/emulator:$ANDROID_HOME/platform-tools
 
 # PASSO 2: Iniciar o container Docker com o Metro Bundler PRIMEIRO
 log "Iniciando o container Docker com docker-compose..."
-docker-compose up -d --build
+docker-compose up -d 
 
 # PASSO 3: Aguardar a PORTA 8081 ficar pronta
 log "Aguardando a porta 8081 ficar pronta..."
