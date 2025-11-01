@@ -41,7 +41,7 @@ echo [INFO] Emulador pronto!
 
 :: Passo 5: Iniciar o container Docker com o Metro Bundler
 echo [INFO] Iniciando o container Docker com docker-compose...
-docker-compose up -d --build
+docker-compose up -d 
 
 :: Passo 6: Configurar o redirecionamento de porta
 echo [INFO] Configurando 'adb reverse' para a porta 8081...
