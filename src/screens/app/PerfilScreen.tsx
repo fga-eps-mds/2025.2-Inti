@@ -4,7 +4,10 @@ import { scale } from 'react-native-size-matters';
 
 export default function PerfilScreen() {
   return (
-    <ScrollView contentContainerStyle={styles.container}>
+    <ScrollView
+      style={styles.container}
+      contentContainerStyle={styles.contentContainer}
+    >
       <View style={styles.header}>
         <View style={styles.containerProfile}>
           <Image
@@ -24,13 +27,232 @@ export default function PerfilScreen() {
           <Text style={styles.contactText}>MUSA@ALUNO.UNB.BR</Text>
           <Text style={styles.contactText}>Estudante de Direito</Text>
         </View>
-        {/* 
-
-      <Text style={styles.bio}>ESTUDANTE DE DIREITO</Text>
-
-      <View style={styles.postsSection}>
-        <Text style={styles.postsTitle}>POSTS</Text>
-      </View> */}
+      </View>
+      <View style={styles.feedSection}>
+        <View style={styles.containerLine}>
+          <Image
+            style={styles.image}
+            source={{
+              uri: 'https://i.pinimg.com/1200x/f6/c6/1d/f6c61dbd0154d004d46895ab014ed338.jpg',
+            }}
+          />
+          <Image
+            style={styles.image}
+            source={{
+              uri: 'https://i.pinimg.com/736x/25/7d/1d/257d1d2e68d3ba8fe97668124d31ccbb.jpg',
+            }}
+          />
+        </View>
+        <View style={styles.containerLine}>
+          <Image
+            style={styles.image}
+            source={{
+              uri: 'https://i.pinimg.com/1200x/f6/c6/1d/f6c61dbd0154d004d46895ab014ed338.jpg',
+            }}
+          />
+          <Image
+            style={styles.image}
+            source={{
+              uri: 'https://i.pinimg.com/736x/25/7d/1d/257d1d2e68d3ba8fe97668124d31ccbb.jpg',
+            }}
+          />
+        </View>
+        <View style={styles.containerLine}>
+          <Image
+            style={styles.image}
+            source={{
+              uri: 'https://i.pinimg.com/1200x/f6/c6/1d/f6c61dbd0154d004d46895ab014ed338.jpg',
+            }}
+          />
+          <Image
+            style={styles.image}
+            source={{
+              uri: 'https://i.pinimg.com/1200x/f6/c6/1d/f6c61dbd0154d004d46895ab014ed338.jpg',
+            }}
+          />
+        </View>
+        <View style={styles.containerLine}>
+          <Image
+            style={styles.image}
+            source={{
+              uri: 'https://i.pinimg.com/1200x/f6/c6/1d/f6c61dbd0154d004d46895ab014ed338.jpg',
+            }}
+          />
+          <Image
+            style={styles.image}
+            source={{
+              uri: 'https://i.pinimg.com/1200x/f6/c6/1d/f6c61dbd0154d004d46895ab014ed338.jpg',
+            }}
+          />
+        </View>
+        <View style={styles.containerLine}>
+          <Image
+            style={styles.image}
+            source={{
+              uri: 'https://i.pinimg.com/1200x/f6/c6/1d/f6c61dbd0154d004d46895ab014ed338.jpg',
+            }}
+          />
+          <Image
+            style={styles.image}
+            source={{
+              uri: 'https://i.pinimg.com/1200x/f6/c6/1d/f6c61dbd0154d004d46895ab014ed338.jpg',
+            }}
+          />
+        </View>
+        <View style={styles.containerLine}>
+          <Image
+            style={styles.image}
+            source={{
+              uri: 'https://i.pinimg.com/1200x/f6/c6/1d/f6c61dbd0154d004d46895ab014ed338.jpg',
+            }}
+          />
+          <Image
+            style={styles.image}
+            source={{
+              uri: 'https://i.pinimg.com/1200x/f6/c6/1d/f6c61dbd0154d004d46895ab014ed338.jpg',
+            }}
+          />
+        </View>
+        <View style={styles.containerLine}>
+          <Image
+            style={styles.image}
+            source={{
+              uri: 'https://i.pinimg.com/1200x/f6/c6/1d/f6c61dbd0154d004d46895ab014ed338.jpg',
+            }}
+          />
+          <Image
+            style={styles.image}
+            source={{
+              uri: 'https://i.pinimg.com/1200x/f6/c6/1d/f6c61dbd0154d004d46895ab014ed338.jpg',
+            }}
+          />
+        </View>
+        <View style={styles.containerLine}>
+          <Image
+            style={styles.image}
+            source={{
+              uri: 'https://i.pinimg.com/1200x/f6/c6/1d/f6c61dbd0154d004d46895ab014ed338.jpg',
+            }}
+          />
+          <Image
+            style={styles.image}
+            source={{
+              uri: 'https://i.pinimg.com/1200x/f6/c6/1d/f6c61dbd0154d004d46895ab014ed338.jpg',
+            }}
+          />
+        </View>
+        <View style={styles.containerLine}>
+          <Image
+            style={styles.image}
+            source={{
+              uri: 'https://i.pinimg.com/1200x/f6/c6/1d/f6c61dbd0154d004d46895ab014ed338.jpg',
+            }}
+          />
+          <Image
+            style={styles.image}
+            source={{
+              uri: 'https://i.pinimg.com/1200x/f6/c6/1d/f6c61dbd0154d004d46895ab014ed338.jpg',
+            }}
+          />
+        </View>
+        <View style={styles.containerLine}>
+          <Image
+            style={styles.image}
+            source={{
+              uri: 'https://i.pinimg.com/1200x/f6/c6/1d/f6c61dbd0154d004d46895ab014ed338.jpg',
+            }}
+          />
+          <Image
+            style={styles.image}
+            source={{
+              uri: 'https://i.pinimg.com/1200x/f6/c6/1d/f6c61dbd0154d004d46895ab014ed338.jpg',
+            }}
+          />
+        </View>
+        <View style={styles.containerLine}>
+          <Image
+            style={styles.image}
+            source={{
+              uri: 'https://i.pinimg.com/1200x/f6/c6/1d/f6c61dbd0154d004d46895ab014ed338.jpg',
+            }}
+          />
+          <Image
+            style={styles.image}
+            source={{
+              uri: 'https://i.pinimg.com/1200x/f6/c6/1d/f6c61dbd0154d004d46895ab014ed338.jpg',
+            }}
+          />
+        </View>
+        <View style={styles.containerLine}>
+          <Image
+            style={styles.image}
+            source={{
+              uri: 'https://i.pinimg.com/1200x/f6/c6/1d/f6c61dbd0154d004d46895ab014ed338.jpg',
+            }}
+          />
+          <Image
+            style={styles.image}
+            source={{
+              uri: 'https://i.pinimg.com/1200x/f6/c6/1d/f6c61dbd0154d004d46895ab014ed338.jpg',
+            }}
+          />
+        </View>
+        <View style={styles.containerLine}>
+          <Image
+            style={styles.image}
+            source={{
+              uri: 'https://i.pinimg.com/1200x/f6/c6/1d/f6c61dbd0154d004d46895ab014ed338.jpg',
+            }}
+          />
+          <Image
+            style={styles.image}
+            source={{
+              uri: 'https://i.pinimg.com/1200x/f6/c6/1d/f6c61dbd0154d004d46895ab014ed338.jpg',
+            }}
+          />
+        </View>
+        <View style={styles.containerLine}>
+          <Image
+            style={styles.image}
+            source={{
+              uri: 'https://i.pinimg.com/1200x/f6/c6/1d/f6c61dbd0154d004d46895ab014ed338.jpg',
+            }}
+          />
+          <Image
+            style={styles.image}
+            source={{
+              uri: 'https://i.pinimg.com/1200x/f6/c6/1d/f6c61dbd0154d004d46895ab014ed338.jpg',
+            }}
+          />
+        </View>
+        <View style={styles.containerLine}>
+          <Image
+            style={styles.image}
+            source={{
+              uri: 'https://i.pinimg.com/1200x/f6/c6/1d/f6c61dbd0154d004d46895ab014ed338.jpg',
+            }}
+          />
+          <Image
+            style={styles.image}
+            source={{
+              uri: 'https://i.pinimg.com/1200x/f6/c6/1d/f6c61dbd0154d004d46895ab014ed338.jpg',
+            }}
+          />
+        </View>
+        <View style={styles.containerLine}>
+          <Image
+            style={styles.image}
+            source={{
+              uri: 'https://i.pinimg.com/1200x/f6/c6/1d/f6c61dbd0154d004d46895ab014ed338.jpg',
+            }}
+          />
+          <Image
+            style={styles.image}
+            source={{
+              uri: 'https://i.pinimg.com/1200x/f6/c6/1d/f6c61dbd0154d004d46895ab014ed338.jpg',
+            }}
+          />
+        </View>
       </View>
     </ScrollView>
   );
@@ -38,11 +260,13 @@ export default function PerfilScreen() {
 
 const styles = StyleSheet.create({
   container: {
-    flexGrow: 1,
+    flex: 1,
     backgroundColor: '#FFFFFF',
-    alignItems: 'center',
+  },
+  contentContainer: {
     paddingTop: 49,
     paddingHorizontal: 20,
+    paddingBottom: 29,
   },
   header: {
     width: '100%',
@@ -91,17 +315,17 @@ const styles = StyleSheet.create({
     fontStyle: 'italic',
     marginBottom: 24,
   },
-  postsSection: {
-    borderTopWidth: 1,
-    borderTopColor: '#E0E0E0',
-    width: '90%',
-    paddingTop: 16,
-    alignItems: 'center',
+  feedSection: {
+    flex: 1,
+    gap: scale(20),
   },
-  postsTitle: {
-    fontSize: 18,
-    fontWeight: 'bold',
-    color: '#000',
-    marginBottom: 16,
+  containerLine: {
+    gap: scale(20),
+    flexDirection: 'row',
+  },
+  image: {
+    width: scale(148),
+    height: scale(148),
+    borderRadius: scale(20),
   },
 });
