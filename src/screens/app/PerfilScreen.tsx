@@ -1,8 +1,50 @@
-import React from 'react';
-import { Image, ScrollView, StyleSheet, Text, View } from 'react-native';
+import React, { useEffect, useState } from 'react';
+import {
+  ActivityIndicator,
+  Image,
+  ScrollView,
+  StyleSheet,
+  Text,
+  View,
+} from 'react-native';
 import { scale } from 'react-native-size-matters';
+import axios from 'axios';
+
+interface IPostsContract {
+  id: number;
+  src: {
+    portrait: string;
+  };
+  alt: string;
+}
 
 export default function PerfilScreen() {
+  const [loading, setLoading] = useState(true);
+  const [posts, setPosts] = useState<Array<IPostsContract>>([]);
+
+  useEffect(() => {
+    const handleGetPosts = async () => {
+      const response = await axios.get(
+        'https://api.pexels.com/v1/search?query=people',
+        {
+          headers: {
+            Authorization:
+              'ggmVotobVGiKdiJD4GkkfOkkz17VWQaylzQvUYHIhrkwW0Az0FCzDtnK',
+          },
+        },
+      );
+
+      console.log(response.data.photos);
+
+      setPosts(() => response.data.photos);
+      setLoading(() => false);
+    };
+
+    handleGetPosts();
+
+    console.log(posts);
+  }, []);
+
   return (
     <ScrollView
       style={styles.container}
@@ -11,9 +53,7 @@ export default function PerfilScreen() {
       <View style={styles.header}>
         <View style={styles.containerProfile}>
           <Image
-            source={{
-              uri: 'https://images.unsplash.com/photo-1566843972705-1aad0ee32f88?q=80&w=1470&auto=format&fit=crop',
-            }}
+            source={require('../../assets/imageProfile.png')}
             style={styles.profileImage}
           />
 
@@ -28,232 +68,23 @@ export default function PerfilScreen() {
           <Text style={styles.contactText}>Estudante de Direito</Text>
         </View>
       </View>
-      <View style={styles.feedSection}>
-        <View style={styles.containerLine}>
-          <Image
-            style={styles.image}
-            source={{
-              uri: 'https://i.pinimg.com/1200x/f6/c6/1d/f6c61dbd0154d004d46895ab014ed338.jpg',
-            }}
-          />
-          <Image
-            style={styles.image}
-            source={{
-              uri: 'https://i.pinimg.com/736x/25/7d/1d/257d1d2e68d3ba8fe97668124d31ccbb.jpg',
-            }}
-          />
+
+      {loading ? (
+        <ActivityIndicator color="#000" size={50} />
+      ) : (
+        <View style={styles.feedSection}>
+          {posts.map(postItem => (
+            <Image
+              key={postItem.id}
+              style={styles.image}
+              source={{
+                uri: postItem.src.portrait,
+              }}
+              alt={postItem.alt}
+            />
+          ))}
         </View>
-        <View style={styles.containerLine}>
-          <Image
-            style={styles.image}
-            source={{
-              uri: 'https://i.pinimg.com/1200x/f6/c6/1d/f6c61dbd0154d004d46895ab014ed338.jpg',
-            }}
-          />
-          <Image
-            style={styles.image}
-            source={{
-              uri: 'https://i.pinimg.com/736x/25/7d/1d/257d1d2e68d3ba8fe97668124d31ccbb.jpg',
-            }}
-          />
-        </View>
-        <View style={styles.containerLine}>
-          <Image
-            style={styles.image}
-            source={{
-              uri: 'https://i.pinimg.com/1200x/f6/c6/1d/f6c61dbd0154d004d46895ab014ed338.jpg',
-            }}
-          />
-          <Image
-            style={styles.image}
-            source={{
-              uri: 'https://i.pinimg.com/1200x/f6/c6/1d/f6c61dbd0154d004d46895ab014ed338.jpg',
-            }}
-          />
-        </View>
-        <View style={styles.containerLine}>
-          <Image
-            style={styles.image}
-            source={{
-              uri: 'https://i.pinimg.com/1200x/f6/c6/1d/f6c61dbd0154d004d46895ab014ed338.jpg',
-            }}
-          />
-          <Image
-            style={styles.image}
-            source={{
-              uri: 'https://i.pinimg.com/1200x/f6/c6/1d/f6c61dbd0154d004d46895ab014ed338.jpg',
-            }}
-          />
-        </View>
-        <View style={styles.containerLine}>
-          <Image
-            style={styles.image}
-            source={{
-              uri: 'https://i.pinimg.com/1200x/f6/c6/1d/f6c61dbd0154d004d46895ab014ed338.jpg',
-            }}
-          />
-          <Image
-            style={styles.image}
-            source={{
-              uri: 'https://i.pinimg.com/1200x/f6/c6/1d/f6c61dbd0154d004d46895ab014ed338.jpg',
-            }}
-          />
-        </View>
-        <View style={styles.containerLine}>
-          <Image
-            style={styles.image}
-            source={{
-              uri: 'https://i.pinimg.com/1200x/f6/c6/1d/f6c61dbd0154d004d46895ab014ed338.jpg',
-            }}
-          />
-          <Image
-            style={styles.image}
-            source={{
-              uri: 'https://i.pinimg.com/1200x/f6/c6/1d/f6c61dbd0154d004d46895ab014ed338.jpg',
-            }}
-          />
-        </View>
-        <View style={styles.containerLine}>
-          <Image
-            style={styles.image}
-            source={{
-              uri: 'https://i.pinimg.com/1200x/f6/c6/1d/f6c61dbd0154d004d46895ab014ed338.jpg',
-            }}
-          />
-          <Image
-            style={styles.image}
-            source={{
-              uri: 'https://i.pinimg.com/1200x/f6/c6/1d/f6c61dbd0154d004d46895ab014ed338.jpg',
-            }}
-          />
-        </View>
-        <View style={styles.containerLine}>
-          <Image
-            style={styles.image}
-            source={{
-              uri: 'https://i.pinimg.com/1200x/f6/c6/1d/f6c61dbd0154d004d46895ab014ed338.jpg',
-            }}
-          />
-          <Image
-            style={styles.image}
-            source={{
-              uri: 'https://i.pinimg.com/1200x/f6/c6/1d/f6c61dbd0154d004d46895ab014ed338.jpg',
-            }}
-          />
-        </View>
-        <View style={styles.containerLine}>
-          <Image
-            style={styles.image}
-            source={{
-              uri: 'https://i.pinimg.com/1200x/f6/c6/1d/f6c61dbd0154d004d46895ab014ed338.jpg',
-            }}
-          />
-          <Image
-            style={styles.image}
-            source={{
-              uri: 'https://i.pinimg.com/1200x/f6/c6/1d/f6c61dbd0154d004d46895ab014ed338.jpg',
-            }}
-          />
-        </View>
-        <View style={styles.containerLine}>
-          <Image
-            style={styles.image}
-            source={{
-              uri: 'https://i.pinimg.com/1200x/f6/c6/1d/f6c61dbd0154d004d46895ab014ed338.jpg',
-            }}
-          />
-          <Image
-            style={styles.image}
-            source={{
-              uri: 'https://i.pinimg.com/1200x/f6/c6/1d/f6c61dbd0154d004d46895ab014ed338.jpg',
-            }}
-          />
-        </View>
-        <View style={styles.containerLine}>
-          <Image
-            style={styles.image}
-            source={{
-              uri: 'https://i.pinimg.com/1200x/f6/c6/1d/f6c61dbd0154d004d46895ab014ed338.jpg',
-            }}
-          />
-          <Image
-            style={styles.image}
-            source={{
-              uri: 'https://i.pinimg.com/1200x/f6/c6/1d/f6c61dbd0154d004d46895ab014ed338.jpg',
-            }}
-          />
-        </View>
-        <View style={styles.containerLine}>
-          <Image
-            style={styles.image}
-            source={{
-              uri: 'https://i.pinimg.com/1200x/f6/c6/1d/f6c61dbd0154d004d46895ab014ed338.jpg',
-            }}
-          />
-          <Image
-            style={styles.image}
-            source={{
-              uri: 'https://i.pinimg.com/1200x/f6/c6/1d/f6c61dbd0154d004d46895ab014ed338.jpg',
-            }}
-          />
-        </View>
-        <View style={styles.containerLine}>
-          <Image
-            style={styles.image}
-            source={{
-              uri: 'https://i.pinimg.com/1200x/f6/c6/1d/f6c61dbd0154d004d46895ab014ed338.jpg',
-            }}
-          />
-          <Image
-            style={styles.image}
-            source={{
-              uri: 'https://i.pinimg.com/1200x/f6/c6/1d/f6c61dbd0154d004d46895ab014ed338.jpg',
-            }}
-          />
-        </View>
-        <View style={styles.containerLine}>
-          <Image
-            style={styles.image}
-            source={{
-              uri: 'https://i.pinimg.com/1200x/f6/c6/1d/f6c61dbd0154d004d46895ab014ed338.jpg',
-            }}
-          />
-          <Image
-            style={styles.image}
-            source={{
-              uri: 'https://i.pinimg.com/1200x/f6/c6/1d/f6c61dbd0154d004d46895ab014ed338.jpg',
-            }}
-          />
-        </View>
-        <View style={styles.containerLine}>
-          <Image
-            style={styles.image}
-            source={{
-              uri: 'https://i.pinimg.com/1200x/f6/c6/1d/f6c61dbd0154d004d46895ab014ed338.jpg',
-            }}
-          />
-          <Image
-            style={styles.image}
-            source={{
-              uri: 'https://i.pinimg.com/1200x/f6/c6/1d/f6c61dbd0154d004d46895ab014ed338.jpg',
-            }}
-          />
-        </View>
-        <View style={styles.containerLine}>
-          <Image
-            style={styles.image}
-            source={{
-              uri: 'https://i.pinimg.com/1200x/f6/c6/1d/f6c61dbd0154d004d46895ab014ed338.jpg',
-            }}
-          />
-          <Image
-            style={styles.image}
-            source={{
-              uri: 'https://i.pinimg.com/1200x/f6/c6/1d/f6c61dbd0154d004d46895ab014ed338.jpg',
-            }}
-          />
-        </View>
-      </View>
+      )}
     </ScrollView>
   );
 }
@@ -318,14 +149,16 @@ const styles = StyleSheet.create({
   feedSection: {
     flex: 1,
     gap: scale(20),
+    flexDirection: 'row',
+    flexWrap: 'wrap',
   },
   containerLine: {
     gap: scale(20),
     flexDirection: 'row',
   },
   image: {
-    width: scale(148),
-    height: scale(148),
+    width: scale(145),
+    height: scale(145),
     borderRadius: scale(20),
   },
 });
