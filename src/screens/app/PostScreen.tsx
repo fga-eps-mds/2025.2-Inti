@@ -1,33 +1,86 @@
-
-import {StyleSheet,Alert,Text, TextInput, TouchableOpacity, ScrollView, Button, ActivityIndicator, Image} from 'react-native';
+import {
+  StyleSheet,
+  Alert,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  ScrollView,
+  Button,
+  ActivityIndicator,
+  Image,
+} from 'react-native';
 import { useAuth } from '../../hooks/useAuth';
-import { Asset, ImagePickerResponse, launchImageLibrary } from 'react-native-image-picker';
+import {
+  Asset,
+  ImagePickerResponse,
+  launchImageLibrary,
+  launchCamera,
+} from 'react-native-image-picker';
 import { AppTabScreenProps } from '../../@types/navigation';
 import { useState } from 'react';
+import { Platform } from 'react-native';
+import { check, request, PERMISSIONS, RESULTS } from 'react-native-permissions';
 
-
-export default function PostScreen({ navigation }: AppTabScreenProps<'NewPost'>) {
+export default function PostScreen({
+  navigation,
+}: AppTabScreenProps<'NewPost'>) {
   const [description, setDescription] = useState('');
   const [image, setImage] = useState<Asset | null>(null);
   const [loading, setLoading] = useState(false);
-  const { token } = useAuth();  
-  
+  const { token } = useAuth();
 
-  const handleChoosePhoto = () => {
-    launchImageLibrary({ mediaType: 'photo', quality: 0.7 }, (response: ImagePickerResponse) => {
-      if (response.didCancel) {
-        console.log('Usuário cancelou a seleção de imagem');
-      } else if (response.errorCode) {
-        console.log('Erro do ImagePicker: ', response.errorMessage);
-        Alert.alert('Erro ao selecionar imagem', response.errorMessage);
-      } else if (response.assets && response.assets.length > 0) {
-        setImage(response.assets[0]);
+  const requestGalleryPermission = async () => {
+    try {
+      if (Platform.OS === 'android') {
+        const permission =
+          Platform.Version >= 33
+            ? PERMISSIONS.ANDROID.READ_MEDIA_IMAGES
+            : PERMISSIONS.ANDROID.READ_EXTERNAL_STORAGE;
+
+        const result = await request(permission);
+        return result === RESULTS.GRANTED;
       }
-    });
-    
+
+      if (Platform.OS === 'ios') {
+        // para iOS 14+ pode retornar 'limited' quando o usuário permite fotos selecionadas
+        const result = await request(PERMISSIONS.IOS.PHOTO_LIBRARY);
+        return result === RESULTS.GRANTED || result === RESULTS.LIMITED;
+      }
+
+      // outros platforms (web etc.) não suportados aqui
+      return false;
+    } catch (err) {
+      console.log('Erro ao pedir permissão: ', err);
+      return false;
+    }
   };
 
-const handleSubmit = async () => {
+  const handleChoosePhoto = async () => {
+    const granted = await requestGalleryPermission();
+    if (!granted) {
+      Alert.alert(
+        'Permissão necessária',
+        'Precisamos de permissão para acessar a galeria para selecionar uma imagem.',
+      );
+      return;
+    }
+
+    launchImageLibrary(
+      { mediaType: 'photo', quality: 0.7 },
+      (response: ImagePickerResponse) => {
+        if (response.didCancel) {
+          console.log('Usuário cancelou a seleção de imagem');
+        } else if (response.errorCode) {
+          console.log('Erro do ImagePicker: ', response.errorMessage);
+          Alert.alert('Erro ao selecionar imagem', response.errorMessage);
+        } else if (response.assets && response.assets.length > 0) {
+          setImage(response.assets[0]);
+        }
+      },
+    );
+  };
+
+  const handleSubmit = async () => {
     if (!image || !image.uri || !image.type || !image.fileName) {
       Alert.alert('Erro', 'Por favor, selecione uma imagem válida.');
       return;
@@ -37,12 +90,12 @@ const handleSubmit = async () => {
       return;
     }
     if (!token) {
-        Alert.alert('Erro', 'Você não está autenticado.');
-        return;
+      Alert.alert('Erro', 'Você não está autenticado.');
+      return;
     }
-    
+
     setLoading(true);
-  }
+  };
 
   return (
     <ScrollView contentContainerStyle={styles.container}>
@@ -73,7 +126,7 @@ const handleSubmit = async () => {
         <Button
           title="Publicar"
           onPress={handleSubmit}
-          disabled={!image || !description.trim()} 
+          disabled={!image || !description.trim()}
           color="#592E83"
         />
       )}
@@ -83,10 +136,10 @@ const handleSubmit = async () => {
 
 const styles = StyleSheet.create({
   container: {
-    flexGrow: 1, 
+    flexGrow: 1,
     padding: 20,
     backgroundColor: '#fff',
-    alignItems: 'center', 
+    alignItems: 'center',
   },
   mainTitle: {
     fontSize: 35,
@@ -117,20 +170,20 @@ const styles = StyleSheet.create({
   },
   input: {
     width: '100%',
-    minHeight: 100, 
+    minHeight: 100,
     borderColor: '#ccc',
     borderWidth: 1,
     borderRadius: 20,
     paddingHorizontal: 15,
-    paddingVertical: 10, 
+    paddingVertical: 10,
     marginBottom: 25,
     fontSize: 16,
-    textAlignVertical: 'top', 
+    textAlignVertical: 'top',
     color: '#333',
   },
-  description:{
+  description: {
     fontSize: 25,
     marginBottom: 30,
     color: '#592E83',
-  }
+  },
 });
