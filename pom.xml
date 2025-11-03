@@ -30,8 +30,11 @@
 	<properties>
 		<java.version>25</java.version>
 		<maven.compiler.target>25</maven.compiler.target>
-        <spring-cloud-azure.version>6.0.0</spring-cloud-azure.version>
+		<spring-cloud-azure.version>6.0.0</spring-cloud-azure.version>
+
+		<!-- REMOVIDA a propriedade spring.profiles.active -->
 	</properties>
+
 	<dependencies>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
@@ -99,30 +102,42 @@
 			<artifactId>java-jwt</artifactId>
 			<version>4.5.0</version>
 		</dependency>
-        <dependency>
-            <groupId>com.h2database</groupId>
-            <artifactId>h2</artifactId>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>com.azure.spring</groupId>
-            <artifactId>spring-cloud-azure-starter-storage</artifactId>
-        </dependency>
+		<dependency>
+			<groupId>com.h2database</groupId>
+			<artifactId>h2</artifactId>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>com.azure.spring</groupId>
+			<artifactId>spring-cloud-azure-starter-storage</artifactId>
+		</dependency>
 	</dependencies>
 
-    <dependencyManagement>
-        <dependencies>
-            <dependency>
-                <groupId>com.azure.spring</groupId>
-                <artifactId>spring-cloud-azure-dependencies</artifactId>
-                <version>${spring-cloud-azure.version}</version>
-                <type>pom</type>
-                <scope>import</scope>
-            </dependency>
-        </dependencies>
-    </dependencyManagement>
+	<dependencyManagement>
+		<dependencies>
+			<dependency>
+				<groupId>com.azure.spring</groupId>
+				<artifactId>spring-cloud-azure-dependencies</artifactId>
+				<version>${spring-cloud-azure.version}</version>
+				<type>pom</type>
+				<scope>import</scope>
+			</dependency>
+		</dependencies>
+	</dependencyManagement>
 
-    <build>
+	<profiles>
+		<profile>
+			<id>local</id>
+			<activation>
+				<activeByDefault>true</activeByDefault>
+			</activation>
+		</profile>
+		<profile>
+			<id>prod</id>
+		</profile>
+	</profiles>
+
+	<build>
 		<plugins>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
@@ -150,5 +165,4 @@
 			</plugin>
 		</plugins>
 	</build>
-
 </project>
