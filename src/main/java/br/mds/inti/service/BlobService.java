@@ -12,6 +12,9 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.io.IOException;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.UUID;
 
 @Service
 @Slf4j
@@ -36,12 +39,16 @@ public class BlobService {
         }
     }
 
-    public String uploadImageWithDescription(MultipartFile file) throws IOException {
+    public String uploadImageWithDescription(UUID userId, MultipartFile file) throws IOException {
 
         if (!isImage(file)) throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "File is not an image");
 
-        String blobFilename = file.getOriginalFilename();
-        if (blobFilename == null) throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Image filename is null");
+        String originalFilename = file.getOriginalFilename();
+        if (originalFilename == null)
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Image filename is null");
+
+        String fileExtension = getFileExtension(originalFilename);
+        String blobFilename = generateUniqueName(userId, fileExtension);
 
         BlobClient blobClient = blobServiceClient
                 .getBlobContainerClient(containerName)
@@ -49,8 +56,7 @@ public class BlobService {
 
         blobClient.upload(file.getInputStream(), file.getSize(), true);
 
-        String blobName = blobClient.getBlobName();
-        return blobName;
+        return blobClient.getBlobName();
     }
 
     private boolean isImage(MultipartFile file) {
@@ -67,5 +73,19 @@ public class BlobService {
                 .getBlobClient(blobName);
 
         blobClient.delete();
+    }
+
+    private String generateUniqueName(UUID userId, String fileExtension) {
+        String timestamp = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMddHHmmssSSS"));
+        String randomSuffix = UUID.randomUUID().toString().substring(0, 8);
+        return String.format("%s_%s_%s%s", userId, timestamp, randomSuffix, fileExtension);
+    }
+
+    private String getFileExtension(String filename) {
+        int lastDotIndex = filename.lastIndexOf(".");
+        if (lastDotIndex > 0) {
+            return filename.substring(lastDotIndex);
+        }
+        return ".jpg";
     }
 }
