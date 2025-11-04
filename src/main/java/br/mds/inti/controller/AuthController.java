@@ -5,8 +5,6 @@ import br.mds.inti.model.dto.auth.ProfileResponse;
 import br.mds.inti.model.dto.auth.RegisterRequest;
 import br.mds.inti.model.entity.Profile;
 import br.mds.inti.service.AuthService;
-import br.mds.inti.service.PostService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -22,9 +20,6 @@ import java.net.URI;
 public class AuthController {
 
     private final AuthService authService;
-
-    @Autowired
-    PostService postService;
 
     public AuthController(AuthService authService) {
         this.authService = authService;

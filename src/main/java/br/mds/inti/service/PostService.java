@@ -28,7 +28,7 @@ public class PostService {
     public void createPost(Profile profile, MultipartFile image, String description) {
         String blobName = "";
         try {
-            blobName = blobService.uploadImageWithDescription(image);
+            blobName = blobService.uploadImageWithDescription(profile.getId(), image);
         } catch (IOException e) {
             log.error("error", e);
             throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Failed to upload image");
@@ -53,6 +53,7 @@ public class PostService {
         if (post.getProfile().getId() != profile.getId())
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "User is not the owner of the post");
 
+        blobService.deleteImage(post.getBlobName());
         postRepository.softDeletePost(postId);
     }
 }
