@@ -36,7 +36,6 @@ public class PostController {
         return ResponseEntity.ok("Post created successfully!");
     }
 
-
     @DeleteMapping()
     public ResponseEntity<String> deletePost(UUID postId) {
 

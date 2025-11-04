@@ -1,6 +1,5 @@
 package br.mds.inti.service;
 
-import org.bouncycastle.crypto.RuntimeCryptoException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -34,7 +33,7 @@ public class ProfileService {
             return new ProfileResponse(profile.getName(), profile.getUsername(), profile.getProfilePictureUrl(),
                     profile.getBio(), profile.getFollowersCount(), profile.getFollowingCount(), post.getContent());
         }
-        throw new RuntimeCryptoException("profile nao autenticado");
+        throw new RuntimeException("profile nao autenticado");
     }
 
     public ProfileResponse getProfileByUsername(String username, int page, int size) {
