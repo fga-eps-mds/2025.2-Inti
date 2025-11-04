@@ -67,11 +67,17 @@ public class PostService {
         Page<Post> postByprofile = postRepository.findAllByProfileIdAndNotDeleted(profileId, peageble);
 
         return postByprofile.map(post -> new PostResponse(post.getId(),
-                post.getBlobName(),
+                generateImageUrl(post.getBlobName()),
                 post.getDescription(),
                 post.getLikesCount(),
                 post.getCreatedAt().toString()));
 
     }
 
+    private String generateImageUrl(String blobName) {
+        if (blobName == null || blobName.isEmpty()) {
+            return null;
+        }
+        return "/images/" + blobName;
+    }
 }
