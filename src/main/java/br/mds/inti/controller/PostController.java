@@ -40,8 +40,8 @@ public class PostController {
     }
 
 
-    @DeleteMapping
-    public ResponseEntity<Void> deletePost(@NotNull UUID postId) {
+    @DeleteMapping("{postId}")
+    public ResponseEntity<Void> deletePost(@PathVariable @NotNull UUID postId) {
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         Profile profile = (Profile) authentication.getPrincipal();
