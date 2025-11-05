@@ -10,7 +10,8 @@
     "test": "jest",
     "dev:start:unix": "chmod +x ./entrypoint.sh && ./entrypoint.sh",
     "dev:start:unixdevice": "chmod +x ./entrypoint.sh && ./entrypoint.sh device",
-    "dev:start:win": "cmd.exe /c entrypoint.bat"
+    "dev:start:win": "cmd.exe /c entrypoint.bat",
+    "dev:start:windevice": "cmd.exe /c entrypoint.bat device"
   },
   "dependencies": {
     "@react-native-async-storage/async-storage": "^2.2.0",
