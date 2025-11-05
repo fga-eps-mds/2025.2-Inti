@@ -21,7 +21,7 @@ echo [INFO] Ambiente Docker limpo.
 
 :: Passo 3: Iniciar o container Docker com o Metro Bundler PRIMEIRO
 echo [INFO] Iniciando o container Docker com docker-compose...
-docker-compose up -d 
+docker-compose up -d
 
 :: Passo 4: Aguardar a PORTA 8081 ficar pronta
 echo [INFO] Aguardando a porta 8081 ficar pronta...
