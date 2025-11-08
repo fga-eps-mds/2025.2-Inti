@@ -47,4 +47,31 @@ public class ProfileService {
                 publicProfile.getFollowingCount(), post.getContent());
     }
 
+    public Profile getProfile(String username) {
+        Profile publicProfile = profileRepository.findByUsername(username)
+                .orElseThrow(() -> new ProfileNotFoundException(username));
+
+        return publicProfile;
+    }
+
+    public void incrementFollowingCount(Profile profile) {
+        profile.setFollowingCount(profile.getFollowingCount() + 1);
+        profileRepository.save(profile);
+    }
+
+    public void incrementFollowerCount(Profile profile) {
+        profile.setFollowersCount(profile.getFollowersCount() + 1);
+        profileRepository.save(profile);
+    }
+
+    public void decrementFollowingCount(Profile profile) {
+        profile.setFollowingCount(profile.getFollowingCount() - 1);
+        profileRepository.save(profile);
+    }
+
+    public void decrementFollowerCount(Profile profile) {
+        profile.setFollowersCount(profile.getFollowersCount() - 1);
+        profileRepository.save(profile);
+    }
+
 }
