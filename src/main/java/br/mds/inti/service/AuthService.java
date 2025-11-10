@@ -1,7 +1,7 @@
 package br.mds.inti.service;
 
 import br.mds.inti.model.dto.auth.LoginRequest;
-import br.mds.inti.model.dto.auth.ProfileResponse;
+import br.mds.inti.model.dto.auth.ProfileCreationResponse;
 import br.mds.inti.model.dto.auth.RegisterRequest;
 import br.mds.inti.model.entity.Profile;
 import br.mds.inti.model.enums.ProfileType;
@@ -24,7 +24,7 @@ public class AuthService {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
-    public ProfileResponse register(RegisterRequest request) {
+    public ProfileCreationResponse register(RegisterRequest request) {
         Profile user = new Profile();
         user.setEmail(request.email());
         user.setName(request.name());
@@ -32,17 +32,18 @@ public class AuthService {
         user.setPassword(passwordEncoder.encode(request.password()));
         user.setType(request.type() != null ? request.type() : ProfileType.user);
         user.setCreatedAt(Instant.now());
-        profileRepository.save(user);
+        Profile savedUser = profileRepository.save(user);
 
-        String jwt = jwtService.generateToken(user.getEmail());
-        return new ProfileResponse(
-                user.getId(),
-                user.getUsername(),
-                user.getName(),
-                user.getEmail(),
+        String jwt = jwtService.generateToken(user);
+
+        return new ProfileCreationResponse(
+                savedUser.getId(),
+                savedUser.getUsername(),
+                savedUser.getName(),
+                savedUser.getEmail(),
                 jwt,
-                user.getType(),
-                user.getCreatedAt());
+                savedUser.getType(),
+                savedUser.getCreatedAt());
     }
 
     public String login(LoginRequest request) {
@@ -53,7 +54,7 @@ public class AuthService {
             throw new RuntimeException("Usuario ou senha invalidos");
         }
 
-        return jwtService.generateToken(user.getEmail());
+        return jwtService.generateToken(user);
     }
 
 }

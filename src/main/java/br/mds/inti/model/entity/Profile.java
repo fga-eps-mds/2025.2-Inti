@@ -120,7 +120,7 @@ public class Profile implements UserDetails {
 
     @Override
     public String getUsername() {
-        return email;
+        return username;
     }
 
     @Override

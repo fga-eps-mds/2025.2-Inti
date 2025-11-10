@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -41,7 +42,8 @@ public class BlobService {
 
     public String uploadImageWithDescription(UUID userId, MultipartFile file) throws IOException {
 
-        if (!isImage(file)) throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "File is not an image");
+        if (!isImage(file))
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "File is not an image");
 
         String originalFilename = file.getOriginalFilename();
         if (originalFilename == null)
@@ -87,5 +89,25 @@ public class BlobService {
             return filename.substring(lastDotIndex);
         }
         return ".jpg";
+    }
+
+    public byte[] downloadImage(String blobName) {
+        try {
+            BlobClient blobClient = blobServiceClient
+                    .getBlobContainerClient(containerName)
+                    .getBlobClient(blobName);
+
+            if (!blobClient.exists()) {
+                return null;
+            }
+
+            ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+            blobClient.downloadStream(outputStream);
+            return outputStream.toByteArray();
+
+        } catch (Exception e) {
+            log.error("Error downloading image: {}", blobName, e);
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Error downloading image");
+        }
     }
 }
