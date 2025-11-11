@@ -40,7 +40,7 @@ public class BlobService {
         }
     }
 
-    public String uploadImageWithDescription(UUID userId, MultipartFile file) throws IOException {
+    public String uploadImage(UUID userId, MultipartFile file) throws IOException {
 
         if (!isImage(file))
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "File is not an image");

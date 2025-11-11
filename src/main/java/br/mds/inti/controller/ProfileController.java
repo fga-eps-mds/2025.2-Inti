@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -13,9 +14,8 @@ import br.mds.inti.model.dto.ProfileResponse;
 import br.mds.inti.service.ProfileService;
 
 @RestController
-@RequestMapping("/profiles")
+@RequestMapping("/profile")
 public class ProfileController {
-
     @Autowired
     private ProfileService profileService;
 
@@ -44,4 +44,8 @@ public class ProfileController {
         return ResponseEntity.ok("teste");
     }
 
+    @PatchMapping("/user")
+    public ResponseEntity<ProfileResponse> user(@NotNull UpdateUserRequest updateUserRequest) {
+        return ResponseEntity.ok().body(profileService.updateUser(username, page, size));
+    }
 }

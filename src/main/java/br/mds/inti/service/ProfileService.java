@@ -22,6 +22,9 @@ public class ProfileService {
     @Autowired
     private PostService postService;
 
+    @Autowired
+    BlobService blobService;
+
     public ProfileResponse getProfile(int page, int size) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 
@@ -45,6 +48,27 @@ public class ProfileService {
         return new ProfileResponse(publicProfile.getName(), publicProfile.getUsername(),
                 publicProfile.getProfilePictureUrl(), publicProfile.getBio(), publicProfile.getFollowersCount(),
                 publicProfile.getFollowingCount(), post.getContent());
+    }
+
+    public ProfileResponse updateUser(UpdateUserRequest updateUserRequest) {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        if(auth == null || auth.getPrincipal() instanceof Profile) return new ResponseStatusException(HttpStatusCode.UNAUTHORIZED, "No authentication provided");
+
+        Profile profile = (Profile) auth.getPrincipal();
+        profile.setBio(updateUserRequest.userBio);
+        profile.setName(updateUserRequest.name);
+        profile.setUsername(updateUserRequest.username);
+
+        byte[] profilePicture = blobService.downloadImage(profile.getProfilePictureUrl);
+        if(!profilePicture.equals(updateUserRequest.profilePicture.getInputStream())){
+            String blobName = blobService.uploadImage(profile.getId(), updateUserRequest.profilePicture);
+            profile.setProfilePictureUrl(blobName)
+        }
+        
+        profileRepository.save(profile);
+
+        return new ProfileResponse(profile.getName(), profile.getUsername(), profile.getProfilePictureUrl(),
+                profile.getBio(), profile.getFollowersCount(), profile.getFollowingCount(), post.getContent());
     }
 
 }
