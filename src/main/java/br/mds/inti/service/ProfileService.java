@@ -62,7 +62,7 @@ public class ProfileService {
         byte[] profilePicture = blobService.downloadImage(profile.getProfilePictureUrl);
         if(!profilePicture.equals(updateUserRequest.profilePicture.getInputStream())){
             String blobName = blobService.uploadImage(profile.getId(), updateUserRequest.profilePicture);
-            profile.setProfilePictureUrl(blobName)
+            profile.setProfilePictureUrl(blobName);
         }
         
         profileRepository.save(profile);
