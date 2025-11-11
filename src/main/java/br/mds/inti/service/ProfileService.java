@@ -1,16 +1,24 @@
 package br.mds.inti.service;
 
+import java.io.IOException;
+import java.util.Arrays;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 import br.mds.inti.model.dto.PostResponse;
 import br.mds.inti.model.dto.ProfileResponse;
+import br.mds.inti.model.dto.UpdateUserRequest;
 import br.mds.inti.model.entity.Profile;
 import br.mds.inti.repositories.ProfileRepository;
+import br.mds.inti.service.exceptions.UsernameAlreadyExistsException;
 import br.mds.inti.service.exceptions.ProfileNotFoundException;
 
 @Service
@@ -50,25 +58,31 @@ public class ProfileService {
                 publicProfile.getFollowingCount(), post.getContent());
     }
 
-    public ProfileResponse updateUser(UpdateUserRequest updateUserRequest) {
+    public String updateUser(UpdateUserRequest updateUserRequest) throws IOException {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        if(auth == null || auth.getPrincipal() instanceof Profile) return new ResponseStatusException(HttpStatusCode.UNAUTHORIZED, "No authentication provided");
+        if(auth == null || !(auth.getPrincipal() instanceof Profile)) 
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "No authentication provided");
 
         Profile profile = (Profile) auth.getPrincipal();
-        profile.setBio(updateUserRequest.userBio);
-        profile.setName(updateUserRequest.name);
-        profile.setUsername(updateUserRequest.username);
+        profile.setBio(updateUserRequest.userBio());
+        profile.setName(updateUserRequest.name());
+        
+        if (profileRepository.findIfUsernameIsUsed(updateUserRequest.username())) {
+            throw new UsernameAlreadyExistsException("Esse username já está sendo usado");
+        } else {
+            profile.setUsername(updateUserRequest.username());
+        }
 
-        byte[] profilePicture = blobService.downloadImage(profile.getProfilePictureUrl);
-        if(!profilePicture.equals(updateUserRequest.profilePicture.getInputStream())){
-            String blobName = blobService.uploadImage(profile.getId(), updateUserRequest.profilePicture);
+        byte[] existingProfilePicture = blobService.downloadImage(profile.getProfilePictureUrl());
+        byte[] newProfilePicture = updateUserRequest.profilePicture().getBytes();
+        
+        if (!Arrays.equals(existingProfilePicture, newProfilePicture)) {
+            String blobName = blobService.uploadImage(profile.getId(), updateUserRequest.profilePicture());
             profile.setProfilePictureUrl(blobName);
         }
         
         profileRepository.save(profile);
-
-        return new ProfileResponse(profile.getName(), profile.getUsername(), profile.getProfilePictureUrl(),
-                profile.getBio(), profile.getFollowersCount(), profile.getFollowingCount(), post.getContent());
+        return "profile updated";
     }
 
 }

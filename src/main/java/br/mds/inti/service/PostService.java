@@ -1,9 +1,13 @@
 package br.mds.inti.service;
 
+import br.mds.inti.model.dto.PostResponse;
 import br.mds.inti.model.entity.Post;
 import br.mds.inti.model.entity.Profile;
 import br.mds.inti.repositories.PostRepository;
 import lombok.extern.slf4j.Slf4j;
+
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -55,5 +59,24 @@ public class PostService {
 
         blobService.deleteImage(post.getBlobName());
         postRepository.softDeletePost(postId);
+    }
+
+    public Page<PostResponse> getPostByIdProfile(UUID profileId, Pageable peageble) {
+
+        Page<Post> postByprofile = postRepository.findAllByProfileIdAndNotDeleted(profileId, peageble);
+
+        return postByprofile.map(post -> new PostResponse(post.getId(),
+                generateImageUrl(post.getBlobName()),
+                post.getDescription(),
+                post.getLikesCount(),
+                post.getCreatedAt().toString()));
+
+    }
+
+    private String generateImageUrl(String blobName) {
+        if (blobName == null || blobName.isEmpty()) {
+            return null;
+        }
+        return "/images/" + blobName;
     }
 }

@@ -1,4 +1,4 @@
-package br.mds.inti.model.dto.user;
+package br.mds.inti.model.dto;
 
 import org.springframework.web.multipart.MultipartFile;
 
