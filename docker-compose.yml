@@ -9,6 +9,10 @@ services:
       - "8081:8081"
     volumes:
       - .:/app
+      - /app/node_modules
+
+volumes:
+  node_modules: {}
       - node_modules_data:/app/node_modules
 
 volumes:
