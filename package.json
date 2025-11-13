@@ -10,7 +10,8 @@
     "test": "jest",
     "dev:start:unix": "chmod +x ./entrypoint.sh && ./entrypoint.sh",
     "dev:start:unixdevice": "chmod +x ./entrypoint.sh && ./entrypoint.sh device",
-    "dev:start:win": "cmd.exe /c entrypoint.bat"
+    "dev:start:win": "cmd.exe /c entrypoint.bat",
+    "dev:start:windevice": "cmd.exe /c entrypoint.bat device"
   },
   "dependencies": {
     "@react-native-async-storage/async-storage": "^2.2.0",
@@ -19,12 +20,12 @@
     "@react-navigation/elements": "^2.6.5",
     "@react-navigation/native": "^7.1.18",
     "@react-navigation/native-stack": "^7.3.28",
+    "axios": "^1.13.1",
     "react": "19.1.0",
     "react-native": "0.81.4",
-    "react-native-image-picker": "^8.2.1",
-    "react-native-permissions": "^5.4.4",
     "react-native-safe-area-context": "^5.6.1",
     "react-native-screens": "^4.17.1",
+    "react-native-size-matters": "^0.4.2",
     "react-native-vector-icons": "^10.3.0"
   },
   "devDependencies": {

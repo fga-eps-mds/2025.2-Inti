@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 # template-repository - Branch Main
 
 Template de Repositório para a matéria de Métodos de Desenvolvimento de Software lecionado pelo professor Ricardo Ajax.
@@ -27,7 +26,6 @@ Este repositório também conta com uma pipeline de automatização de deploy do
 * Clique em salvar e pronto;
 
 Após essas etapas de configuração, o seu GitPages deve funcionar normalmente.
-=======
 # MUSA
 
 [![Version](https://img.shields.io/badge/version-1.0.0-blue.svg)](https://github.com/seu-usuario/sign-app)
@@ -136,4 +134,4 @@ O comando `npm run dev:start:*` executa uma série de passos para criar um ambie
 
       * **Solução:** Isso pode ser um problema de rede ou um pacote quebrado no `package.json`. Tente forçar uma reconstrução limpa da imagem com o comando: `docker-compose build --no-cache` e depois rode o script de start novamente. Verifique o log do Docker para mensagens de erro específicas do `npm`.
 
->>>>>>> 0b8fd81026ff58bb5aba933df26b11c159c88c1e
+

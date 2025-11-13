@@ -13,4 +13,8 @@ services:
 
 volumes:
   node_modules: {}
+      - node_modules_data:/app/node_modules
+
+volumes:
+  node_modules_data: {}
 
