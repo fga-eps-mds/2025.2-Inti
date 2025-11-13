@@ -1,22 +1,22 @@
-console.log('MUSA carregado');
+console.log("MUSA carregado");
 
 // Função para verificar autenticação
 function checkAuth() {
-    const isAuthenticated = localStorage.getItem('isAuthenticated');
-    return isAuthenticated === 'true';
+  const isAuthenticated = localStorage.getItem("isAuthenticated");
+  return isAuthenticated === "true";
 }
 
 // Função para fazer logout
 function logout() {
-    localStorage.removeItem('isAuthenticated');
-    localStorage.removeItem('userData');
-    window.location.href = '../index.html';
+  localStorage.removeItem("isAuthenticated");
+  localStorage.removeItem("userData");
+  window.location.href = "../index.html";
 }
 
 // Adicionar listener para botões de logout se existirem
-document.addEventListener('DOMContentLoaded', function() {
-    const logoutBtns = document.querySelectorAll('.logout-btn');
-    logoutBtns.forEach(btn => {
-        btn.addEventListener('click', logout);
-    });
+document.addEventListener("DOMContentLoaded", function () {
+  const logoutBtns = document.querySelectorAll(".logout-btn");
+  logoutBtns.forEach((btn) => {
+    btn.addEventListener("click", logout);
+  });
 });

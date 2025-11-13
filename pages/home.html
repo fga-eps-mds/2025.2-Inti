@@ -8,234 +8,305 @@
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-      href="https://fonts.googleapis.com/css2?family=Tilt+Warp:wght@400&family=Teachers:wght@400&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Maitree:wght@300;400;500;600&family=Libre+Bodoni:wght@400;700&display=swap"
       rel="stylesheet"
     />
   </head>
   <body>
     <div class="container">
       <div class="screen home-screen">
-        <header class="header">
-          <div class="logo">M</div>
-          <div class="feed-selector">
-            <h1 class="feed-title">Feed</h1>
-            <svg
-              class="dropdown-icon"
-              width="23"
-              height="16"
-              viewBox="0 0 23 16"
-              fill="none"
-            >
-              <line
-                x1="2.12132"
-                y1="2.12132"
-                x2="13.435"
-                y2="13.435"
-                stroke="#A38BBA"
-                stroke-width="6"
-              />
-              <line
-                x1="9.17867"
-                y1="13.435"
-                x2="20.4924"
-                y2="2.12132"
-                stroke="#A38BBA"
-                stroke-width="6"
-              />
-            </svg>
-          </div>
-          <button class="notification-btn">
-            <svg width="32" height="32" viewBox="0 0 32 32" fill="none">
-              <circle cx="16" cy="16" r="16" fill="#592E83" />
-              <path
-                d="M16 8C14.5 8 13 9 13 11V15L11 18H21L19 15V11C19 9 17.5 8 16 8Z"
-                fill="white"
-              />
-              <circle cx="16" cy="22" r="2" fill="white" />
-            </svg>
+        <!-- Header Minimalista -->
+        <header class="header-home">
+          <img src="../assets/MUSA-M.png" alt="MUSA" class="logo-icon" />
+          <h1 class="page-title">Feed</h1>
+          <button class="notification-btn-home" aria-label="Notificações">
+            <img src="../assets/NotificationIcon.png" alt="Notificações" />
           </button>
         </header>
 
+        <!-- Filtros/Categorias -->
+        <nav class="filter-nav">
+          <button class="filter-btn active">Todos</button>
+          <button class="filter-btn">Música</button>
+          <button class="filter-btn">Arte</button>
+          <button class="filter-btn">Teatro</button>
+        </nav>
 
-        <div class="posts-grid">
-          <!-- Post 1 -->
-          <div class="post-card">
-            <div
-              class="post-image"
-              style="
-                background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-              "
-            >
-              <div class="post-image-placeholder">Pato Loko</div>
+        <!-- Grid de Eventos -->
+        <div class="events-grid">
+          <!-- Evento 1 -->
+          <article class="event-card">
+            <div class="event-image">
+              <img
+                src="https://images.unsplash.com/photo-1514320291840-2e0a9bf2a9ae?w=400&h=500&fit=crop"
+                alt="Pato Loko"
+              />
+              <button class="favorite-btn" aria-label="Favoritar">
+                <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+                  <path
+                    d="M10 3L12 8L17 8.5L13.5 12L14.5 17L10 14.5L5.5 17L6.5 12L3 8.5L8 8L10 3Z"
+                    stroke="currentColor"
+                    stroke-width="1.5"
+                    fill="none"
+                  />
+                </svg>
+              </button>
             </div>
-            <div class="post-footer">
-              <span class="post-title">Pato Loko</span>
-              <div class="post-actions">
-                <button class="action-btn">
-                  <svg
-                    width="13"
-                    height="13"
-                    viewBox="0 0 13 13"
-                    fill="#592E83"
-                  >
-                    <path
-                      d="M6.5 1L8 4.5L12 5L9 8L10 12L6.5 10L3 12L4 8L1 5L5 4.5L6.5 1Z"
-                    />
-                  </svg>
-                </button>
-                <button class="action-btn">
-                  <svg
-                    width="14"
-                    height="14"
-                    viewBox="0 0 14 14"
-                    fill="#592E83"
-                  >
-                    <path d="M13 7H8V2H6V7H1V9H6V14H8V9H13V7Z" />
-                  </svg>
-                </button>
-              </div>
+            <div class="event-info">
+              <h3 class="event-title">Pato Loko</h3>
+              <p class="event-date">15 Nov • 21h</p>
+              <span class="event-category">Música</span>
             </div>
-          </div>
+          </article>
 
-          <!-- Post 2 -->
-          <div class="post-card">
-            <div
-              class="post-image"
-              style="
-                background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
-              "
-            >
-              <div class="post-image-placeholder">Show - Verde</div>
+          <!-- Evento 2 -->
+          <article class="event-card">
+            <div class="event-image">
+              <img
+                src="https://images.unsplash.com/photo-1470229722913-7c0e2dbbafd3?w=400&h=500&fit=crop"
+                alt="Show Verde"
+              />
+              <button class="favorite-btn" aria-label="Favoritar">
+                <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+                  <path
+                    d="M10 3L12 8L17 8.5L13.5 12L14.5 17L10 14.5L5.5 17L6.5 12L3 8.5L8 8L10 3Z"
+                    stroke="currentColor"
+                    stroke-width="1.5"
+                    fill="none"
+                  />
+                </svg>
+              </button>
             </div>
-            <div class="post-footer">
-              <span class="post-title">Show - Verde</span>
-              <div class="post-actions">
-                <button class="action-btn">📅</button>
-                <button class="action-btn">⭐</button>
-                <button class="action-btn">➕</button>
-              </div>
+            <div class="event-info">
+              <h3 class="event-title">Show - Verde</h3>
+              <p class="event-date">18 Nov • 20h</p>
+              <span class="event-category">Música</span>
             </div>
-          </div>
+          </article>
 
-          <!-- Post 3 -->
-          <div class="post-card">
-            <div
-              class="post-image"
-              style="
-                background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
-              "
-            >
-              <div class="post-image-placeholder">Van Gogh</div>
+          <!-- Evento 3 -->
+          <article class="event-card">
+            <div class="event-image">
+              <img
+                src="https://images.unsplash.com/photo-1513364776144-60967b0f800f?w=400&h=500&fit=crop"
+                alt="Van Gogh"
+              />
+              <button class="favorite-btn" aria-label="Favoritar">
+                <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+                  <path
+                    d="M10 3L12 8L17 8.5L13.5 12L14.5 17L10 14.5L5.5 17L6.5 12L3 8.5L8 8L10 3Z"
+                    stroke="currentColor"
+                    stroke-width="1.5"
+                    fill="none"
+                  />
+                </svg>
+              </button>
             </div>
-            <div class="post-footer">
-              <span class="post-title">Van Gogh</span>
-              <div class="post-actions">
-                <button class="action-btn">⭐</button>
-                <button class="action-btn">➕</button>
-              </div>
+            <div class="event-info">
+              <h3 class="event-title">Van Gogh</h3>
+              <p class="event-date">20 Nov • 14h</p>
+              <span class="event-category">Arte</span>
             </div>
-          </div>
+          </article>
 
-          <!-- Post 4 -->
-          <div class="post-card">
-            <div
-              class="post-image"
-              style="
-                background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
-              "
-            >
-              <div class="post-image-placeholder">Sísifo</div>
+          <!-- Evento 4 -->
+          <article class="event-card">
+            <div class="event-image">
+              <img
+                src="https://images.unsplash.com/photo-1503095396549-807759245b35?w=400&h=500&fit=crop"
+                alt="Sísifo"
+              />
+              <button class="favorite-btn" aria-label="Favoritar">
+                <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+                  <path
+                    d="M10 3L12 8L17 8.5L13.5 12L14.5 17L10 14.5L5.5 17L6.5 12L3 8.5L8 8L10 3Z"
+                    stroke="currentColor"
+                    stroke-width="1.5"
+                    fill="none"
+                  />
+                </svg>
+              </button>
             </div>
-            <div class="post-footer">
-              <span class="post-title">Sísifo</span>
-              <div class="post-actions">
-                <button class="action-btn">⭐</button>
-                <button class="action-btn">➕</button>
-              </div>
+            <div class="event-info">
+              <h3 class="event-title">Sísifo</h3>
+              <p class="event-date">22 Nov • 19h</p>
+              <span class="event-category">Teatro</span>
             </div>
-          </div>
+          </article>
 
-          <!-- Post 5 -->
-          <div class="post-card post-small">
-            <div
-              class="post-image"
-              style="
-                background: linear-gradient(135deg, #fa709a 0%, #fee140 100%);
-              "
-            >
-              <div class="post-image-placeholder"></div>
+          <!-- Evento 5 -->
+          <article class="event-card">
+            <div class="event-image">
+              <img
+                src="https://images.unsplash.com/photo-1459749411175-04bf5292ceea?w=400&h=500&fit=crop"
+                alt="Jazz Night"
+              />
+              <button class="favorite-btn" aria-label="Favoritar">
+                <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+                  <path
+                    d="M10 3L12 8L17 8.5L13.5 12L14.5 17L10 14.5L5.5 17L6.5 12L3 8.5L8 8L10 3Z"
+                    stroke="currentColor"
+                    stroke-width="1.5"
+                    fill="none"
+                  />
+                </svg>
+              </button>
             </div>
-          </div>
+            <div class="event-info">
+              <h3 class="event-title">Jazz Night</h3>
+              <p class="event-date">25 Nov • 22h</p>
+              <span class="event-category">Música</span>
+            </div>
+          </article>
 
-          <!-- Post 6 -->
-          <div class="post-card post-small">
-            <div
-              class="post-image"
-              style="
-                background: linear-gradient(135deg, #30cfd0 0%, #330867 100%);
-              "
-            >
-              <div class="post-image-placeholder"></div>
+          <!-- Evento 6 -->
+          <article class="event-card">
+            <div class="event-image">
+              <img
+                src="https://images.unsplash.com/photo-1518834107812-67b0b7c58434?w=400&h=500&fit=crop"
+                alt="Arte Moderna"
+              />
+              <button class="favorite-btn" aria-label="Favoritar">
+                <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+                  <path
+                    d="M10 3L12 8L17 8.5L13.5 12L14.5 17L10 14.5L5.5 17L6.5 12L3 8.5L8 8L10 3Z"
+                    stroke="currentColor"
+                    stroke-width="1.5"
+                    fill="none"
+                  />
+                </svg>
+              </button>
             </div>
-          </div>
+            <div class="event-info">
+              <h3 class="event-title">Arte Moderna</h3>
+              <p class="event-date">28 Nov • 10h</p>
+              <span class="event-category">Arte</span>
+            </div>
+          </article>
         </div>
 
         <!-- Navigation Bar -->
         <nav class="navbar">
-          <button class="nav-btn active">
-            <svg width="32" height="32" viewBox="0 0 32 32" fill="#592E83">
-              <path d="M16 6L6 14V26H12V20H20V26H26V14L16 6Z" />
+          <button class="nav-btn active" aria-label="Home">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+              <path
+                d="M3 9L12 2L21 9V20C21 20.5304 20.7893 21.0391 20.4142 21.4142C20.0391 21.7893 19.5304 22 19 22H5C4.46957 22 3.96086 21.7893 3.58579 21.4142C3.21071 21.0391 3 20.5304 3 20V9Z"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              />
+              <path
+                d="M9 22V12H15V22"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              />
             </svg>
           </button>
-          <button class="nav-btn">
-            <svg width="32" height="32" viewBox="0 0 32 32" fill="#592E83">
-              <circle cx="16" cy="12" r="4" />
-              <circle cx="26" cy="12" r="4" />
-              <circle cx="6" cy="12" r="4" />
-              <circle cx="16" cy="22" r="4" />
-              <circle cx="26" cy="22" r="4" />
-              <circle cx="6" cy="22" r="4" />
-            </svg>
-          </button>
-          <button class="nav-btn">
-            <svg width="32" height="32" viewBox="0 0 32 32" fill="#592E83">
+          <button class="nav-btn" aria-label="Explorar">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
               <circle
-                cx="16"
-                cy="16"
-                r="10"
-                stroke="#592E83"
+                cx="11"
+                cy="11"
+                r="8"
+                stroke="currentColor"
                 stroke-width="2"
-                fill="none"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              />
+              <path
+                d="M21 21L16.65 16.65"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              />
+            </svg>
+          </button>
+          <button class="nav-btn nav-btn-add" aria-label="Adicionar">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+              <line
+                x1="12"
+                y1="5"
+                x2="12"
+                y2="19"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+              />
+              <line
+                x1="5"
+                y1="12"
+                x2="19"
+                y2="12"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+              />
+            </svg>
+          </button>
+          <button class="nav-btn" aria-label="Calendário">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+              <rect
+                x="3"
+                y="4"
+                width="18"
+                height="18"
+                rx="2"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
               />
               <line
                 x1="16"
-                y1="16"
+                y1="2"
                 x2="16"
-                y2="10"
-                stroke="#592E83"
+                y2="6"
+                stroke="currentColor"
                 stroke-width="2"
+                stroke-linecap="round"
               />
               <line
-                x1="16"
-                y1="16"
-                x2="20"
-                y2="16"
-                stroke="#592E83"
+                x1="8"
+                y1="2"
+                x2="8"
+                y2="6"
+                stroke="currentColor"
                 stroke-width="2"
+                stroke-linecap="round"
+              />
+              <line
+                x1="3"
+                y1="10"
+                x2="21"
+                y2="10"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
               />
             </svg>
           </button>
-          <button class="nav-btn">
-            <svg width="32" height="32" viewBox="0 0 32 32" fill="#592E83">
-              <rect x="6" y="8" width="20" height="4" />
-              <rect x="6" y="14" width="20" height="4" />
-              <rect x="6" y="20" width="20" height="4" />
-            </svg>
-          </button>
-          <button class="nav-btn">
-            <svg width="32" height="32" viewBox="0 0 32 32" fill="#592E83">
-              <circle cx="16" cy="12" r="6" />
-              <path d="M6 28C6 22 10 18 16 18C22 18 26 22 26 28" />
+          <button class="nav-btn" aria-label="Perfil">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+              <path
+                d="M20 21V19C20 17.9391 19.5786 16.9217 18.8284 16.1716C18.0783 15.4214 17.0609 15 16 15H8C6.93913 15 5.92172 15.4214 5.17157 16.1716C4.42143 16.9217 4 17.9391 4 19V21"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              />
+              <circle
+                cx="12"
+                cy="7"
+                r="4"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              />
             </svg>
           </button>
         </nav>

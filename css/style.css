@@ -1,54 +1,564 @@
+/* ============================================
+   RESET & BASE
+   ============================================ */
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
 }
 
+:root {
+  /* Cores principais */
+  --primary: #592e83;
+  --primary-light: #7a4fa3;
+  --primary-lighter: #f2ebfb;
+  --accent: #a38bba;
+
+  /* Tons neutros */
+  --gray-50: #fafafa;
+  --gray-100: #f5f5f5;
+  --gray-200: #e5e5e5;
+  --gray-300: #d4d4d4;
+  --gray-400: #a3a3a3;
+  --gray-500: #737373;
+  --gray-600: #525252;
+  --gray-900: #171717;
+
+  /* Espaçamentos */
+  --spacing-xs: 4px;
+  --spacing-sm: 8px;
+  --spacing-md: 16px;
+  --spacing-lg: 24px;
+  --spacing-xl: 32px;
+
+  /* Bordas */
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 16px;
+  --radius-full: 9999px;
+
+  /* Sombras */
+  --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+}
+
 body {
   font-family: "Maitree", serif;
-  background: white;
-  min-height: 100vh;
-  display: flex;
-  justify-content: center;
-  align-items: center;
+  background: var(--gray-50);
+  color: var(--gray-900);
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
 .container {
   width: 100%;
   max-width: 390px;
-  min-height: 844px;
+  min-height: 100vh;
   background: white;
-  position: relative;
-  overflow: hidden;
+  margin: 0 auto;
+  box-shadow: var(--shadow-lg);
 }
 
 .screen {
   width: 100%;
-  height: 100%;
-  min-height: 844px;
+  min-height: 100vh;
   position: relative;
   background: white;
 }
 
-/* Título principal */
+/* ============================================
+   HOME SCREEN - HEADER
+   ============================================ */
+.home-screen {
+  padding-bottom: 80px;
+}
+
+.header-home {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background: white;
+  border-bottom: 1px solid var(--gray-200);
+  padding: var(--spacing-md) var(--spacing-lg);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--spacing-md);
+}
+
+.logo-icon {
+  width: 36px;
+  height: 36px;
+  object-fit: contain;
+}
+
+.page-title {
+  font-family: "Libre Bodoni", serif;
+  font-size: 24px;
+  font-weight: 700;
+  color: var(--primary);
+  letter-spacing: 0.5px;
+  flex: 1;
+  text-align: center;
+}
+
+.notification-btn-home {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: var(--spacing-xs);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: opacity 0.2s ease;
+  width: 36px;
+  height: 36px;
+}
+
+.notification-btn-home:hover {
+  opacity: 0.7;
+}
+
+.notification-btn-home img {
+  width: 28px;
+  height: 28px;
+  object-fit: contain;
+}
+
+/* ============================================
+   FILTROS
+   ============================================ */
+.filter-nav {
+  padding: var(--spacing-md) var(--spacing-lg);
+  display: flex;
+  gap: var(--spacing-sm);
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+}
+
+.filter-nav::-webkit-scrollbar {
+  display: none;
+}
+
+.filter-btn {
+  padding: var(--spacing-sm) var(--spacing-md);
+  background: white;
+  border: 1px solid var(--gray-300);
+  border-radius: var(--radius-full);
+  font-family: "Maitree", serif;
+  font-size: 14px;
+  color: var(--gray-600);
+  cursor: pointer;
+  white-space: nowrap;
+  transition: all 0.2s ease;
+  font-weight: 500;
+}
+
+.filter-btn:hover {
+  border-color: var(--primary);
+  color: var(--primary);
+}
+
+.filter-btn.active {
+  background: var(--primary);
+  border-color: var(--primary);
+  color: white;
+}
+
+/* ============================================
+   GRID DE EVENTOS
+   ============================================ */
+.events-grid {
+  padding: var(--spacing-md) var(--spacing-lg);
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: var(--spacing-lg);
+}
+
+/* ============================================
+   CARD DE EVENTO
+   ============================================ */
+.event-card {
+  background: white;
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease;
+  cursor: pointer;
+}
+
+.event-card:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-lg);
+}
+
+.event-image {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 3/4;
+  overflow: hidden;
+  background: var(--gray-100);
+}
+
+.event-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.3s ease;
+}
+
+.event-card:hover .event-image img {
+  transform: scale(1.05);
+}
+
+.favorite-btn {
+  position: absolute;
+  top: var(--spacing-sm);
+  right: var(--spacing-sm);
+  width: 36px;
+  height: 36px;
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(8px);
+  border: none;
+  border-radius: var(--radius-full);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  color: var(--gray-600);
+  transition: all 0.2s ease;
+  box-shadow: var(--shadow-md);
+}
+
+.favorite-btn:hover {
+  color: var(--primary);
+  background: white;
+  transform: scale(1.1);
+}
+
+.favorite-btn:active {
+  transform: scale(0.95);
+}
+
+.event-info {
+  padding: var(--spacing-md);
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-xs);
+}
+
+.event-title {
+  font-family: "Libre Bodoni", serif;
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--gray-900);
+  line-height: 1.3;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.event-date {
+  font-size: 13px;
+  color: var(--gray-500);
+  font-weight: 400;
+}
+
+.event-category {
+  display: inline-block;
+  padding: 4px 12px;
+  background: var(--primary-lighter);
+  color: var(--primary);
+  border-radius: var(--radius-full);
+  font-size: 11px;
+  font-weight: 500;
+  width: fit-content;
+  margin-top: var(--spacing-xs);
+}
+
+/* ============================================
+   NAVIGATION BAR
+   ============================================ */
+.navbar {
+  position: fixed;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 100%;
+  max-width: 390px;
+  height: 70px;
+  background: white;
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  padding: 0 var(--spacing-md);
+  border-top: 1px solid var(--gray-200);
+  z-index: 1000;
+}
+
+.nav-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: var(--spacing-sm);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  color: var(--gray-400);
+  transition: all 0.2s ease;
+  position: relative;
+  min-width: 50px;
+  height: 50px;
+}
+
+.nav-btn:hover {
+  color: var(--primary);
+}
+
+.nav-btn.active {
+  color: var(--primary);
+}
+
+.nav-btn.active::after {
+  content: "";
+  position: absolute;
+  bottom: -16px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 32px;
+  height: 3px;
+  background: var(--primary);
+  border-radius: var(--radius-full);
+}
+
+.nav-btn svg {
+  width: 24px;
+  height: 24px;
+}
+
+/* Botão de adicionar centralizado */
+.nav-btn-add {
+  width: 54px;
+  height: 54px;
+  background: var(--primary);
+  border-radius: var(--radius-full);
+  color: white;
+  margin: 0 var(--spacing-xs);
+  box-shadow: var(--shadow-md);
+}
+
+.nav-btn-add:hover {
+  background: var(--primary-light);
+  color: white;
+  transform: scale(1.05);
+}
+
+.nav-btn-add svg {
+  width: 28px;
+  height: 28px;
+}
+
+/* ============================================
+   LOGIN & CADASTRO
+   ============================================ */
+
+/* Container da tela de login */
+.screen-container {
+  width: 100%;
+  max-width: 390px;
+  min-height: 100vh;
+  background: white;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--spacing-lg);
+}
+
+.screen-login {
+  width: 100%;
+  max-width: 320px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* Título LOGIN */
+.login-title {
+  font-family: "Libre Bodoni", serif;
+  font-weight: 700;
+  font-size: 48px;
+  color: var(--primary);
+  text-align: center;
+  letter-spacing: 1.92px;
+  margin-bottom: 60px;
+}
+
+/* Formulário de login */
+.form-login {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 36px;
+  margin-bottom: var(--spacing-lg);
+}
+
+.form-group-login {
+  position: relative;
+  width: 100%;
+}
+
+.input-label-login {
+  position: absolute;
+  left: 10px;
+  top: -9px;
+  font-family: "Maitree", serif;
+  font-size: 14px;
+  color: var(--primary);
+  background: white;
+  padding: 0 5px;
+  letter-spacing: 0.56px;
+  z-index: 1;
+}
+
+.input-field-login {
+  width: 100%;
+  height: 41.31px;
+  background: var(--primary-lighter);
+  border: none;
+  border-radius: var(--radius-lg);
+  padding: 10px 20px;
+  font-family: "Maitree", serif;
+  font-size: 14px;
+  color: var(--primary);
+  outline: none;
+  transition: box-shadow 0.2s ease;
+}
+
+.input-field-login:focus {
+  box-shadow: 0 0 0 3px rgba(89, 46, 131, 0.1);
+}
+
+.input-field-login::placeholder {
+  color: rgba(89, 46, 131, 0.55);
+  font-size: 10px;
+}
+
+/* Checkbox mostrar senha */
+.checkbox-group-login {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: var(--spacing-lg);
+  align-self: flex-start;
+  padding-left: 35px;
+}
+
+.checkbox-login {
+  width: 24px;
+  height: 24px;
+  background: var(--primary-lighter);
+  border: none;
+  border-radius: 3px;
+  cursor: pointer;
+  appearance: none;
+  -webkit-appearance: none;
+  position: relative;
+  transition: all 0.2s ease;
+}
+
+.checkbox-login:checked {
+  background: var(--primary);
+}
+
+.checkbox-login:checked::after {
+  content: "✓";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  color: white;
+  font-size: 16px;
+  font-weight: bold;
+}
+
+.checkbox-label-login {
+  font-family: "Maitree", serif;
+  font-size: 14px;
+  color: var(--primary);
+  letter-spacing: 0.72px;
+  cursor: pointer;
+  user-select: none;
+}
+
+/* Botão de login */
+.btn-login {
+  width: 250px;
+  height: 35px;
+  background: var(--primary-lighter);
+  border: none;
+  border-radius: 20px;
+  font-family: "Libre Bodoni", serif;
+  font-weight: 700;
+  font-size: 18px;
+  color: var(--primary);
+  letter-spacing: 0.72px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  margin-bottom: var(--spacing-lg);
+}
+
+.btn-login:hover {
+  background: var(--primary);
+  color: white;
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-md);
+}
+
+.btn-login:active {
+  transform: translateY(0);
+}
+
+/* Link criar conta */
+.link-criar-conta {
+  font-family: "Libre Bodoni", serif;
+  font-weight: 700;
+  font-size: 18px;
+  color: var(--primary);
+  text-decoration: none;
+  text-align: center;
+  letter-spacing: 0.72px;
+  transition: opacity 0.2s ease;
+}
+
+.link-criar-conta:hover {
+  opacity: 0.7;
+  text-decoration: underline;
+}
+
+/* Estilos antigos mantidos para compatibilidade */
 .title {
   font-family: "Libre Bodoni", serif;
   font-weight: 700;
   font-size: 48px;
-  color: #592e83;
+  color: var(--primary);
   text-align: center;
   letter-spacing: 1.92px;
   margin-top: 86px;
   margin-bottom: 60px;
 }
 
-/* Formulários */
 .form {
   width: 320px;
   margin: 0 auto;
   display: flex;
   flex-direction: column;
-  gap: 16px;
+  gap: var(--spacing-md);
 }
 
 .form-cadastro {
@@ -67,14 +577,19 @@ body {
 .input-field {
   width: 100%;
   height: 41.31px;
-  background: #f2ebfb;
+  background: var(--primary-lighter);
   border: none;
-  border-radius: 16px;
+  border-radius: var(--radius-lg);
   padding: 10px 20px;
   font-family: "Maitree", serif;
   font-size: 14px;
-  color: #592e83;
+  color: var(--primary);
   outline: none;
+  transition: box-shadow 0.2s ease;
+}
+
+.input-field:focus {
+  box-shadow: 0 0 0 3px rgba(89, 46, 131, 0.1);
 }
 
 .input-field::placeholder {
@@ -88,13 +603,12 @@ body {
   top: -9px;
   font-family: "Maitree", serif;
   font-size: 14px;
-  color: #592e83;
+  color: var(--primary);
   background: white;
   padding: 0 5px;
   letter-spacing: 0.56px;
 }
 
-/* Checkbox */
 .checkbox-wrapper {
   display: flex;
   align-items: center;
@@ -106,7 +620,7 @@ body {
 .checkbox {
   width: 24px;
   height: 24px;
-  background: #f2ebfb;
+  background: var(--primary-lighter);
   border: none;
   border-radius: 3px;
   cursor: pointer;
@@ -121,38 +635,40 @@ body {
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  color: #592e83;
+  color: var(--primary);
   font-size: 18px;
 }
 
 .checkbox-label {
   font-family: "Maitree", serif;
   font-size: 14px;
-  color: #592e83;
+  color: var(--primary);
   letter-spacing: 0.72px;
   cursor: pointer;
 }
 
-/* Botões */
 .btn {
   width: 250px;
   height: 35px;
-  background: #f2ebfb;
+  background: var(--primary-lighter);
   border: none;
   border-radius: 20px;
   font-family: "Libre Bodoni", serif;
   font-weight: 700;
   font-size: 18px;
-  color: #592e83;
+  color: var(--primary);
   letter-spacing: 0.72px;
   cursor: pointer;
   margin: 20px auto 10px;
   display: block;
-  transition: background 0.3s ease;
+  transition: all 0.3s ease;
 }
 
 .btn:hover {
-  background: #e5d8f5;
+  background: var(--primary);
+  color: white;
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-md);
 }
 
 .btn-primary {
@@ -164,225 +680,81 @@ body {
   font-family: "Libre Bodoni", serif;
   font-weight: 700;
   font-size: 18px;
-  color: #592e83;
+  color: var(--primary);
   text-decoration: none;
   text-align: center;
   display: block;
   margin: 20px auto;
   letter-spacing: 0.72px;
+  transition: opacity 0.2s ease;
 }
 
 .btn-link:hover {
-  text-decoration: underline;
+  opacity: 0.8;
 }
 
-/* Login Screen */
 .login-screen .form {
   margin-top: 30px;
   gap: 36px;
 }
 
-/* Cadastro Screen */
 .cadastro-screen .form {
   margin-top: 20px;
 }
 
-/* Home Screen */
-.home-screen {
-  padding-bottom: 60px;
+/* Página de cadastro */
+.screen-cadastro {
+  width: 100%;
+  max-width: 320px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding-top: var(--spacing-xl);
 }
 
-/* Header */
-.header {
-  position: relative;
-  padding: 20px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  margin-bottom: 20px;
-}
-
-.logo {
-  width: 48px;
-  height: 48px;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-family: "Tilt Warp", sans-serif;
-  font-size: 32px;
-  color: white;
+.cadastro-title {
+  font-family: "Libre Bodoni", serif;
   font-weight: 700;
-}
-
-.feed-selector {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  background: #d9d9d9;
-  padding: 8px 20px;
-  border-radius: 24px;
-}
-
-.feed-title {
-  font-family: "Tilt Warp", sans-serif;
-  font-size: 32px;
-  color: #592e83;
+  font-size: 48px;
+  color: var(--primary);
+  text-align: center;
   letter-spacing: 1.92px;
-  font-weight: 400;
+  margin-bottom: 40px;
 }
 
-.dropdown-icon {
-  width: 22px;
-  height: 12px;
-}
-
-.notification-btn {
-  background: none;
-  border: none;
-  cursor: pointer;
-  padding: 0;
-  width: 32px;
-  height: 32px;
-}
-
-/* Posts Grid */
-.posts-grid {
-  padding: 0 0 20px 0;
-  display: grid;
-  grid-template-columns: repeat(2, 192px);
-  gap: 26px 6px;
-  justify-content: center;
-}
-
-.post-card {
-  width: 192px;
-  border-radius: 16px;
-  overflow: hidden;
-  box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25);
-  background: white;
-}
-
-.post-image {
-  width: 100%;
-  height: 240px;
-  border-radius: 16px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  position: relative;
-}
-
-.post-image-placeholder {
-  color: white;
-  font-size: 18px;
-  font-weight: 700;
-  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
-}
-
-.post-footer {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 8px 10px;
-  background: white;
-}
-
-.post-title {
-  font-family: "Teachers", sans-serif;
-  font-size: 16px;
-  color: #592e83;
-  letter-spacing: 0.64px;
-}
-
-.post-actions {
-  display: flex;
-  gap: 4px;
-  align-items: center;
-}
-
-.action-btn {
-  background: none;
-  border: none;
-  cursor: pointer;
-  font-size: 14px;
-  padding: 4px;
-  width: 20px;
-  height: 20px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.post-small {
-  height: 164px;
-}
-
-.post-small .post-image {
-  height: 164px;
-}
-
-/* Navigation Bar */
-.navbar {
-  position: fixed;
-  bottom: 0;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 100%;
-  max-width: 390px;
-  height: 60px;
-  background: #f2ebfb;
-  display: flex;
-  align-items: center;
-  justify-content: space-around;
-  padding: 0 20px;
-  border-top: 3px solid #000;
-  z-index: 1000;
-}
-
-.nav-btn {
-  background: none;
-  border: none;
-  cursor: pointer;
-  padding: 8px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: transform 0.2s ease;
-}
-
-.nav-btn:hover {
-  transform: scale(1.1);
-}
-
-.nav-btn.active {
-  background: rgba(89, 46, 131, 0.1);
-  border-radius: 50%;
-}
-
+/* ============================================
+   RESPONSIVIDADE
+   ============================================ */
 @media (max-width: 390px) {
   .container {
     max-width: 100%;
   }
 
-  .posts-grid {
-    grid-template-columns: repeat(2, 1fr);
-    gap: 20px 10px;
-    padding: 0 10px 20px;
+  .events-grid {
+    gap: var(--spacing-md);
+    padding: var(--spacing-md);
   }
 
-  .post-card {
-    width: 100%;
+  .header-home {
+    padding: var(--spacing-md);
   }
 
-  .post-image {
-    height: 200px;
+  .filter-nav {
+    padding: var(--spacing-md);
   }
 }
 
 @media (min-width: 768px) {
-  .posts-grid {
-    grid-template-columns: repeat(3, 192px);
+  .events-grid {
+    grid-template-columns: repeat(3, 1fr);
+    max-width: 800px;
+    margin: 0 auto;
+  }
+}
+
+@media (min-width: 1024px) {
+  .events-grid {
+    grid-template-columns: repeat(4, 1fr);
+    max-width: 1200px;
   }
 }

@@ -9,19 +9,17 @@
 [![Spring Boot](https://img.shields.io/badge/Spring%20Boot-6DB33F.svg?logo=springboot&logoColor=white)](https://spring.io/projects/spring-boot)
 [![PostgreSQL](https://img.shields.io/badge/PostgreSQL-4169E1.svg?logo=postgresql&logoColor=white)](https://www.postgresql.org/)
 
-
 Repositório principal do aplicativo **MUSA** desenvolvido pelo grupo `Inti` da turma 2025.2 da disciplina de Métodos de Desenvolvimento de Software (MDS) da Faculdade de Ciências e Tecnologia em Engenharias da Universidade de Brasília (FCTE - UnB).
 
 ---
 
 ## Sobre o Projeto
 
-O **MUSA** é uma aplicação web moderna desenvolvida com HTML5, CSS3 e JavaScript puro, seguindo o padrão **SPA (Single Page Application)**. A arquitetura foi projetada para ser **web-centric**, garantindo um *single-source-of-truth* (fonte única de verdade) para o código.
-
+O **MUSA** é uma aplicação web moderna desenvolvida com HTML5, CSS3 e JavaScript puro, seguindo o padrão **SPA (Single Page Application)**. A arquitetura foi projetada para ser **web-centric**, garantindo um _single-source-of-truth_ (fonte única de verdade) para o código.
 
 ### Distribuição Mobile
 
-A aplicação pode ser distribuída para plataformas móveis (iOS e Android) através do **Capacitor**, que atua como um *wrapper* nativo instanciando uma **WebView** que carrega o site web principal a partir de sua URL hospedada.
+A aplicação pode ser distribuída para plataformas móveis (iOS e Android) através do **Capacitor**, que atua como um _wrapper_ nativo instanciando uma **WebView** que carrega o site web principal a partir de sua URL hospedada.
 
 ---
 
@@ -34,18 +32,21 @@ O projeto MUSA segue uma arquitetura moderna de três camadas:
 ### Componentes do Sistema
 
 #### 1. **Frontend (Cliente Web)**
+
 - Aplicação SPA em HTML/CSS/JavaScript puro
 - Hospedagem em servidor estático
 - Roteamento client-side
 - Comunicação com backend via REST API
 
 #### 2. **Mobile (Capacitor)**
+
 - Wrapper nativo para iOS e Android
 - WebView integrada
 - Acesso a recursos nativos (notificações, câmera, etc.)
 - Carregamento do frontend via URL remota
 
 #### 3. **Backend (API REST)**
+
 - Implementado em Java Spring Boot
 - Autenticação e autorização
 - Lógica de negócio
@@ -54,7 +55,7 @@ O projeto MUSA segue uma arquitetura moderna de três camadas:
 ### Fluxo de Dados
 
 ```
-Usuário → App Nativo (Capacitor) → WebView → 
+Usuário → App Nativo (Capacitor) → WebView →
   ├─→ Frontend (HTML/JS/CSS)
   └─→ Backend API (Spring Boot) → PostgreSQL
 ```
@@ -113,7 +114,6 @@ musa/
 - **Extensão [Live Server](https://marketplace.visualstudio.com/items?itemName=ritwickdey.LiveServer)** - Servidor de desenvolvimento com hot-reload
 - **Extensão [Prettier](https://marketplace.visualstudio.com/items?itemName=esbenp.prettier-vscode)** - Formatação automática de código
 
-
 ## 🚀 Como Rodar o Projeto
 
 ### 1️⃣ Clone o Repositório
@@ -133,11 +133,9 @@ npm install
 
 #### 🐧 **Linux / macOS** e 💻 **Windows**
 
-
 - Instale a extensão [Live Server](https://marketplace.visualstudio.com/items?itemName=ritwickdey.LiveServer) no VS Code
 - Clique com botão direito em index.html
 - Selecione "Open with Live Server"
-
 
 #### Teste de Responsividade Mobile
 
@@ -175,22 +173,25 @@ git push
 ## Tecnologias Utilizadas
 
 ### Frontend
+
 - **HTML5** - Estrutura semântica
 - **CSS3** - Estilização e responsividade
 - **JavaScript (ES6+)** - Lógica da aplicação
 
 ### Ferramentas de Desenvolvimento
+
 - **Node.js** - Runtime JavaScript
 - **npm** - Gerenciamento de pacotes
 - **Prettier** - Formatação de código
 - **Live Server** - Servidor de desenvolvimento
 
-### Mobile 
+### Mobile
+
 - **Capacitor** - Wrapper nativo para iOS/Android
 
 ### Backend (Separado)
+
 - **Java 17+**
 - **Spring Boot** - Framework backend
 - **PostgreSQL** - Banco de dados relacional
 - **JWT** - Autenticação e autorização
-
