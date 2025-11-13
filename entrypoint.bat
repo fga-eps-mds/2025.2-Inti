@@ -76,11 +76,9 @@ if /i "%MODE%"=="emulator" (
     %ANDROID_HOME%\platform-tools\adb.exe wait-for-device
     echo [INFO] Dispositivo fisico detectado!
 
-) else (
-    :: --- Bloco de Erro para opção inválida ---
-    echo Erro: Modo invalido '%MODE%'. Use 'emulator' ou 'device'.
-    exit /b 1
-)
+:: Passo 5: Iniciar o container Docker com o Metro Bundler
+echo [INFO] Iniciando o container Docker com docker-compose...
+docker-compose up -d 
 
 :: Passo 8: Configurar o redirecionamento de porta
 echo [INFO] Configurando 'adb reverse' para a porta 8081...
