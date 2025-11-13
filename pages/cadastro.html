@@ -1,0 +1,133 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>MUSA - Cadastro</title>
+    <link rel="stylesheet" href="../css/style.css" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Libre+Bodoni:wght@700&family=Maitree:wght@400&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
+    <div class="container">
+      <div class="screen cadastro-screen">
+        <h1 class="title">CADASTRO</h1>
+
+        <form class="form form-cadastro" id="cadastroForm">
+          <div class="form-group">
+            <div class="input-wrapper">
+              <label class="input-label">Nome:</label>
+              <input
+                type="text"
+                class="input-field"
+                placeholder="Ex: Musa UnB"
+                required
+              />
+            </div>
+          </div>
+
+          <div class="form-group">
+            <div class="input-wrapper">
+              <label class="input-label">Username:</label>
+              <input
+                type="text"
+                class="input-field"
+                placeholder="Ex: musa123"
+                required
+              />
+            </div>
+          </div>
+
+          <div class="form-group">
+            <div class="input-wrapper">
+              <label class="input-label">Email:</label>
+              <input
+                type="email"
+                class="input-field"
+                placeholder="Ex: musa@aluno.unb.br"
+                required
+              />
+            </div>
+          </div>
+
+          <div class="form-group">
+            <div class="input-wrapper">
+              <label class="input-label">Senha</label>
+              <input
+                type="password"
+                class="input-field"
+                id="cadastroPassword"
+                required
+              />
+            </div>
+          </div>
+
+          <div class="form-group">
+            <div class="input-wrapper">
+              <label class="input-label">Confirmar senha</label>
+              <input
+                type="password"
+                class="input-field"
+                id="confirmPassword"
+                required
+              />
+            </div>
+          </div>
+
+          <div class="checkbox-wrapper">
+            <input type="checkbox" id="showPasswordCadastro" class="checkbox" />
+            <label for="showPasswordCadastro" class="checkbox-label"
+              >Mostrar senha</label
+            >
+          </div>
+
+          <div class="checkbox-wrapper">
+            <input type="checkbox" id="isOrganizational" class="checkbox" />
+            <label for="isOrganizational" class="checkbox-label"
+              >Essa conta é do tipo organizacional?</label
+            >
+          </div>
+
+          <button type="submit" class="btn btn-primary">CRIAR CONTA</button>
+          <a href="../index.html" class="btn-link">Fazer login</a>
+        </form>
+      </div>
+    </div>
+
+    <script src="../js/app.js"></script>
+    <script src="../js/auth.js"></script>
+    <script>
+      document
+        .getElementById("showPasswordCadastro")
+        .addEventListener("change", function () {
+          const passwordField = document.getElementById("cadastroPassword");
+          const confirmField = document.getElementById("confirmPassword");
+          const type = this.checked ? "text" : "password";
+          passwordField.type = type;
+          confirmField.type = type;
+        });
+
+      // Handle cadastro
+      document
+        .getElementById("cadastroForm")
+        .addEventListener("submit", function (e) {
+          e.preventDefault();
+          const password = document.getElementById("cadastroPassword").value;
+          const confirmPassword =
+            document.getElementById("confirmPassword").value;
+
+          if (password !== confirmPassword) {
+            alert("As senhas não coincidem!");
+            return;
+          }
+
+          // Redireciona para home após cadastro
+          window.location.href = "home.html";
+        });
+    </script>
+  </body>
+</html>

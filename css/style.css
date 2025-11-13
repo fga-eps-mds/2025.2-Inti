@@ -1,0 +1,388 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: "Maitree", serif;
+  background: white;
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.container {
+  width: 100%;
+  max-width: 390px;
+  min-height: 844px;
+  background: white;
+  position: relative;
+  overflow: hidden;
+}
+
+.screen {
+  width: 100%;
+  height: 100%;
+  min-height: 844px;
+  position: relative;
+  background: white;
+}
+
+/* Título principal */
+.title {
+  font-family: "Libre Bodoni", serif;
+  font-weight: 700;
+  font-size: 48px;
+  color: #592e83;
+  text-align: center;
+  letter-spacing: 1.92px;
+  margin-top: 86px;
+  margin-bottom: 60px;
+}
+
+/* Formulários */
+.form {
+  width: 320px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.form-cadastro {
+  margin-top: -20px;
+}
+
+.form-group {
+  width: 100%;
+}
+
+.input-wrapper {
+  position: relative;
+  width: 100%;
+}
+
+.input-field {
+  width: 100%;
+  height: 41.31px;
+  background: #f2ebfb;
+  border: none;
+  border-radius: 16px;
+  padding: 10px 20px;
+  font-family: "Maitree", serif;
+  font-size: 14px;
+  color: #592e83;
+  outline: none;
+}
+
+.input-field::placeholder {
+  color: rgba(89, 46, 131, 0.55);
+  font-size: 10px;
+}
+
+.input-label {
+  position: absolute;
+  left: 10px;
+  top: -9px;
+  font-family: "Maitree", serif;
+  font-size: 14px;
+  color: #592e83;
+  background: white;
+  padding: 0 5px;
+  letter-spacing: 0.56px;
+}
+
+/* Checkbox */
+.checkbox-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 10px 0;
+  padding-left: 35px;
+}
+
+.checkbox {
+  width: 24px;
+  height: 24px;
+  background: #f2ebfb;
+  border: none;
+  border-radius: 3px;
+  cursor: pointer;
+  appearance: none;
+  -webkit-appearance: none;
+  position: relative;
+}
+
+.checkbox:checked::after {
+  content: "✓";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  color: #592e83;
+  font-size: 18px;
+}
+
+.checkbox-label {
+  font-family: "Maitree", serif;
+  font-size: 14px;
+  color: #592e83;
+  letter-spacing: 0.72px;
+  cursor: pointer;
+}
+
+/* Botões */
+.btn {
+  width: 250px;
+  height: 35px;
+  background: #f2ebfb;
+  border: none;
+  border-radius: 20px;
+  font-family: "Libre Bodoni", serif;
+  font-weight: 700;
+  font-size: 18px;
+  color: #592e83;
+  letter-spacing: 0.72px;
+  cursor: pointer;
+  margin: 20px auto 10px;
+  display: block;
+  transition: background 0.3s ease;
+}
+
+.btn:hover {
+  background: #e5d8f5;
+}
+
+.btn-primary {
+  width: 250px;
+  margin-top: 30px;
+}
+
+.btn-link {
+  font-family: "Libre Bodoni", serif;
+  font-weight: 700;
+  font-size: 18px;
+  color: #592e83;
+  text-decoration: none;
+  text-align: center;
+  display: block;
+  margin: 20px auto;
+  letter-spacing: 0.72px;
+}
+
+.btn-link:hover {
+  text-decoration: underline;
+}
+
+/* Login Screen */
+.login-screen .form {
+  margin-top: 30px;
+  gap: 36px;
+}
+
+/* Cadastro Screen */
+.cadastro-screen .form {
+  margin-top: 20px;
+}
+
+/* Home Screen */
+.home-screen {
+  padding-bottom: 60px;
+}
+
+/* Header */
+.header {
+  position: relative;
+  padding: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+
+.logo {
+  width: 48px;
+  height: 48px;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: "Tilt Warp", sans-serif;
+  font-size: 32px;
+  color: white;
+  font-weight: 700;
+}
+
+.feed-selector {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: #d9d9d9;
+  padding: 8px 20px;
+  border-radius: 24px;
+}
+
+.feed-title {
+  font-family: "Tilt Warp", sans-serif;
+  font-size: 32px;
+  color: #592e83;
+  letter-spacing: 1.92px;
+  font-weight: 400;
+}
+
+.dropdown-icon {
+  width: 22px;
+  height: 12px;
+}
+
+.notification-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  width: 32px;
+  height: 32px;
+}
+
+/* Posts Grid */
+.posts-grid {
+  padding: 0 0 20px 0;
+  display: grid;
+  grid-template-columns: repeat(2, 192px);
+  gap: 26px 6px;
+  justify-content: center;
+}
+
+.post-card {
+  width: 192px;
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25);
+  background: white;
+}
+
+.post-image {
+  width: 100%;
+  height: 240px;
+  border-radius: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+}
+
+.post-image-placeholder {
+  color: white;
+  font-size: 18px;
+  font-weight: 700;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.post-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 10px;
+  background: white;
+}
+
+.post-title {
+  font-family: "Teachers", sans-serif;
+  font-size: 16px;
+  color: #592e83;
+  letter-spacing: 0.64px;
+}
+
+.post-actions {
+  display: flex;
+  gap: 4px;
+  align-items: center;
+}
+
+.action-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 14px;
+  padding: 4px;
+  width: 20px;
+  height: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.post-small {
+  height: 164px;
+}
+
+.post-small .post-image {
+  height: 164px;
+}
+
+/* Navigation Bar */
+.navbar {
+  position: fixed;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 100%;
+  max-width: 390px;
+  height: 60px;
+  background: #f2ebfb;
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  padding: 0 20px;
+  border-top: 3px solid #000;
+  z-index: 1000;
+}
+
+.nav-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.2s ease;
+}
+
+.nav-btn:hover {
+  transform: scale(1.1);
+}
+
+.nav-btn.active {
+  background: rgba(89, 46, 131, 0.1);
+  border-radius: 50%;
+}
+
+@media (max-width: 390px) {
+  .container {
+    max-width: 100%;
+  }
+
+  .posts-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px 10px;
+    padding: 0 10px 20px;
+  }
+
+  .post-card {
+    width: 100%;
+  }
+
+  .post-image {
+    height: 200px;
+  }
+}
+
+@media (min-width: 768px) {
+  .posts-grid {
+    grid-template-columns: repeat(3, 192px);
+  }
+}

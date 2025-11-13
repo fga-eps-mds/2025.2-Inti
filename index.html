@@ -1,0 +1,78 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>MUSA - Login</title>
+    <link rel="stylesheet" href="css/style.css" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Libre+Bodoni:wght@700&family=Maitree:wght@400&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
+    <div class="screen-container">
+      <div class="screen-login">
+        <h1 class="login-title">LOGIN</h1>
+
+        <form class="form-login" id="loginForm">
+          <div class="form-group-login">
+            <label class="input-label-login">Email:</label>
+            <input
+              type="email"
+              class="input-field-login"
+              placeholder="Ex: musa@aluno.unb.br"
+              required
+            />
+          </div>
+
+          <div class="form-group-login">
+            <label class="input-label-login">Senha</label>
+            <input
+              type="password"
+              class="input-field-login"
+              id="loginPassword"
+              required
+            />
+          </div>
+        </form>
+
+
+        <div class="checkbox-group-login">
+          <input type="checkbox" id="showPassword" class="checkbox-login" />
+          <label for="showPassword" class="checkbox-label-login"
+            >Mostrar senha</label
+          >
+        </div>
+
+
+        <button type="submit" form="loginForm" class="btn-login">
+          FAZER LOGIN
+        </button>
+
+
+        <a href="pages/cadastro.html" class="link-criar-conta">Criar conta</a>
+      </div>
+    </div>
+
+    <script src="js/app.js"></script>
+    <script src="js/auth.js"></script>
+    <script>
+      document
+        .getElementById("showPassword")
+        .addEventListener("change", function () {
+          const passwordField = document.getElementById("loginPassword");
+          passwordField.type = this.checked ? "text" : "password";
+        });
+
+      document
+        .getElementById("loginForm")
+        .addEventListener("submit", function (e) {
+          e.preventDefault();
+          window.location.href = "pages/home.html";
+        });
+    </script>
+  </body>
+</html>

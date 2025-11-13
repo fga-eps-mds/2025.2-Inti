@@ -1,0 +1,24 @@
+{
+  "name": "inti",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/fga-eps-mds/2025.2-Inti.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/fga-eps-mds/2025.2-Inti/issues"
+  },
+  "homepage": "https://github.com/fga-eps-mds/2025.2-Inti#readme",
+  "devDependencies": {
+    "prettier": "^3.6.2"
+  }
+}
