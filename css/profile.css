@@ -72,32 +72,31 @@ body {
 }
 
 .screen-user {
-    width: 100%;
+  width: 100%;
 }
-
 
 /* 
   TELA DE USER
 */
-.profile-photo{
+.profile-photo {
   position: relative;
-  width: 100px;  
-  height: 100px; 
+  width: 100px;
+  height: 100px;
   margin: 0 auto;
   margin-top: 10px;
 }
 
 .img-user-icon {
-    width: 100px;
-    height: 100px;
-    border-radius: 50%;
-    background-image: url('../assets/image-user-icon.png');
-    background-size: cover;
-    background-position: center;
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%); 
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  background-image: url("../assets/image-user-icon.png");
+  background-size: cover;
+  background-position: center;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
 }
 
 .container-header {
@@ -106,22 +105,22 @@ body {
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  font-family: 'Julius Sans One', sans-serif;
+  font-family: "Julius Sans One", sans-serif;
 }
-.user-name{
-    font-size: 24px;
-}
-
-.user-username{
-    font-size: 12px;
+.user-name {
+  font-size: 24px;
 }
 
-.container-data-user{
+.user-username {
+  font-size: 12px;
+}
+
+.container-data-user {
   margin-top: 25px;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  font-family: 'Julius Sans One', sans-serif;
+  font-family: "Julius Sans One", sans-serif;
   padding: 0 30px;
 }
 
@@ -140,18 +139,18 @@ body {
 .profile-seguindo,
 .profile-post,
 .profile-seguidores {
-    font-size: 14px;
+  font-size: 14px;
 }
 
 .contact-info-box {
-    background-color: #D9D9D9;
-    align-items: center;
-    border-radius: 12px;
-    margin: 20px 30px;
+  background-color: #d9d9d9;
+  align-items: center;
+  border-radius: 12px;
+  margin: 20px 30px;
 }
 
 .contact-text {
-  font-family: 'Julius Sans One', sans-serif;
+  font-family: "Julius Sans One", sans-serif;
   font-size: 14px;
   margin-bottom: 12px;
   padding: 6px;
@@ -164,9 +163,9 @@ body {
 }
 
 .screen-container {
-    display: flex;
-    padding: 25px;
-    flex: 1;
+  display: flex;
+  padding: 25px;
+  flex: 1;
 }
 
 /* ============================================
