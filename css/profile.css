@@ -51,6 +51,7 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   display: flex;
+  flex-direction: column;
   width: 100%;
   min-height: 100vh;
 }
@@ -73,6 +74,7 @@ body {
 
 .screen-user {
   width: 100%;
+  align-items: center;
 }
 
 /* 
@@ -168,6 +170,73 @@ body {
   flex: 1;
 }
 
+
+.grid-products {
+  height: 55px;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 100px;
+  margin: 0 0;
+}
+
+.icon,
+.products {
+  width: 25px;
+  height: 25px;
+  flex-shrink: 0;
+}
+
+.icon {
+  margin-left: 60px;
+}
+
+.products {
+  margin-right: 60px;
+}
+
+.linha {
+  width: 1px;
+  height: 35px;
+  background-color: var(--primary);
+  flex-shrink: 0;
+}
+.edit{
+    width: 18px;
+    height: 18px;
+    margin-left: 5px;
+    margin-top: 6px;
+}
+
+.edit-icon{
+  width: 29px;
+  height: 29px;
+  background-color: #FCF9FF;
+  border-radius: 8px;
+  margin-top: 80px;
+  margin-left: 90px;
+  align-items: center;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+
+}
+
+.divider{
+  width: 100%;
+  height: 2px;
+  background-color: #d9d9d9;
+ 
+}
+
+
+
+
+
+
+
+
+
 /* ============================================
    RESPONSIVIDADE
    ============================================ */
@@ -175,7 +244,10 @@ body {
   .container {
     max-width: 100%;
   }
-
+  .contact-info-box{
+    max-width: 100%;
+    max-height: auto;
+  }
   .events-grid {
     gap: var(--spacing-md);
     padding: var(--spacing-md);
@@ -188,6 +260,26 @@ body {
   .filter-nav {
     padding: var(--spacing-md);
   }
+  .container-data-user{
+    max-width: 100%;
+    gap: 50px;
+  }
+  .grid-products {
+    max-width: 100%;
+    gap: 80px;
+    padding: 0 15px;
+  }
+  
+  .icon {
+    margin-left: 40px;
+  }
+  
+  .products {
+    margin-right: 40px;
+  }
+  .divider{
+    width: 100%;
+  }
 }
 
 @media (min-width: 768px) {
@@ -196,11 +288,61 @@ body {
     max-width: 800px;
     margin: 0 auto;
   }
+
+   .grid-products {
+    height: 60px;
+    gap: 120px;
+  }
+  
+  .icon,
+  .products {
+    width: 30px;
+    height: 30px;
+  }
+  
+  .icon {
+    margin-left: 80px;
+  }
+  
+  .products {
+    margin-right: 80px;
+  }
+  
+  .linha {
+    height: 40px;
+    width: 2px;
+  }
+  .divider{
+    width: 100%;
+  }
 }
 
 @media (min-width: 1024px) {
-  .events-grid {
-    grid-template-columns: repeat(4, 1fr);
-    max-width: 1200px;
+  .grid-products {
+    height: 70px;
+    gap: 150px;
+  }
+  
+  .icon,
+  .products {
+    width: 35px;
+    height: 35px;
+  }
+  
+  .icon {
+    margin-left: 100px;
+  }
+  
+  .products {
+    margin-right: 100px;
+  }
+  
+  .linha {
+    height: 45px;
+    width: 2px;
+  }
+  
+  .divider{
+    width: 100%;
   }
 }
