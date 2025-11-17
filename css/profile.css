@@ -82,15 +82,16 @@ body {
 */
 .profile-photo {
   position: relative;
-  width: 100px;
-  height: 100px;
+  width: 75px;
+  height: 75px;
   margin: 0 auto;
-  margin-top: 10px;
+  margin-bottom: 10px;
+
 }
 
 .img-user-icon {
-  width: 100px;
-  height: 100px;
+  width: 73px;
+  height: 73px;
   border-radius: 50%;
   background-image: url("../assets/image-user-icon.png");
   background-size: cover;
@@ -102,7 +103,6 @@ body {
 }
 
 .container-header {
-  margin-top: 25px;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -118,12 +118,12 @@ body {
 }
 
 .container-data-user {
-  margin-top: 25px;
+  margin-top: 0px;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  font-family: "Julius Sans One", sans-serif;
-  padding: 0 30px;
+  font-family: "Jost", sans-serif;
+
 }
 
 .profile-item {
@@ -142,20 +142,21 @@ body {
 .profile-post,
 .profile-seguidores {
   font-size: 14px;
+  font-weight: 700;
 }
 
 .contact-info-box {
   background-color: #d9d9d9;
   align-items: center;
   border-radius: 12px;
-  margin: 20px 30px;
+  width: 364;
+  height: 93;
 }
 
 .contact-text {
   font-family: "Julius Sans One", sans-serif;
   font-size: 14px;
-  margin-bottom: 12px;
-  padding: 6px;
+  padding: 10px 20px;
   border-radius: 6px;
   text-align: left;
 }
@@ -166,7 +167,9 @@ body {
 
 .screen-container {
   display: flex;
-  padding: 25px;
+  padding-top: 16px;
+  padding-left: 16px;
+  padding-right: 16px;
   flex: 1;
 }
 
@@ -206,8 +209,8 @@ body {
 .edit{
     width: 18px;
     height: 18px;
-    margin-left: 5px;
     margin-top: 6px;
+    margin-left: 5px;
 }
 
 .edit-icon{
@@ -215,11 +218,20 @@ body {
   height: 29px;
   background-color: #FCF9FF;
   border-radius: 8px;
-  margin-top: 80px;
-  margin-left: 90px;
+  margin-top: 50px;
+  margin-left: 60px;
   align-items: center;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
 
+.follow-icon{
+  width: 29px;
+  height: 29px;
+  background-color: #FCF9FF;
+  border-radius: 8px;
+  margin-top: 50px;
+  margin-left: 80px;
+  align-items: center;
 }
 
 .divider{
@@ -233,6 +245,84 @@ body {
 
 
 
+
+/* ============================================
+   NAVIGATION BAR (copiado de style.css)
+   ============================================ */
+.navbar {
+  position: fixed;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 100%;
+  max-width: 390px;
+  height: 70px;
+  background: white;
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  padding: 0 var(--spacing-md);
+  border-top: 1px solid var(--gray-200);
+  z-index: 1000;
+}
+
+.nav-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: var(--spacing-sm);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  color: var(--gray-400);
+  transition: all 0.2s ease;
+  position: relative;
+  min-width: 50px;
+  height: 50px;
+}
+
+.nav-btn:hover {
+  color: var(--primary);
+}
+
+.nav-btn.active {
+  color: var(--primary);
+}
+
+.nav-btn.active::after {
+  content: "";
+  position: absolute;
+  bottom: -16px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 32px;
+  height: 3px;
+  background: var(--primary);
+  border-radius: var(--radius-full);
+}
+
+.nav-btn svg {
+  width: 24px;
+  height: 24px;
+}
+
+/* Botão de adicionar centralizado */
+.nav-btn-add {
+  width: 54px;
+  height: 54px;
+  background: var(--primary);
+  border-radius: var(--radius-full);
+  color: white;
+  margin: 0 var(--spacing-xs);
+  box-shadow: var(--shadow-md);
+}
+
+.nav-btn-add:hover {
+  background: var(--primary-light);
+  color: white;
+  transform: scale(1.05);
+}
 
 
 
@@ -267,7 +357,7 @@ body {
   .grid-products {
     max-width: 100%;
     gap: 80px;
-    padding: 0 15px;
+    padding: 15px 15px;
   }
   
   .icon {
