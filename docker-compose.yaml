@@ -1,0 +1,31 @@
+services:
+  db:
+    image: postgres:latest
+    container_name: inti-db
+    environment:
+      POSTGRES_DB: banco_MUSA
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: 1234
+    ports:
+      - "5432:5432"
+    volumes:
+      - ./init:/docker-entrypoint-initdb.d
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U user -d banco_MUSA"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  app:
+    build:
+      context: .
+    container_name: inti-backend
+    depends_on:
+        db:
+            condition: service_healthy
+    ports:
+      - "8080:8080"
+    env_file:
+      - .env
+    environment:
+      - SPRING_PROFILES_ACTIVE=local
