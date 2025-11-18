@@ -194,7 +194,7 @@
             border-radius: 16px;
             border: 0 solid transparent;
             color: #592e83B3;
-            background-color: #d9d9d9;
+            background-color: #F2EBFB;
         }
 
         .botao-edit:active {
@@ -218,22 +218,22 @@
                     </div>
                     <div class="name-edit">
                         <p>Editar nome</p>
-                        <input type="text" placeholder="Ex: Musa UnB">
+                        <input class="nome-input" type="text" placeholder="Ex: Musa UnB">
                     </div>
                 </div>
 
                 <div class="informacao">
                     <div class="informacao-info">
                         <p>Editar Telefone</p>
-                        <input class="informacao-input" type="text" placeholder="(+55) 61 1234-5678">
+                        <input class="informacao-input" type="text" id="telefone-input" placeholder="(+55) 61 1234-5678">
                     </div>
                     <div class="informacao-info">
                         <p>Editar Email</p>
-                        <input class="informacao-input" type="text" placeholder="Ex: musa@aluno.unb.br">
+                        <input class="informacao-input" type="text" id="email-input" placeholder="Ex: musa@aluno.unb.br">
                     </div>
                     <div class="informacao-info">
                         <p>Editar Bio</p>
-                        <textarea placeholder="Eu gosto de usar o MUSA" class="informacao-input"></textarea>
+                        <textarea placeholder="Eu gosto de usar o MUSA" id="bio-input" class="informacao-input"></textarea>
                     </div>
                 </div>
 
@@ -289,6 +289,7 @@
     </div>
     <script src="../js/app.js"></script>
     <script src="../js/router.js"></script>
+    <script src="../js/edit.js"></script>
 </body>
 
 </html>
