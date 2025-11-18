@@ -2,8 +2,6 @@ package br.mds.inti.service;
 
 import com.azure.storage.blob.BlobClient;
 import com.azure.storage.blob.BlobServiceClient;
-import com.azure.storage.blob.BlobServiceClientBuilder;
-import jakarta.annotation.PostConstruct;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
@@ -29,15 +27,8 @@ public class BlobService {
     @Value("${spring.cloud.azure.storage.blob.container-name}")
     private String containerName;
 
-    @PostConstruct
-    public void init() {
-        try {
-            blobServiceClient = new BlobServiceClientBuilder()
-                    .connectionString(connectionString)
-                    .buildClient();
-        } catch (Exception e) {
-            log.error("Failed to initialize BlobServiceClient", e);
-        }
+    public BlobService(BlobServiceClient blobServiceClient) {
+        this.blobServiceClient = blobServiceClient;
     }
 
     public String uploadImage(UUID userId, MultipartFile file) throws IOException {
