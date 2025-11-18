@@ -19,6 +19,7 @@ import br.mds.inti.model.dto.UpdateUserRequest;
 import br.mds.inti.model.entity.Profile;
 import br.mds.inti.repositories.ProfileRepository;
 import br.mds.inti.service.exceptions.UsernameAlreadyExistsException;
+import jakarta.validation.constraints.Null;
 import br.mds.inti.service.exceptions.ProfileNotFoundException;
 
 @Service
@@ -64,23 +65,32 @@ public class ProfileService {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "No authentication provided");
 
         Profile profile = (Profile) auth.getPrincipal();
-        profile.setBio(updateUserRequest.userBio());
-        profile.setName(updateUserRequest.name());
+
+        if (updateUserRequest.name() != null && !updateUserRequest.name().isBlank()) {
+            profile.setName(updateUserRequest.name());
+        }
+        if (updateUserRequest.userBio() != null && !updateUserRequest.userBio().isBlank()) {
+            profile.setBio(updateUserRequest.userBio());
+        }
         
-        if (profileRepository.findIfUsernameIsUsed(updateUserRequest.username())) {
-            throw new UsernameAlreadyExistsException("Esse username já está sendo usado");
-        } else {
-            profile.setUsername(updateUserRequest.username());
+        if (updateUserRequest.username() != null && !updateUserRequest.username().isBlank()) {
+            if (profileRepository.findIfUsernameIsUsed(updateUserRequest.username())) {
+                throw new UsernameAlreadyExistsException("Esse username já está sendo usado");
+            } else {
+                profile.setUsername(updateUserRequest.username());
+            }
         }
 
-        byte[] existingProfilePicture = blobService.downloadImage(profile.getProfilePictureUrl());
-        byte[] newProfilePicture = updateUserRequest.profilePicture().getBytes();
-        
-        if (!Arrays.equals(existingProfilePicture, newProfilePicture)) {
-            String blobName = blobService.uploadImage(profile.getId(), updateUserRequest.profilePicture());
-            profile.setProfilePictureUrl(blobName);
+        if (updateUserRequest.profilePicture() != null && !updateUserRequest.profilePicture().isEmpty()) {
+            byte[] existingProfilePicture = blobService.downloadImage(profile.getProfilePictureUrl());
+            byte[] newProfilePicture = updateUserRequest.profilePicture().getBytes();
+
+            if (!Arrays.equals(existingProfilePicture, newProfilePicture)) {
+                String blobName = blobService.uploadImage(profile.getId(), updateUserRequest.profilePicture());
+                profile.setProfilePictureUrl(blobName);
+            }
         }
-        
+
         profileRepository.save(profile);
         return "profile updated";
     }

@@ -6,9 +6,9 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 
 public record UpdateUserRequest (
-    @NotBlank String name,
-    @NotBlank String username,
-    @NotBlank String userBio,
-    @NotNull MultipartFile profilePicture
+    String name,
+    String username,
+    String userBio,
+    MultipartFile profilePicture
 ) {
 }
