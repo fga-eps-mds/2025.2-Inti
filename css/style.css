@@ -54,7 +54,6 @@ body {
 
 .container {
   width: 100%;
-  max-width: 390px;
   min-height: 100vh;
   background: white;
   margin: 0 auto;
@@ -289,7 +288,6 @@ body {
   left: 50%;
   transform: translateX(-50%);
   width: 100%;
-  max-width: 390px;
   height: 70px;
   background: white;
   display: flex;
