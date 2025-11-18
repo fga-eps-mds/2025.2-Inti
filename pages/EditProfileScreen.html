@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Editar perfil</title>
+    <link rel="stylesheet" href="../css/style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Maitree:wght@200;300;400;500;600;700&family=Quicksand:wght@300..700&display=swap"
+        rel="stylesheet">
+    <style>
+        /* ============================================
+   RESET & BASE
+   ============================================ */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            /* Cores principais */
+            --primary: #592e83;
+            --primary-light: #7a4fa3;
+            --primary-lighter: #f2ebfb;
+            --accent: #a38bba;
+
+            /* Tons neutros */
+            --gray-50: #fafafa;
+            --gray-100: #f5f5f5;
+            --gray-200: #e5e5e5;
+            --gray-300: #d4d4d4;
+            --gray-400: #a3a3a3;
+            --gray-500: #737373;
+            --gray-600: #525252;
+            --gray-900: #171717;
+
+            /* Espaçamentos */
+            --spacing-xs: 4px;
+            --spacing-sm: 8px;
+            --spacing-md: 16px;
+            --spacing-lg: 24px;
+            --spacing-xl: 32px;
+
+            /* Bordas */
+            --radius-sm: 8px;
+            --radius-md: 12px;
+            --radius-lg: 16px;
+            --radius-full: 9999px;
+
+            /* Sombras */
+            --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+            --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+        }
+
+        .container-edit {
+            padding: 5vh 5vw 0;
+        }
+
+        .edit-picture-name {
+            width: 100%;
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            justify-content: center;
+            gap: 5vw;
+
+        }
+
+        .imagens {
+            position: relative;
+            display: inline-block;
+        }
+
+        .input-img {
+
+            opacity: 0;
+            position: absolute;
+            width: 100px;
+            height: 100px;
+            cursor: pointer;
+            z-index: 3;
+        }
+
+        .upload-label {
+            display: inline-block;
+            width: 90px;
+            height: 90px;
+            background-color: #F2EBFB;
+            border-radius: 100%;
+            cursor: pointer;
+            position: relative;
+        }
+
+        .icon-user {
+            width: 80px;
+            height: 80px;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+
+        .edit-icon {
+            position: absolute;
+            bottom: -2px;
+            right: 2px;
+            width: 25px;
+            height: auto;
+            z-index: 2;
+        }
+
+        .name-edit {
+            width: auto;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .name-edit input {
+            width: 220px;
+            height: 36px;
+            border-radius: 12px;
+            align-items: center;
+            padding: 0 15px;
+            border: 0 solid transparent;
+            background-color: #F2EBFB;
+            outline: none;
+        }
+
+        .name-edit input:focus {
+            outline: 2px solid var(--primary-light);
+        }
+
+        .name-edit p {
+            color: #592e83;
+            opacity: 70%;
+            margin-left: 10px;
+            margin-bottom: -2px;
+            font-size: 18px;
+        }
+
+        .informacao {
+            display: flex;
+            flex-direction: column;
+            margin-top: 6vw;
+            gap: 20px;
+        }
+
+        .informacao-info p {
+            color: #592e83;
+            opacity: 70%;
+            margin-left: 2vw;
+            font-size: 18px;
+        }
+
+        .informacao-input {
+            height: 40px;
+            width: 100%;
+            border-radius: 12px;
+            outline: none;
+            border: 0 solid transparent;
+            background-color: #F2EBFB;
+            padding: 0 4vw;
+            font-family: "Maitree", serif;
+            font-weight: normal;
+        }
+
+        .informacao-input:focus {
+            outline: 2px solid var(--primary-light);
+        }
+
+        .informacao-info textarea {
+            resize: none;
+            height: 150px;
+            padding-top: 8px;
+        }
+
+        .informacao-info textarea:focus {
+            outline: 2px solid var(--primary-light);
+        }
+
+        .botao-edit {
+            display: flex;
+            margin: 3vh auto 0;
+            width: 35vw;
+            justify-content: center;
+            align-items: center;
+            height: 40px;
+            font-size: 18px;
+            border-radius: 16px;
+            border: 0 solid transparent;
+            color: #592e83B3;
+            background-color: #d9d9d9;
+        }
+
+        .botao-edit:active {
+            outline: 2px solid var(--primary-light);
+            background-color: var(--primary-lighter);
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <div class="container-edit">
+            <form>
+                <div class="edit-picture-name">
+                    <div class="imagens">
+                        <input type="file" accept="image/*" class="input-img" id="avatar-upload">
+                        <label for="avatar-upload" class="upload-label">
+                            <img class="icon-user" src="../assets/img_user.svg" alt="Selecionar foto">
+                        </label>
+                        <img src="../assets/image 16.svg" alt="" class="edit-icon">
+                    </div>
+                    <div class="name-edit">
+                        <p>Editar nome</p>
+                        <input type="text" placeholder="Ex: Musa UnB">
+                    </div>
+                </div>
+
+                <div class="informacao">
+                    <div class="informacao-info">
+                        <p>Editar Telefone</p>
+                        <input class="informacao-input" type="text" placeholder="(+55) 61 1234-5678">
+                    </div>
+                    <div class="informacao-info">
+                        <p>Editar Email</p>
+                        <input class="informacao-input" type="text" placeholder="Ex: musa@aluno.unb.br">
+                    </div>
+                    <div class="informacao-info">
+                        <p>Editar Bio</p>
+                        <textarea placeholder="Eu gosto de usar o MUSA" class="informacao-input"></textarea>
+                    </div>
+                </div>
+
+                <button class="botao-edit" type="submit">Concluído</button>
+            </form>
+        </div>
+        <nav class="navbar">
+            <button class="nav-btn active" aria-label="Home">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                    <path
+                        d="M3 9L12 2L21 9V20C21 20.5304 20.7893 21.0391 20.4142 21.4142C20.0391 21.7893 19.5304 22 19 22H5C4.46957 22 3.96086 21.7893 3.58579 21.4142C3.21071 21.0391 3 20.5304 3 20V9Z"
+                        stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                    <path d="M9 22V12H15V22" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round" />
+                </svg>
+            </button>
+            <button class="nav-btn" aria-label="Explorar">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                    <circle cx="11" cy="11" r="8" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round" />
+                    <path d="M21 21L16.65 16.65" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round" />
+                </svg>
+            </button>
+            <button class="nav-btn nav-btn-add" aria-label="Adicionar">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                    <line x1="12" y1="5" x2="12" y2="19" stroke="currentColor" stroke-width="2"
+                        stroke-linecap="round" />
+                    <line x1="5" y1="12" x2="19" y2="12" stroke="currentColor" stroke-width="2"
+                        stroke-linecap="round" />
+                </svg>
+            </button>
+            <button class="nav-btn" aria-label="Calendário">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                    <rect x="3" y="4" width="18" height="18" rx="2" stroke="currentColor" stroke-width="2"
+                        stroke-linecap="round" stroke-linejoin="round" />
+                    <line x1="16" y1="2" x2="16" y2="6" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+                    <line x1="8" y1="2" x2="8" y2="6" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+                    <line x1="3" y1="10" x2="21" y2="10" stroke="currentColor" stroke-width="2"
+                        stroke-linecap="round" />
+                </svg>
+            </button>
+            <button class="nav-btn" aria-label="Perfil">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                    <path
+                        d="M20 21V19C20 17.9391 19.5786 16.9217 18.8284 16.1716C18.0783 15.4214 17.0609 15 16 15H8C6.93913 15 5.92172 15.4214 5.17157 16.1716C4.42143 16.9217 4 17.9391 4 19V21"
+                        stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                    <circle cx="12" cy="7" r="4" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round" />
+                </svg>
+            </button>
+        </nav>
+    </div>
+    <script src="../js/app.js"></script>
+    <script src="../js/router.js"></script>
+</body>
+
+</html>
