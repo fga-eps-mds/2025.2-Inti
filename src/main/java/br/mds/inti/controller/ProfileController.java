@@ -29,7 +29,8 @@ public class ProfileController {
     @GetMapping("/me")
     public ResponseEntity<ProfileResponse> getMe(@RequestParam("size") Integer size,
             @RequestParam("page") Integer page) {
-        return ResponseEntity.ok().body(profileService.getProfile(page, size));
+        ProfileResponse response = profileService.getProfile(page, size);
+        return ResponseEntity.ok().body(response);
     }
 
     @GetMapping("/{username}")

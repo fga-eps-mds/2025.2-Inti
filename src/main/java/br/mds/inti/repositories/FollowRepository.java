@@ -15,4 +15,5 @@ public interface FollowRepository extends JpaRepository<Follow, FollowsPK> {
     @Query("select f from Follow f where f.followerProfile = :follower and f.followingProfile = :following")
     Optional<Follow> findFollowRelationship(@Param("follower") Profile followerProfile,
             @Param("following") Profile followingProfile);
+
 }
