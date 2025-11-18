@@ -82,6 +82,10 @@ class ProfileServiceTest {
 
         when(postService.getPostByIdProfile(profileId, PageRequest.of(0, 10))).thenReturn(mockPosts);
 
+        // CORREÇÃO: Mock do generateImageUrl para retornar o valor esperado
+        when(postService.generateImageUrl("http://example.com/avatar.jpg"))
+                .thenReturn("/images/http://example.com/avatar.jpg");
+
         // Act
         ProfileResponse result = profileService.getProfile(0, 10);
 
@@ -89,7 +93,8 @@ class ProfileServiceTest {
         assertNotNull(result);
         assertEquals(mockProfile.getName(), result.name());
         assertEquals(mockProfile.getUsername(), result.username());
-        assertEquals(mockProfile.getProfilePictureUrl(), result.profile_picture_url());
+        // CORREÇÃO: Agora espera a URL transformada
+        assertEquals("/images/http://example.com/avatar.jpg", result.profile_picture_url());
         assertEquals(mockProfile.getBio(), result.bio());
         assertEquals(mockProfile.getFollowersCount(), result.followersCount());
         assertEquals(mockProfile.getFollowingCount(), result.followingCount());

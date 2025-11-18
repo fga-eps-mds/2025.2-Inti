@@ -30,7 +30,8 @@ public class ProfileService {
 
             Page<PostResponse> post = postService.getPostByIdProfile(profile.getId(), PageRequest.of(page, size));
 
-            return new ProfileResponse(profile.getName(), profile.getUsername(), profile.getProfilePictureUrl(),
+            return new ProfileResponse(profile.getName(), profile.getUsername(),
+                    postService.generateImageUrl(profile.getProfilePictureUrl()),
                     profile.getBio(), profile.getFollowersCount(), profile.getFollowingCount(), post.getContent());
         }
         throw new RuntimeException("profile nao autenticado");
@@ -43,7 +44,8 @@ public class ProfileService {
         Page<PostResponse> post = postService.getPostByIdProfile(publicProfile.getId(), PageRequest.of(page, size));
 
         return new ProfileResponse(publicProfile.getName(), publicProfile.getUsername(),
-                publicProfile.getProfilePictureUrl(), publicProfile.getBio(), publicProfile.getFollowersCount(),
+                postService.generateImageUrl(publicProfile.getProfilePictureUrl()), publicProfile.getBio(),
+                publicProfile.getFollowersCount(),
                 publicProfile.getFollowingCount(), post.getContent());
     }
 
