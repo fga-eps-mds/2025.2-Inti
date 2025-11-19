@@ -253,7 +253,6 @@ body {
   left: 50%;
   transform: translateX(-50%);
   width: 100%;
-  max-width: 390px;
   height: 70px;
   background: white;
   display: flex;
