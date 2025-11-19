@@ -420,11 +420,18 @@ body {
     font-style: italic;
 }
 
+.view-btn{
+  background: transparent;
+  border: none;
+  cursor: pointer;
+}
+
+
 /* ============================================
    RESPONSIVIDADE
    ============================================ */
    
-@media (max-width: 390px) {
+@media (max-width: 480px) {
   .container {
     max-width: 100%;
   }
@@ -446,12 +453,11 @@ body {
   }
   .container-data-user{
     max-width: 100%;
-    gap: 50px;
+    gap: 30px;
   }
   .grid-products {
     max-width: 100%;
-    gap: 80px;
-    padding-bottom: 80px;
+    gap: 30px;
   }
   
   .icon {
@@ -463,6 +469,10 @@ body {
   }
   .divider{
     width: 100%;
+  }
+
+  .contact-text{
+    max-width: 100%;
   }
 }
 
