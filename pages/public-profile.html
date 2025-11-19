@@ -66,10 +66,17 @@
             <div class="line-navbar"></div>
 
             <section class="grid-products">
-                <img src="../assets/grid-icon.png" alt="grid-icon" class="icon">
+                <button class="view-btn grid-btn active" data-view="posts" data-url="/profiles/me/posts">
+                    <img src="../assets/grid-icon.png" alt="grid-icon" class="icon">
+                </button>
+
                 <div class="linha"></div>
-                <img src="../assets/product-icon.jpg" alt="product-icon" class="products">
+
+                <button class="view-btn product-btn" data-view="products" data-url="/profiles/me/products">
+                    <img src="../assets/product-icon.png" alt="product-icon" class="products">
+                </button>
             </section>
+
             <div class="divider"></div>
 
         </div>
@@ -117,7 +124,7 @@
             </svg>
         </button>
     </nav>
-    <script src="../js/app.js"></script>
+    <script src="../js/public-profile.js"></script>
     <script src="../js/router.js"></script>
 </body>
 
