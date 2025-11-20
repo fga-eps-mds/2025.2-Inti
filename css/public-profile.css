@@ -242,6 +242,7 @@ body {
   margin-left: 60px;
   align-items: center;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+
 }
 
 .follow-icon{
@@ -251,6 +252,7 @@ body {
   background-color: #FCF9FF;
   border-radius: 8px;
   align-items: center;
+  border: none;
 }
 
 .divider{
@@ -420,10 +422,14 @@ body {
     font-style: italic;
 }
 
-.view-btn{
-  background: transparent;
+section button.view-btn {
   border: none;
-  cursor: pointer;
+  background: transparent;
+  display: flex;
+  flex: 1;
+  justify-content: center;
+  align-items: center;
+  height: 40px;
 }
 
 
@@ -457,7 +463,8 @@ body {
   }
   .grid-products {
     max-width: 100%;
-    gap: 30px;
+    gap: 80px;
+    padding: 15px 15px;
   }
   
   .icon {
