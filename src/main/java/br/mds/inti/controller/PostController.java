@@ -23,7 +23,7 @@ public class PostController {
 
     @PostMapping
     public ResponseEntity<Void> createPost(
-            @NotNull @RequestPart MultipartFile image, 
+            @NotNull @RequestPart MultipartFile image,
             @NotBlank @RequestPart String description) {
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
