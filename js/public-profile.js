@@ -93,10 +93,128 @@ function populateProfileData(data) {
     
     // Contadores (seguidores, seguindo, posts)
     updateProfileCounters(data);
+
+    // Inicializar estado do botão follow
+    initializeFollowButton(data);
     
     // Posts do usuário
     console.log('Chamando populateUserPosts com:', data.posts);
     populateUserPosts(data.posts || []);
+}
+
+function initializeFollowButton(data) {
+    const followBtn = document.querySelector('.follow-icon');
+    if (!followBtn) return;
+
+    const img = followBtn.querySelector('img');
+    if (!img) return;
+
+    // Define as URLs dos endpoints
+    followBtn.dataset.followUrl = `/profile/${data.username}/follow`;
+    followBtn.dataset.unfollowUrl = `/profile/${data.username}/unfollow`;
+
+    // Detecta se o usuário atual está seguindo este perfil
+    const isFollowing = data.following ?? data.is_following ?? data.followingCountIsMine ?? false;
+
+    // Atualiza o estado visual do botão
+    updateFollowButtonState(followBtn, isFollowing);
+
+    // Adiciona o event listener
+    followBtn.addEventListener('click', handleFollowClick);
+}
+
+function updateFollowButtonState(followBtn, isFollowing) {
+    const img = followBtn.querySelector('img');
+    
+    if (isFollowing) {
+        // Estado: Seguindo
+        followBtn.classList.add('active');
+        img.src = img.src.replace('follow-icon', 'unfollow-icon');
+        followBtn.dataset.following = 'true';
+        followBtn.title = 'Deixar de seguir';
+    } else {
+        // Estado: Não seguindo
+        followBtn.classList.remove('active');
+        img.src = img.src.replace('unfollow-icon', 'follow-icon');
+        followBtn.dataset.following = 'false';
+        followBtn.title = 'Seguir';
+    }
+}
+
+async function handleFollowClick(event) {
+    event.preventDefault();
+    
+    const followBtn = event.currentTarget;
+    const img = followBtn.querySelector('img');
+    
+    // Evitar múltiplos cliques simultâneos
+    if (followBtn.classList.contains('loading')) return;
+    
+    followBtn.classList.add('loading');
+    
+    try {
+        const isCurrentlyFollowing = followBtn.dataset.following === 'true';
+        const endpoint = isCurrentlyFollowing ? followBtn.dataset.unfollowUrl : followBtn.dataset.followUrl;
+        const method = isCurrentlyFollowing ? 'DELETE' : 'POST';
+        
+        const backendUrl = 'https://20252-inti-production.up.railway.app';
+        const fullUrl = backendUrl + endpoint;
+        
+        console.log(`${method} para: ${fullUrl}`);
+        
+        const response = await fetch(fullUrl, {
+            method: method,
+            headers: {
+                'Authorization': `Bearer ${AUTH_TOKEN}`,
+                'Content-Type': 'application/json'
+            }
+        });
+
+        if (!response.ok) {
+            throw new Error(`Erro na requisição: ${response.status}`);
+        }
+
+        // Inverte o estado do botão
+        const newFollowingState = !isCurrentlyFollowing;
+        updateFollowButtonState(followBtn, newFollowingState);
+        
+        // Atualiza o contador de seguidores na UI
+        await updateFollowersCounter(newFollowingState);
+        
+        console.log(`Success: ${isCurrentlyFollowing ? 'Unfollow' : 'Follow'} realizado com sucesso`);
+        
+    } catch (error) {
+        console.error('Erro ao executar follow/unfollow:', error);
+        showError('Erro ao executar ação. Tente novamente.');
+    } finally {
+        followBtn.classList.remove('loading');
+    }
+}
+
+async function updateFollowersCounter(isFollowing) {
+    try {
+        // Busca os dados atualizados do perfil para obter o contador correto
+        const response = await fetch(`https://20252-inti-production.up.railway.app/profile/${username}?size=10&page=0`, {
+            method: 'GET',
+            headers: {
+                'Authorization': `Bearer ${AUTH_TOKEN}`,
+                'Content-Type': 'application/json'
+            }
+        });
+
+        if (response.ok) {
+            const profileData = await response.json();
+            
+            // Atualiza o contador de seguidores
+            const followersCountElement = document.querySelector('.profile-seguidores + .profile-number');
+            if (followersCountElement && profileData.followersCount !== undefined) {
+                followersCountElement.textContent = formatNumber(profileData.followersCount);
+            }
+        }
+    } catch (error) {
+        console.error('Erro ao atualizar contador de seguidores:', error);
+        // Não mostra erro para o usuário, pois a ação principal foi bem sucedida
+    }
 }
 
 function updateProfileCounters(data) {
