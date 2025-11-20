@@ -5,7 +5,6 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>MUSA - Perfil</title>
-    <link rel="stylesheet" href="../css/public-profile.css" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Julius+Sans+One&display=swap" rel="stylesheet" />
@@ -128,6 +127,558 @@
     </nav>
     <script src="../js/public-profile.js"></script>
     <script src="../js/router.js"></script>
+
+    <style>
+        /* ============================================
+   RESET & BASE
+   ============================================ */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+:root {
+  /* Cores principais */
+  --primary: #592e83;
+  --primary-light: #7a4fa3;
+  --primary-lighter: #f2ebfb;
+  --accent: #a38bba;
+
+  /* Tons neutros */
+  --gray-50: #fafafa;
+  --gray-100: #f5f5f5;
+  --gray-200: #e5e5e5;
+  --gray-300: #d4d4d4;
+  --gray-400: #a3a3a3;
+  --gray-500: #737373;
+  --gray-600: #525252;
+  --gray-900: #171717;
+
+  /* Espaçamentos */
+  --spacing-xs: 4px;
+  --spacing-sm: 8px;
+  --spacing-md: 16px;
+  --spacing-lg: 24px;
+  --spacing-xl: 32px;
+
+  /* Bordas */
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 16px;
+  --radius-full: 9999px;
+
+  /* Sombras */
+  --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+}
+
+body {
+  font-family: "Maitree", serif;
+  background: var(--gray-50);
+  color: var(--gray-900);
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  min-height: 100vh;
+}
+
+.container {
+  width: 100%;
+  max-width: 390px;
+  min-height: 100vh;
+  background: white;
+  margin: 0 auto;
+  box-shadow: var(--shadow-lg);
+}
+
+.screen {
+  width: 100%;
+  min-height: 100vh;
+  position: relative;
+  background: white;
+}
+
+.screen-user {
+  width: 100%;
+  align-items: center;
+}
+
+/* 
+  TELA DE USER
+*/
+.profile-photo {
+  position: relative;
+  width: 75px;
+  height: 75px;
+  margin: 0 auto;
+  margin-bottom: 10px;
+
+}
+
+.img-user-icon {
+  width: 73px;
+  height: 73px;
+  border-radius: 50%;
+  background-image: url("../assets/image-user-icon.png");
+  background-size: cover;
+  background-position: center;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  margin-top: 26px;
+  margin-left: 3px;
+}
+
+.container-header {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  font-family: "Julius Sans One", sans-serif;
+}
+.container-header {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  font-family: "Julius Sans One", sans-serif;
+  flex: 1;
+  min-width: 0; /* permite que o conteúdo encolha corretamente em flexbox */
+}
+
+.user-name {
+  font-size: 24px;
+  font-family: "Jost", sans-serif;
+  white-space: nowrap; /* impede quebra em múltiplas linhas */
+  overflow: hidden; /* esconde o texto que ultrapassar */
+  text-overflow: ellipsis; /* adiciona reticências quando necessário */
+  max-width: 100%;
+  display: block;
+  margin-top: 39px;
+}
+
+.user-username {
+  font-size: 12px;
+  font-family: "Jost", sans-serif;
+}
+
+.container-data-user {
+  margin-top: 0px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-family: "Jost", sans-serif;
+
+}
+
+.profile-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.profile-number {
+  font-size: 14px;
+  margin-bottom: 5px;
+}
+
+.profile-seguindo,
+.profile-post,
+.profile-seguidores {
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.contact-info-box {
+  background-color: #d9d9d9;
+  align-items: center;
+  border-radius: 12px;
+  width: 364;
+  height: 93;
+}
+
+.contact-text {
+  font-family: "Julius Sans One", sans-serif;
+  font-size: 14px;
+  padding: 10px 20px;
+  border-radius: 6px;
+  text-align: left;
+}
+
+.contact-text:last-child {
+  margin-bottom: 0;
+}
+
+.screen-container {
+  display: flex;
+  padding-top: 16px;
+  padding-left: 16px;
+  padding-right: 16px;
+  flex: 1;
+}
+
+
+.grid-products {
+  height: 55px;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 100px;
+  margin: 0 0;
+
+}
+
+.icon,
+.products {
+  width: 25px;
+  height: 25px;
+  flex-shrink: 0;
+}
+
+.icon {
+  margin-left: 60px;
+}
+
+.products {
+  margin-right: 60px;
+}
+
+.linha {
+  width: 1px;
+  height: 35px;
+  background-color: var(--primary);
+  flex-shrink: 0;
+}
+.edit{
+    width: 38px;
+    height: 38px;
+
+}
+
+.edit-icon{
+  width: 29px;
+  height: 29px;
+  background-color: #FCF9FF;
+  border-radius: 8px;
+  margin-top: 50px;
+  margin-left: 60px;
+  align-items: center;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+
+}
+
+.follow-icon{
+  margin-top: 40px;
+  margin-right: -4px;
+  margin-right: 5px;
+  background-color: #FCF9FF;
+  border-radius: 8px;
+  align-items: center;
+  border: none;
+}
+
+.divider{
+  width: 100%;
+  height: 2px;
+  background-color: #d9d9d9;
+ 
+}
+
+
+.container-perfil{
+  display: flex;
+  flex-direction: row;
+  gap: 20px;
+  padding-bottom: 20px;
+}
+
+.follow-icon-screen{
+  width: 10px;
+  height: 10px;
+}
+
+
+/* ============================================
+   NAVIGATION BAR (copiado de style.css)
+   ============================================ */
+.navbar {
+  position: fixed;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 100%;
+  height: 70px;
+  background: white;
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  padding: 0 var(--spacing-md);
+  border-top: 1px solid var(--gray-200);
+  z-index: 1000;
+}
+
+.nav-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: var(--spacing-sm);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  color: var(--gray-400);
+  transition: all 0.2s ease;
+  position: relative;
+  min-width: 50px;
+  height: 50px;
+}
+
+.nav-btn:hover {
+  color: var(--primary);
+}
+
+.nav-btn.active {
+  color: var(--primary);
+}
+
+.nav-btn.active::after {
+  content: "";
+  position: absolute;
+  bottom: -16px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 32px;
+  height: 3px;
+  background: var(--primary);
+  border-radius: var(--radius-full);
+}
+
+.nav-btn svg {
+  width: 24px;
+  height: 24px;
+}
+
+/* Botão de adicionar centralizado */
+.nav-btn-add {
+  width: 54px;
+  height: 54px;
+  background: var(--primary);
+  border-radius: var(--radius-full);
+  color: white;
+  margin: 0 var(--spacing-xs);
+  box-shadow: var(--shadow-md);
+}
+
+.nav-btn-add:hover {
+  background: var(--primary-light);
+  color: white;
+  transform: scale(1.05);
+}
+
+
+/* Adicione estas linhas ao final do seu public-profile.css, antes da seção de responsividade */
+
+/* ============================================
+   GRID DE POSTS
+   ============================================ */
+.user-posts-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+    padding-top: 20px;
+    padding-bottom: 80px; /* Espaço para navbar */
+}
+
+.user-post-item {
+    aspect-ratio: 1/1;
+    height: auto;
+    position: relative;
+    border-radius: 12px;
+    overflow: hidden;
+    cursor: pointer;
+    transition: transform 0.2s ease;
+    background-size: cover;
+    background-position: center;
+}
+
+.rect-1, .rect-2, .rect-3, .rect-4, .rect-5 {
+    aspect-ratio: 1/1 !important;
+}
+
+.user-post-item:hover {
+    transform: scale(1.02);
+}
+
+.user-post-item:hover .post-overlay {
+    opacity: 1;
+}
+
+.post-stats {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 4px;
+}
+
+.post-likes {
+    font-size: 13px;
+    font-weight: bold;
+}
+
+.post-description {
+    font-size: 11px;
+    margin: 0;
+    line-height: 1.3;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+}
+
+.no-posts {
+    grid-column: 1 / -1;
+    text-align: center;
+    padding: 40px;
+    color: #666;
+    font-style: italic;
+}
+
+section button.view-btn {
+  border: none;
+  background: transparent;
+  display: flex;
+  flex: 1;
+  justify-content: center;
+  align-items: center;
+  height: 40px;
+}
+
+
+/* ============================================
+   RESPONSIVIDADE
+   ============================================ */
+   
+@media (max-width: 480px) {
+  .container {
+    max-width: 100%;
+  }
+  .contact-info-box{
+    max-width: 100%;
+    max-height: auto;
+  }
+  .events-grid {
+    gap: var(--spacing-md);
+    padding: var(--spacing-md);
+  }
+
+  .header-home {
+    padding: var(--spacing-md);
+  }
+
+  .filter-nav {
+    padding: var(--spacing-md);
+  }
+  .container-data-user{
+    max-width: 100%;
+    gap: 30px;
+  }
+  .grid-products {
+    max-width: 100%;
+    gap: 80px;
+    padding: 15px 15px;
+  }
+  
+  .icon {
+    margin-left: 40px;
+  }
+  
+  .products {
+    margin-right: 40px;
+  }
+  .divider{
+    width: 100%;
+  }
+
+  .contact-text{
+    max-width: 100%;
+  }
+}
+
+@media (min-width: 768px) {
+  .events-grid {
+    grid-template-columns: repeat(3, 1fr);
+    max-width: 800px;
+    margin: 0 auto;
+  }
+
+   .grid-products {
+    height: 60px;
+    gap: 120px;
+  }
+  
+  .icon,
+  .products {
+    width: 30px;
+    height: 30px;
+  }
+  
+  .icon {
+    margin-left: 80px;
+  }
+  
+  .products {
+    margin-right: 80px;
+  }
+  
+  .linha {
+    height: 40px;
+    width: 2px;
+  }
+  .divider{
+    width: 100%;
+  }
+}
+
+@media (min-width: 1024px) {
+  .grid-products {
+    height: 70px;
+    gap: 150px;
+  }
+  
+  .icon,
+  .products {
+    width: 35px;
+    height: 35px;
+  }
+  
+  .icon {
+    margin-left: 100px;
+  }
+  
+  .products {
+    margin-right: 100px;
+  }
+  
+  .linha {
+    height: 45px;
+    width: 2px;
+  }
+  
+  .divider{
+    width: 100%;
+  }
+}
+    </style>
 </body>
 
 </html>
