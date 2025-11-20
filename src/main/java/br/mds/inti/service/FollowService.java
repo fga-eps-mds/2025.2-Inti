@@ -12,6 +12,7 @@ import br.mds.inti.model.entity.Follow;
 import br.mds.inti.model.entity.Profile;
 import br.mds.inti.model.entity.pk.FollowsPK;
 import br.mds.inti.repositories.FollowRepository;
+import br.mds.inti.service.exceptions.FollowRelationshipAlredyExistException;
 import br.mds.inti.service.exceptions.ProfileNotFoundException;
 
 @Service
@@ -32,31 +33,36 @@ public class FollowService {
 
             Profile profileToFollow = profileService.getProfile(username);
 
-            if (profileToFollow != null) {
-
-                FollowsPK primaryKey = new FollowsPK();
-                primaryKey.setFollowerProfileId(profileToFollow.getId());
-                primaryKey.setFollowingProfileId(me.getId());
-
-                Follow action = new Follow();
-
-                action.setId(primaryKey);
-
-                action.setCreatedAt(Instant.now());
-                action.setFollowerProfile(profileToFollow);
-                action.setFollowingProfile(me);
-
-                Follow saved = followRepository.save(action);
-
-                profileService.incrementFollowerCount(profileToFollow);
-                profileService.incrementFollowingCount(me);
-
-                if (saved != null) {
-                    String msg = "Perfil seguido com sucesso.";
-                    return new FollowResponse(msg);
-                }
-
+            if (profileToFollow == null) {
+                throw new ProfileNotFoundException(username);
             }
+
+            var followExistOpt = followRepository.findFollowRelationship(me, profileToFollow);
+            if (followExistOpt.isPresent()) {
+                throw new FollowRelationshipAlredyExistException("Already exist");
+            }
+
+            // Create new follow relationship
+            FollowsPK primaryKey = new FollowsPK();
+            primaryKey.setFollowerProfileId(profileToFollow.getId());
+            primaryKey.setFollowingProfileId(me.getId());
+
+            Follow action = new Follow();
+            action.setId(primaryKey);
+            action.setCreatedAt(Instant.now());
+            action.setFollowerProfile(profileToFollow);
+            action.setFollowingProfile(me);
+
+            Follow saved = followRepository.save(action);
+
+            profileService.incrementFollowerCount(profileToFollow);
+            profileService.incrementFollowingCount(me);
+
+            if (saved != null) {
+                String msg = "Perfil seguido com sucesso.";
+                return new FollowResponse(msg);
+            }
+
             throw new ProfileNotFoundException(username);
         }
         throw new RuntimeException("profile nao autenticado");
