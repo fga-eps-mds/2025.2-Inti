@@ -5,10 +5,10 @@ import br.mds.inti.model.entity.Post;
 import br.mds.inti.model.entity.Profile;
 import br.mds.inti.repositories.PostRepository;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -32,7 +32,7 @@ public class PostService {
     public void createPost(Profile profile, MultipartFile image, String description) {
         String blobName = "";
         try {
-            blobName = blobService.uploadImageWithDescription(profile.getId(), image);
+            blobName = blobService.uploadImage(profile.getId(), image);
         } catch (IOException e) {
             log.error("error", e);
             throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Failed to upload image");
@@ -51,8 +51,7 @@ public class PostService {
     public void deletePost(Profile profile, UUID postId) {
 
         Optional<Post> postOptional = postRepository.findById(postId);
-        if (postOptional.isEmpty())
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Post not found");
+        if (postOptional.isEmpty()) throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Post not found");
 
         Post post = postOptional.get();
         if (post.getProfile().getId() != profile.getId())

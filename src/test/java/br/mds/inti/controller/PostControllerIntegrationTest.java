@@ -79,7 +79,7 @@ class PostControllerIntegrationTest {
         SecurityContextHolder.setContext(context);
 
         // Mock blob service success by default
-        when(blobService.uploadImageWithDescription(any(), any())).thenReturn("mock-blob-name");
+        when(blobService.uploadImage(any(), any())).thenReturn("mock-blob-name");
     }
 
     @Test
@@ -131,7 +131,8 @@ class PostControllerIntegrationTest {
 
     @Test
     void createPost_WhenBlobUploadFails_ShouldReturnInternalServerError() throws Exception {
-        when(blobService.uploadImageWithDescription(any(UUID.class), any())).thenThrow(new IOException("Upload failed"));
+        when(blobService.uploadImage(any(UUID.class), any()))
+                .thenThrow(new IOException("Upload failed"));
 
         MockMultipartFile image = new MockMultipartFile("image", "test.png", "image/png", "content".getBytes());
 
