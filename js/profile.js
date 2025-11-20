@@ -1,6 +1,3 @@
-// profile.js
-
-// TOKEN: mantenha seguro (não comitar em repositórios públicos)
 const AUTH_TOKEN =
   "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJub3ZvdCIsImV4cCI6MTc2NjA5ODg4MH0.BIBmMxWoq7em60fQWioz2qTin4g0TwZUaMHwioLe6JU";
 window.AUTH_TOKEN = AUTH_TOKEN;
@@ -69,7 +66,6 @@ function populateProfileData(data) {
     console.error("Elemento .user-username não encontrado");
   }
 
-  // Foto de perfil
   const profileImg = document.querySelector(".img-user-icon");
   if (profileImg) {
     if (data.profile_picture_url) {
@@ -84,23 +80,19 @@ function populateProfileData(data) {
     }
   }
 
-  // Bio/Informações de contato
   const contactInfo = document.querySelector(".contact-text");
   if (contactInfo && data.bio) {
     contactInfo.innerHTML = data.bio.replace(/\n/g, "<br>");
   }
 
-  // Contadores (seguidores, seguindo, posts)
   updateProfileCounters(data);
 
-  // Posts do usuário
   populateUserPosts(data.posts || []);
 }
 
 function updateProfileCounters(data) {
   console.log("Atualizando contadores...");
 
-  // CORRIGIDO: Busca direta pelos elementos .profile-number dentro de cada .profile-item
   const profileItems = document.querySelectorAll(".profile-item");
 
   profileItems.forEach((item) => {
@@ -131,21 +123,18 @@ function populateUserPosts(posts) {
     return;
   }
 
-  // Limpar posts existentes
   postsGrid.innerHTML = "";
 
   if (!posts || posts.length === 0) {
     return;
   }
 
-  // ORDENAR POSTS POR DATA (mais recentes primeiro)
   const sortedPosts = [...posts].sort((a, b) => {
     const dateA = new Date(a.createdAt);
     const dateB = new Date(b.createdAt);
-    return dateB - dateA; // Ordem decrescente
+    return dateB - dateA;
   });
 
-  // Adicionar cada post
   sortedPosts.forEach((post, index) => {
     const postItem = createPostElement(post, index);
     postsGrid.appendChild(postItem);
@@ -156,13 +145,11 @@ function createPostElement(post, index) {
   const postDiv = document.createElement("div");
   postDiv.className = `user-post-item rect-${(index % 5) + 1}`;
 
-  // Se o post tiver imagem, carregar com Bearer token
   if (post.imgLink) {
     const backendUrl = "https://20252-inti-production.up.railway.app";
     const fullImageUrl = backendUrl + post.imgLink;
     setBackgroundImageWithBearer(postDiv, fullImageUrl, AUTH_TOKEN);
   } else {
-    // Estilo padrão se não tiver imagem
     postDiv.style.backgroundColor = getRandomColor();
     postDiv.style.display = "flex";
     postDiv.style.alignItems = "center";
@@ -174,7 +161,6 @@ function createPostElement(post, index) {
   return postDiv;
 }
 
-// NOVA FUNÇÃO: Carregar imagem com autenticação Bearer
 async function setBackgroundImageWithBearer(element, imageUrl, token) {
   try {
     const response = await fetch(imageUrl, {
@@ -196,12 +182,10 @@ async function setBackgroundImageWithBearer(element, imageUrl, token) {
     element.style.backgroundPosition = "center";
   } catch (error) {
     console.error("Erro ao carregar imagem:", error);
-    // Em caso de erro, usar imagem padrão ou cor
     element.style.backgroundColor = getRandomColor();
   }
 }
 
-// Função auxiliar para cores aleatórias (se não tiver imagem)
 function getRandomColor() {
   const colors = [
     "#FF6B6B",
@@ -216,7 +200,6 @@ function getRandomColor() {
 }
 
 function formatNumber(num) {
-  // Verificar se num é válido
   if (num === null || num === undefined || isNaN(num)) {
     return "0";
   }
@@ -249,13 +232,9 @@ function showError(message) {
   }, 5000);
 }
 
-// Event listener para o botão de editar
 const editIcon = document.querySelector(".edit-icon");
 if (editIcon) {
-  editIcon.addEventListener("click", function () {
-    console.log("Editar perfil clicado");
-    // window.location.href = '/edit-profile';
-  });
+  editIcon.addEventListener("click", function () {});
 } else {
   console.warn("Elemento .edit-icon não encontrado");
 }

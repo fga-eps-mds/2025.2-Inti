@@ -1,12 +1,8 @@
-// public-profile.js
-
-// TOKEN: mantenha seguro (não comitar em repositórios públicos)
 const AUTH_TOKEN =
   "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJub3ZvdCIsImV4cCI6MTc2NjA5ODg4MH0.BIBmMxWoq7em60fQWioz2qTin4g0TwZUaMHwioLe6JU";
 window.AUTH_TOKEN = AUTH_TOKEN;
 
 const urlParams = new URLSearchParams(window.location.search);
-// const username = urlParams.get('user');
 
 const username = "morettipdr";
 
@@ -87,26 +83,21 @@ function populateProfileData(data) {
       const fullImageUrl = backendUrl + data.profile_picture_url;
       setBackgroundImageWithBearer(profileImg, fullImageUrl, AUTH_TOKEN);
     } else {
-      // imagem padrão local
       profileImg.style.backgroundImage = `url("../assets/image-user-icon.png")`;
       profileImg.style.backgroundSize = "cover";
       profileImg.style.backgroundPosition = "center";
     }
   }
 
-  // Bio/Informações de contato
   const contactInfo = document.querySelector(".contact-text");
   if (contactInfo && data.bio) {
     contactInfo.innerHTML = data.bio.replace(/\n/g, "<br>");
   }
 
-  // Contadores (seguidores, seguindo, posts)
   updateProfileCounters(data);
 
-  // Inicializar estado do botão follow
   initializeFollowButton(data);
 
-  // Posts do usuário
   console.log("Chamando populateUserPosts com:", data.posts);
   populateUserPosts(data.posts || []);
 }
@@ -118,18 +109,14 @@ function initializeFollowButton(data) {
   const img = followBtn.querySelector("img");
   if (!img) return;
 
-  // Define as URLs dos endpoints
   followBtn.dataset.followUrl = `/profile/${data.username}/follow`;
   followBtn.dataset.unfollowUrl = `/profile/${data.username}/unfollow`;
 
-  // Detecta se o usuário atual está seguindo este perfil
   const isFollowing =
     data.following ?? data.is_following ?? data.followingCountIsMine ?? false;
 
-  // Atualiza o estado visual do botão
   updateFollowButtonState(followBtn, isFollowing);
 
-  // Adiciona o event listener
   followBtn.addEventListener("click", handleFollowClick);
 }
 
@@ -137,13 +124,11 @@ function updateFollowButtonState(followBtn, isFollowing) {
   const img = followBtn.querySelector("img");
 
   if (isFollowing) {
-    // Estado: Seguindo
     followBtn.classList.add("active");
     img.src = img.src.replace("follow-icon", "unfollow-icon");
     followBtn.dataset.following = "true";
     followBtn.title = "Deixar de seguir";
   } else {
-    // Estado: Não seguindo
     followBtn.classList.remove("active");
     img.src = img.src.replace("unfollow-icon", "follow-icon");
     followBtn.dataset.following = "false";
@@ -157,7 +142,6 @@ async function handleFollowClick(event) {
   const followBtn = event.currentTarget;
   const img = followBtn.querySelector("img");
 
-  // Evitar múltiplos cliques simultâneos
   if (followBtn.classList.contains("loading")) return;
 
   followBtn.classList.add("loading");
@@ -186,11 +170,9 @@ async function handleFollowClick(event) {
       throw new Error(`Erro na requisição: ${response.status}`);
     }
 
-    // Inverte o estado do botão
     const newFollowingState = !isCurrentlyFollowing;
     updateFollowButtonState(followBtn, newFollowingState);
 
-    // Atualiza o contador de seguidores na UI
     await updateFollowersCounter(newFollowingState);
 
     console.log(
@@ -206,7 +188,6 @@ async function handleFollowClick(event) {
 
 async function updateFollowersCounter(isFollowing) {
   try {
-    // Busca os dados atualizados do perfil para obter o contador correto
     const response = await fetch(
       `https://20252-inti-production.up.railway.app/profile/${username}?size=10&page=0`,
       {
@@ -221,7 +202,6 @@ async function updateFollowersCounter(isFollowing) {
     if (response.ok) {
       const profileData = await response.json();
 
-      // Atualiza o contador de seguidores
       const followersCountElement = document.querySelector(
         ".profile-seguidores + .profile-number"
       );
@@ -233,7 +213,6 @@ async function updateFollowersCounter(isFollowing) {
     }
   } catch (error) {
     console.error("Erro ao atualizar contador de seguidores:", error);
-    // Não mostra erro para o usuário, pois a ação principal foi bem sucedida
   }
 }
 
@@ -274,7 +253,6 @@ function populateUserPosts(posts) {
     return;
   }
 
-  // Limpar posts existentes
   postsGrid.innerHTML = "";
 
   if (!posts || posts.length === 0) {
@@ -283,7 +261,6 @@ function populateUserPosts(posts) {
     return;
   }
 
-  // ORDENAR POSTS POR DATA (mais recentes primeiro)
   const sortedPosts = [...posts].sort((a, b) => {
     const dateA = new Date(a.createdAt);
     const dateB = new Date(b.createdAt);
@@ -292,7 +269,6 @@ function populateUserPosts(posts) {
 
   console.log(`Renderizando ${sortedPosts.length} posts...`);
 
-  // Adicionar cada post
   sortedPosts.forEach((post, index) => {
     const postItem = createPostElement(post, index);
     postsGrid.appendChild(postItem);
@@ -308,14 +284,12 @@ function createPostElement(post, index) {
 
   console.log(`Criando post ${index}:`, post);
 
-  // Se o post tiver imagem, carregar com Bearer token
   if (post.imgLink) {
     const backendUrl = "https://20252-inti-production.up.railway.app";
     const fullImageUrl = backendUrl + post.imgLink;
     console.log("Carregando imagem:", fullImageUrl);
     setBackgroundImageWithBearer(postDiv, fullImageUrl, AUTH_TOKEN);
   } else {
-    // Estilo padrão se não tiver imagem
     const randomColor = getRandomColor();
     console.log("Sem imagem, usando cor:", randomColor);
     postDiv.style.backgroundColor = randomColor;
@@ -329,7 +303,6 @@ function createPostElement(post, index) {
   return postDiv;
 }
 
-// NOVA FUNÇÃO: Renderizar produtos
 function populateUserProducts(products) {
   const postsGrid = document.querySelector(".user-posts-grid");
 
@@ -378,23 +351,6 @@ function createProductElement(product, index) {
     productDiv.style.color = "white";
     productDiv.style.fontWeight = "bold";
   }
-
-  const overlay = document.createElement("div");
-  overlay.className = "post-overlay product-overlay";
-
-  const productName = product.name || product.title || "Produto";
-  const productPrice = product.price
-    ? `R$ ${parseFloat(product.price).toFixed(2)}`
-    : "";
-
-  overlay.innerHTML = `
-        <div class="product-info">
-            <p class="product-name">${productName}</p>
-            ${productPrice ? `<p class="product-price">${productPrice}</p>` : ""}
-        </div>
-    `;
-
-  productDiv.appendChild(overlay);
 
   return productDiv;
 }

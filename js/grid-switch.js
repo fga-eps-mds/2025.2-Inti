@@ -1,10 +1,7 @@
-// grid-switch.js
-// Handle view buttons in .grid-products: toggle active, animate, and fetch posts/products
 (function () {
   const backendBase = "https://20252-inti-production.up.railway.app";
 
   function isSameView(btn) {
-    // consider current active view
     const active = document.querySelector(".grid-products .view-btn.active");
     return active === btn;
   }
@@ -24,9 +21,7 @@
     const json = await res.json();
     console.log(`Dados recebidos (${viewType}):`, json);
 
-    // Determinar qual função de renderização usar baseado no viewType
     if (viewType === "posts") {
-      // Buscar posts no JSON (pode vir como array direto ou dentro de propriedade)
       const posts = json.posts || json.data || json || [];
 
       if (typeof window.populateUserPosts === "function") {
@@ -35,7 +30,6 @@
         console.warn("populateUserPosts não está disponível");
       }
     } else if (viewType === "products") {
-      // Buscar produtos no JSON
       const products = json.products || json.data || json || [];
 
       if (typeof window.populateUserProducts === "function") {
@@ -44,7 +38,6 @@
         console.warn(
           "populateUserProducts não está disponível - usando renderização padrão"
         );
-        // Fallback: usar a mesma função de posts
         if (typeof window.populateUserPosts === "function") {
           window.populateUserPosts(products);
         }
@@ -73,14 +66,12 @@
         const current = container.querySelector(".view-btn.active");
         if (current) current.classList.remove("active");
 
-        // add active + animating for quick effect
         btn.classList.add("active", "animating");
-        // small visual feedback
+
         setTimeout(() => btn.classList.remove("animating"), 300);
 
-        // fetch data for this view if data-url provided
         const url = btn.dataset.url;
-        const viewType = btn.dataset.view; // 'posts' ou 'products'
+        const viewType = btn.dataset.view;
 
         if (url && viewType) {
           await fetchAndPopulate(url, viewType);
