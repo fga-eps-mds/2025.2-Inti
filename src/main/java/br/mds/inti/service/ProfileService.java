@@ -43,7 +43,8 @@ public class ProfileService {
 
             Page<PostResponse> post = postService.getPostByIdProfile(profile.getId(), PageRequest.of(page, size));
 
-            return new ProfileResponse(profile.getName(), profile.getUsername(), profile.getProfilePictureUrl(),
+            return new ProfileResponse(profile.getName(), profile.getUsername(),
+                    postService.generateImageUrl(profile.getProfilePictureUrl()),
                     profile.getBio(), profile.getFollowersCount(), profile.getFollowingCount(), post.getContent());
         }
         throw new RuntimeException("profile nao autenticado");
@@ -56,8 +57,36 @@ public class ProfileService {
         Page<PostResponse> post = postService.getPostByIdProfile(publicProfile.getId(), PageRequest.of(page, size));
 
         return new ProfileResponse(publicProfile.getName(), publicProfile.getUsername(),
-                publicProfile.getProfilePictureUrl(), publicProfile.getBio(), publicProfile.getFollowersCount(),
+                postService.generateImageUrl(publicProfile.getProfilePictureUrl()), publicProfile.getBio(),
+                publicProfile.getFollowersCount(),
                 publicProfile.getFollowingCount(), post.getContent());
+    }
+
+    public Profile getProfile(String username) {
+        Profile publicProfile = profileRepository.findByUsername(username)
+                .orElseThrow(() -> new ProfileNotFoundException(username));
+
+        return publicProfile;
+    }
+
+    public void incrementFollowingCount(Profile profile) {
+        profile.setFollowingCount(profile.getFollowingCount() + 1);
+        profileRepository.save(profile);
+    }
+
+    public void incrementFollowerCount(Profile profile) {
+        profile.setFollowersCount(profile.getFollowersCount() + 1);
+        profileRepository.save(profile);
+    }
+
+    public void decrementFollowingCount(Profile profile) {
+        profile.setFollowingCount(profile.getFollowingCount() - 1);
+        profileRepository.save(profile);
+    }
+
+    public void decrementFollowerCount(Profile profile) {
+        profile.setFollowersCount(profile.getFollowersCount() - 1);
+        profileRepository.save(profile);
     }
 
     public void updateUser(UpdateUserRequest updateUserRequest) throws IOException {

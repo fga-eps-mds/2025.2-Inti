@@ -11,13 +11,13 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.mock.web.MockPart;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -50,7 +50,7 @@ class PostControllerIntegrationTest {
     @Autowired
     private ProfileRepository profileRepository;
 
-    @MockitoBean
+    @MockBean
     private BlobService blobService;
 
     private Profile testProfile;
@@ -79,7 +79,7 @@ class PostControllerIntegrationTest {
         SecurityContextHolder.setContext(context);
 
         // Mock blob service success by default
-        when(blobService.uploadImageWithDescription(any(), any())).thenReturn("mock-blob-name");
+        when(blobService.uploadImage(any(), any())).thenReturn("mock-blob-name");
     }
 
     @Test
@@ -131,7 +131,8 @@ class PostControllerIntegrationTest {
 
     @Test
     void createPost_WhenBlobUploadFails_ShouldReturnInternalServerError() throws Exception {
-        when(blobService.uploadImageWithDescription(any(UUID.class), any())).thenThrow(new IOException("Upload failed"));
+        when(blobService.uploadImage(any(UUID.class), any()))
+                .thenThrow(new IOException("Upload failed"));
 
         MockMultipartFile image = new MockMultipartFile("image", "test.png", "image/png", "content".getBytes());
 

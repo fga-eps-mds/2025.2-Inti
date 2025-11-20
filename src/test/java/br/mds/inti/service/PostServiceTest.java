@@ -44,7 +44,7 @@ class PostServiceTest {
         MockMultipartFile image = new MockMultipartFile("image", "pic.png", "image/png", "hello".getBytes());
 
         String expectedBlob = "user-" + profileId + "_123.png";
-        when(blobService.uploadImageWithDescription(eq(profileId), any(MultipartFile.class))).thenReturn(expectedBlob);
+        when(blobService.uploadImage(eq(profileId), any(MultipartFile.class))).thenReturn(expectedBlob);
 
         postService.createPost(profile, image, description);
 
@@ -67,7 +67,8 @@ class PostServiceTest {
 
         MockMultipartFile image = new MockMultipartFile("image", "pic.png", "image/png", "hello".getBytes());
 
-        when(blobService.uploadImageWithDescription(eq(profileId), any(MultipartFile.class))).thenThrow(new IOException("boom"));
+        when(blobService.uploadImage(eq(profileId), any(MultipartFile.class)))
+                .thenThrow(new IOException("boom"));
 
         ResponseStatusException ex = assertThrows(ResponseStatusException.class,
                 () -> postService.createPost(profile, image, "desc"));
@@ -122,7 +123,8 @@ class PostServiceTest {
         Post post = new Post();
         UUID postId = UUID.randomUUID();
         post.setId(postId);
-        // IMPORTANT: PostService compares object references (==) for ids, so keep same UUID instance
+        // IMPORTANT: PostService compares object references (==) for ids, so keep same
+        // UUID instance
         // but to be safe, set the same profile instance on both
         post.setProfile(profile);
         post.setBlobName("blob-1.png");
@@ -135,4 +137,3 @@ class PostServiceTest {
         verify(postRepository).softDeletePost(postId);
     }
 }
-

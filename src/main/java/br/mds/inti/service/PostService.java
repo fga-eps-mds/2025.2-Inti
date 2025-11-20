@@ -73,7 +73,7 @@ public class PostService {
 
     }
 
-    private String generateImageUrl(String blobName) {
+    public String generateImageUrl(String blobName) {
         if (blobName == null || blobName.isEmpty()) {
             return null;
         }
