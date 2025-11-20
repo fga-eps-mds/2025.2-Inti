@@ -23,8 +23,8 @@ public class PostController {
 
     @PostMapping
     public ResponseEntity<Void> createPost(
-            @NotNull @RequestPart MultipartFile image,
-            @NotBlank @RequestPart String description) {
+            @NotNull @RequestPart("image") MultipartFile image,
+            @NotBlank @RequestPart("description") String description) {
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         Profile profile = (Profile) authentication.getPrincipal();
@@ -33,8 +33,8 @@ public class PostController {
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
-    @DeleteMapping("/{postId}")
-    public ResponseEntity<Void> deletePost(@PathVariable @NotNull UUID postId) {
+    @DeleteMapping
+    public ResponseEntity<Void> deletePost(@RequestParam("postId") @NotNull UUID postId) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         Profile profile = (Profile) authentication.getPrincipal();
 
