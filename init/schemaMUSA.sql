@@ -17,6 +17,7 @@ CREATE TABLE "profiles" (
   "email" varchar(255) UNIQUE NOT NULL,
   "password" varchar(255) NOT NULL,
   "public_email" varchar(255) DEFAULT null,
+  "phone" text DEFAULT null
   "type" varchar(50) NOT NULL,
   "profile_picture_url" varchar(255) DEFAULT null,
   "bio" varchar(255) DEFAULT null,
