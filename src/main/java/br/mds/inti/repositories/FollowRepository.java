@@ -1,6 +1,8 @@
 package br.mds.inti.repositories;
 
+import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -16,4 +18,15 @@ public interface FollowRepository extends JpaRepository<Follow, FollowsPK> {
     Optional<Follow> findFollowRelationship(@Param("follower") Profile followerProfile,
             @Param("following") Profile followingProfile);
 
+    // IDs of profiles the given user follows
+    @Query("select f.followingProfile.id from Follow f where f.followerProfile.id = :followerId")
+    List<UUID> findFollowedUserIds(@Param("followerId") UUID followerId);
+
+    // IDs of profiles that follow the given user
+    @Query("select f.followerProfile.id from Follow f where f.followingProfile.id = :followingId")
+    List<UUID> findFollowerIds(@Param("followingId") UUID followingId);
+
+    // IDs of profiles followed by any of the given user IDs (second degree)
+    @Query("select distinct f.followingProfile.id from Follow f where f.followerProfile.id in :userIds")
+    List<UUID> findFollowedByUsers(@Param("userIds") List<UUID> userIds);
 }
