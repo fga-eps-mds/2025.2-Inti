@@ -43,7 +43,8 @@ public class ProfileService {
 
             Page<PostResponse> post = postService.getPostByIdProfile(profile.getId(), PageRequest.of(page, size));
 
-            return new ProfileResponse(profile.getName(), profile.getUsername(),
+            return new ProfileResponse(profile.getName(), profile.getUsername(), profile.getPublicEmail(),
+                    profile.getPhone(),
                     postService.generateImageUrl(profile.getProfilePictureUrl()),
                     profile.getBio(), profile.getFollowersCount(), profile.getFollowingCount(), post.getContent());
         }
@@ -56,7 +57,8 @@ public class ProfileService {
 
         Page<PostResponse> post = postService.getPostByIdProfile(publicProfile.getId(), PageRequest.of(page, size));
 
-        return new ProfileResponse(publicProfile.getName(), publicProfile.getUsername(),
+        return new ProfileResponse(publicProfile.getName(), publicProfile.getUsername(), publicProfile.getPublicEmail(),
+                publicProfile.getPhone(),
                 postService.generateImageUrl(publicProfile.getProfilePictureUrl()), publicProfile.getBio(),
                 publicProfile.getFollowersCount(),
                 publicProfile.getFollowingCount(), post.getContent());
@@ -101,6 +103,14 @@ public class ProfileService {
         }
         if (updateUserRequest.userBio() != null && !updateUserRequest.userBio().isBlank()) {
             profile.setBio(updateUserRequest.userBio());
+        }
+
+        if (updateUserRequest.publicemail() != null && !updateUserRequest.publicemail().isBlank()) {
+            profile.setPublicEmail(updateUserRequest.publicemail());
+        }
+
+        if (updateUserRequest.phone() != null && !updateUserRequest.phone().isBlank()) {
+            profile.setPhone(updateUserRequest.phone());
         }
 
         if (updateUserRequest.username() != null && !updateUserRequest.username().isBlank()) {

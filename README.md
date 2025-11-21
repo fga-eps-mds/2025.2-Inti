@@ -147,6 +147,43 @@ Respostas possíveis:
 - 401 Unauthorized — usuário não é o dono do post
 - 404 Not Found — post não encontrado
 
+### 3) Recuperar Detalhes do Post
+
+- Endpoint: `GET /post/{postId}`
+- Autenticação: obrigatória
+- Parâmetros: `postId` (UUID) na URL
+
+Comportamento:
+
+- Retorna os detalhes completos do post, incluindo URL da imagem, descrição, contagem de likes, autor e lista de quem curtiu.
+- Se o post não existir ou estiver deletado, retorna 404 Not Found.
+
+Exemplo de Resposta:
+
+```json
+{
+  "id": "uuid-do-post",
+  "imageUrl": "/images/blob-name.png",
+  "description": "Descrição do post",
+  "likesCount": 10,
+  "createdAt": "2023-10-27T10:00:00Z",
+  "author": {
+    "id": "uuid-do-autor",
+    "name": "Nome do Autor",
+    "username": "username_autor",
+    "profilePictureUrl": "http://url-da-foto"
+  },
+  "likedBy": [
+    {
+      "id": "uuid-usuario-que-curtiu",
+      "name": "Nome Usuario",
+      "username": "username_usuario",
+      "profilePictureUrl": "http://url-da-foto"
+    }
+  ]
+}
+```
+
 ---
 
 ## Segurança / JWT
