@@ -2,6 +2,7 @@ package br.mds.inti.controller;
 
 import br.mds.inti.model.dto.FollowResponse;
 import br.mds.inti.model.dto.ProfileResponse;
+import br.mds.inti.model.dto.UpdateUserRequest;
 import br.mds.inti.service.FollowService;
 import br.mds.inti.service.ProfileService;
 import org.junit.jupiter.api.BeforeEach;
@@ -12,7 +13,11 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.mock.web.MockMultipartFile;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.server.ResponseStatusException;
 
+import java.io.IOException;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -38,6 +43,8 @@ class ProfileControllerTest {
         mockProfileResponse = new ProfileResponse(
                 "Test User",
                 "testuser",
+                "emailtest@gmail.com",
+                "9980223030",
                 "http://example.com/avatar.jpg",
                 "Test bio",
                 10,
@@ -76,17 +83,6 @@ class ProfileControllerTest {
         assertEquals(HttpStatus.OK, response.getStatusCode());
         assertEquals(mockProfileResponse, response.getBody());
         verify(profileService).getProfileByUsername(username, 0, 10);
-    }
-
-    @Test
-    void getString_ShouldReturnTestString() {
-        // Act
-        ResponseEntity<String> response = profileController.getString();
-
-        // Assert
-        assertNotNull(response);
-        assertEquals(HttpStatus.OK, response.getStatusCode());
-        assertEquals("teste", response.getBody());
     }
 
     @Test
@@ -157,5 +153,111 @@ class ProfileControllerTest {
         // Assert
         assertNotNull(response);
         verify(profileService).getProfileByUsername(username, 1, 5);
+    }
+
+    @Test
+    void setMyProfilePhoto_ShouldReturnCreated() throws IOException {
+        // Arrange
+        MultipartFile mockImage = new MockMultipartFile(
+                "myImage",
+                "test.jpg",
+                "image/jpeg",
+                "test image content".getBytes());
+        doNothing().when(profileService).setPhoto(mockImage);
+
+        // Act
+        ResponseEntity<Void> response = profileController.setMyProfilePhoto(mockImage);
+
+        // Assert
+        assertNotNull(response);
+        assertEquals(HttpStatus.CREATED, response.getStatusCode());
+        verify(profileService).setPhoto(mockImage);
+    }
+
+    @Test
+    void setMyProfilePhoto_WhenIOExceptionThrown_ShouldThrowResponseStatusException() throws IOException {
+        // Arrange
+        MultipartFile mockImage = new MockMultipartFile(
+                "myImage",
+                "test.jpg",
+                "image/jpeg",
+                "test image content".getBytes());
+        doThrow(new IOException("Upload failed")).when(profileService).setPhoto(mockImage);
+
+        // Act & Assert
+        ResponseStatusException exception = assertThrows(
+                ResponseStatusException.class,
+                () -> profileController.setMyProfilePhoto(mockImage));
+        assertEquals(HttpStatus.BAD_REQUEST, exception.getStatusCode());
+        assertEquals("Error trying to set profile image", exception.getReason());
+        verify(profileService).setPhoto(mockImage);
+    }
+
+    @Test
+    void updateUser_ShouldReturnCreated() throws IOException {
+        // Arrange
+        UpdateUserRequest updateRequest = new UpdateUserRequest(
+                "Updated Name",
+                "updateduser",
+                "9988776655",
+                "updated@example.com",
+                "Updated bio",
+                null);
+        doNothing().when(profileService).updateUser(updateRequest);
+
+        // Act
+        ResponseEntity<Void> response = profileController.user(updateRequest);
+
+        // Assert
+        assertNotNull(response);
+        assertEquals(HttpStatus.CREATED, response.getStatusCode());
+        verify(profileService).updateUser(updateRequest);
+    }
+
+    @Test
+    void updateUser_WhenIOExceptionThrown_ShouldThrowResponseStatusException() throws IOException {
+        // Arrange
+        UpdateUserRequest updateRequest = new UpdateUserRequest(
+                "Updated Name",
+                "updateduser",
+                "9988776655",
+                "updated@example.com",
+                "Updated bio",
+                null);
+        doThrow(new IOException("Update failed")).when(profileService).updateUser(updateRequest);
+
+        // Act & Assert
+        ResponseStatusException exception = assertThrows(
+                ResponseStatusException.class,
+                () -> profileController.user(updateRequest));
+        assertEquals(HttpStatus.BAD_REQUEST, exception.getStatusCode());
+        assertEquals("Error trying to update profile", exception.getReason());
+        verify(profileService).updateUser(updateRequest);
+    }
+
+    @Test
+    void updateUser_WithProfilePicture_ShouldReturnCreated() throws IOException {
+        // Arrange
+        MultipartFile mockImage = new MockMultipartFile(
+                "profilePicture",
+                "newavatar.jpg",
+                "image/jpeg",
+                "new avatar content".getBytes());
+        UpdateUserRequest updateRequest = new UpdateUserRequest(
+                "Updated Name",
+                "updateduser",
+                "9988776655",
+                "updated@example.com",
+                "Updated bio",
+                mockImage);
+        doNothing().when(profileService).updateUser(updateRequest);
+
+        // Act
+        ResponseEntity<Void> response = profileController.user(updateRequest);
+
+        // Assert
+        assertNotNull(response);
+        assertEquals(HttpStatus.CREATED, response.getStatusCode());
+        verify(profileService).updateUser(updateRequest);
     }
 }

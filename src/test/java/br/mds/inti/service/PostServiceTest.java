@@ -17,7 +17,6 @@ import org.springframework.web.server.ResponseStatusException;
 import java.io.IOException;
 import java.util.Optional;
 import java.time.Instant;
-import java.util.Optional;
 import java.util.UUID;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
@@ -139,6 +138,7 @@ class PostServiceTest {
         verify(blobService).deleteImage("blob-1.png");
         verify(postRepository).softDeletePost(postId);
     }
+
     @Test
     void getPostById_whenPostExists_shouldReturnPostDetail() {
         UUID postId = UUID.randomUUID();
