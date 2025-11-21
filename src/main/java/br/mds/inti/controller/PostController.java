@@ -1,5 +1,6 @@
 package br.mds.inti.controller;
 
+import br.mds.inti.model.dto.PostDetailResponse;
 import br.mds.inti.model.entity.Profile;
 import br.mds.inti.service.PostService;
 import jakarta.validation.constraints.NotBlank;
@@ -40,5 +41,11 @@ public class PostController {
 
         postService.deletePost(profile, postId);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+    }
+
+    @GetMapping("/{postId}")
+    public ResponseEntity<PostDetailResponse> getPostById(@PathVariable UUID postId) {
+        PostDetailResponse post = postService.getPostById(postId);
+        return ResponseEntity.ok(post);
     }
 }
