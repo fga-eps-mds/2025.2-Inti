@@ -120,8 +120,8 @@ function populateForms(userData) {
   document.getElementById("nome-input").value = userData.name || "";
   document.getElementById("nome-input").setAttribute('data-original', userData.name || "");
   
-  document.getElementById("email-input").value = userData.email || "";
-  document.getElementById("email-input").setAttribute('data-original', userData.email || "");
+  document.getElementById("email-input").value = userData.publicEmail || "";
+  document.getElementById("email-input").setAttribute('data-original', userData.publicEmail || "");
   
   document.getElementById("bio-input").value = userData.bio || "";
   document.getElementById("bio-input").setAttribute('data-original', userData.bio || "");
@@ -184,7 +184,7 @@ function loadProfileImage(imageUrl) {
 function updateOriginalData(currentData) {
   document.getElementById("username-input").setAttribute('data-original', currentData.username || "");
   document.getElementById("nome-input").setAttribute('data-original', currentData.name || "");
-  document.getElementById("email-input").setAttribute('data-original', currentData.email || "");
+  document.getElementById("email-input").setAttribute('data-original', currentData.publicEmail || "");
   document.getElementById("bio-input").setAttribute('data-original', currentData.bio || "");
   document.getElementById("telefone-input").setAttribute('data-original', currentData.telefone || "");
 }
