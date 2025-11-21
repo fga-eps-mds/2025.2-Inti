@@ -1,5 +1,6 @@
 package br.mds.inti.service;
 
+import br.mds.inti.model.dto.PostDetailResponse;
 import br.mds.inti.model.entity.Post;
 import br.mds.inti.model.entity.Profile;
 import br.mds.inti.repositories.PostRepository;
@@ -14,6 +15,8 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.io.IOException;
+import java.util.Optional;
+import java.time.Instant;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -135,5 +138,57 @@ class PostServiceTest {
 
         verify(blobService).deleteImage("blob-1.png");
         verify(postRepository).softDeletePost(postId);
+    }
+    @Test
+    void getPostById_whenPostExists_shouldReturnPostDetail() {
+        UUID postId = UUID.randomUUID();
+        Profile author = new Profile();
+        author.setId(UUID.randomUUID());
+        author.setName("Author Name");
+        author.setUsername("author_user");
+        author.setProfilePictureUrl("http://pic.url");
+
+        Post post = new Post();
+        post.setId(postId);
+        post.setProfile(author);
+        post.setDescription("Desc");
+        post.setLikesCount(0);
+        post.setCreatedAt(Instant.now());
+        post.setBlobName("blob.png");
+
+        when(postRepository.findById(postId)).thenReturn(Optional.of(post));
+
+        PostDetailResponse response = postService.getPostById(postId);
+
+        assertThat(response.id()).isEqualTo(postId);
+        assertThat(response.description()).isEqualTo("Desc");
+        assertThat(response.author().username()).isEqualTo("author_user");
+        assertThat(response.imageUrl()).isEqualTo("/images/blob.png");
+    }
+
+    @Test
+    void getPostById_whenPostNotFound_shouldThrow404() {
+        UUID postId = UUID.randomUUID();
+        when(postRepository.findById(postId)).thenReturn(Optional.empty());
+
+        ResponseStatusException ex = assertThrows(ResponseStatusException.class,
+                () -> postService.getPostById(postId));
+
+        assertThat(ex.getStatusCode().value()).isEqualTo(404);
+    }
+
+    @Test
+    void getPostById_whenPostDeleted_shouldThrow404() {
+        UUID postId = UUID.randomUUID();
+        Post post = new Post();
+        post.setId(postId);
+        post.setDeletedAt(Instant.now());
+
+        when(postRepository.findById(postId)).thenReturn(Optional.of(post));
+
+        ResponseStatusException ex = assertThrows(ResponseStatusException.class,
+                () -> postService.getPostById(postId));
+
+        assertThat(ex.getStatusCode().value()).isEqualTo(404);
     }
 }
