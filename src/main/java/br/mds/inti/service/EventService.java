@@ -33,7 +33,7 @@ public class EventService {
 
         String blobName = null;
         if(eventRequestDTO.image() != null) {
-            blobName = blobService.uploadImageWithDescription(profile.getId(), eventRequestDTO.image());
+            blobName = blobService.uploadImage(profile.getId(), eventRequestDTO.image());
         }
 
         event.setBlobName(blobName);
