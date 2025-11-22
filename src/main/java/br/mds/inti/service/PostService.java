@@ -4,6 +4,7 @@ import br.mds.inti.model.dto.PostResponse;
 import br.mds.inti.model.entity.Post;
 import br.mds.inti.model.entity.Profile;
 import br.mds.inti.repositories.PostRepository;
+import jakarta.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -48,15 +49,14 @@ public class PostService {
         postRepository.save(post);
     }
 
+    @Transactional
     public void deletePost(Profile profile, UUID postId) {
 
         Optional<Post> postOptional = postRepository.findById(postId);
-        if (postOptional.isEmpty())
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Post not found");
+        if (postOptional.isEmpty()) throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Post not found");
 
         Post post = postOptional.get();
-        if (post.getProfile().getId() != profile.getId())
-            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "User is not the owner of the post");
+        if (!post.getProfile().getId().equals(profile.getId())) throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "User is not the owner of the post");
 
         blobService.deleteImage(post.getBlobName());
         postRepository.softDeletePost(postId);

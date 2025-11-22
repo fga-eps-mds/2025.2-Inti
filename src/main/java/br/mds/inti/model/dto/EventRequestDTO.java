@@ -17,7 +17,6 @@ public record EventRequestDTO (
     String title,
 
     @NotNull // não nulo
-    @JsonProperty("event_time")
     Instant eventTime,
 
     @NotNull
@@ -26,11 +25,9 @@ public record EventRequestDTO (
     MultipartFile image,
 
     @NotNull
-    @JsonProperty("street_address")
     String streetAddress,
 
     @NotNull
-    @JsonProperty("administrative_region")
     String administrativeRegion,
 
     @NotNull
@@ -40,7 +37,6 @@ public record EventRequestDTO (
     String state,
 
     @NotNull
-    @JsonProperty("reference_point")
     String referencePoint,
 
     @NotNull

@@ -74,6 +74,10 @@ public class BlobService {
                 .getBlobContainerClient(containerName)
                 .getBlobClient(blobName);
 
+        if(!blobClient.exists()){
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Image already deleted");
+        }
+
         blobClient.delete();
     }
 

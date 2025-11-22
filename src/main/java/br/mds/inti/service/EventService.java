@@ -26,11 +26,10 @@ public class EventService {
 
     final String EVENTO_CRIADO = "Evento criado com sucesso";
 
-    public CreateEventResponseDTO createEvent(@NotNull Profile profile, @NotNull EventRequestDTO eventRequestDTO) throws IOException {
+    public EventResponseDTO createEvent(@NotNull Profile profile, @NotNull EventRequestDTO eventRequestDTO) throws IOException {
         Event event = new Event();
+        event.setProfile(profile);
         event.setTitle(eventRequestDTO.title());
-        event.setEventTime(eventRequestDTO.eventTime());
-        event.setDescription(eventRequestDTO.description());
 
         String blobName = null;
         if(eventRequestDTO.image() != null) {
@@ -38,6 +37,8 @@ public class EventService {
         }
 
         event.setBlobName(blobName);
+        event.setEventTime(eventRequestDTO.eventTime());
+        event.setDescription(eventRequestDTO.description());
         event.setStreetAddress(eventRequestDTO.streetAddress());
         event.setAdministrativeRegion(eventRequestDTO.administrativeRegion());
         event.setCity(eventRequestDTO.city());
@@ -49,8 +50,7 @@ public class EventService {
 
         eventRepository.save(event);
 
-        EventResponseDTO eventResponseDTO = new EventResponseDTO(event.getId(), EVENTO_CRIADO);
-        return eventResponseDTO;
+        return new EventResponseDTO(event.getId(), EVENTO_CRIADO);
     }
 
 }

@@ -10,7 +10,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
+
+import java.io.IOException;
 
 @RestController // define como um controller
 @RequestMapping("/event") // request ter como endpoint base "/events"
@@ -21,7 +25,7 @@ public class EventController {
 
     //GET, POST, PATCH, DELETE
     @PostMapping(consumes = "multipart/form-data") // define como POST (criação de algo) que recebe multipart (pra receber imagem)
-    public ResponseEntity<EventResponseDTO> createEvent(@ModelAttribute @Valid EventRequestDTO eventRequestDTO){ // retorna um ResponseEntity (possui status code), que tem uma entidade que vai ser o CreateEvent
+    public ResponseEntity<EventResponseDTO> createEvent(@ModelAttribute @Valid EventRequestDTO eventRequestDTO) throws IOException { // retorna um ResponseEntity (possui status code), que tem uma entidade que vai ser o CreateEvent
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         Profile profile = (Profile) authentication.getPrincipal();
