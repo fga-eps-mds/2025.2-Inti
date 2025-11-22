@@ -184,6 +184,56 @@ Exemplo de Resposta:
 }
 ```
 
+### 4) Curtir Post
+
+- Endpoint: `POST /post/{postId}/like`
+- Autenticação: obrigatória
+- Parâmetros: `postId` (UUID) na URL
+
+Comportamento:
+- O usuário curte o post identificado por `postId`.
+- Se o post não existir, retorna 404 Not Found.
+- Se o usuário já curtiu, retorna 409 Conflict.
+- Se o post for curtido com sucesso, retorna 200 OK (corpo vazio).
+
+Exemplo com curl:
+```bash
+curl -i -X POST http://localhost:8080/post/6f7a3b2a-...-abcd/like \
+  -H "Authorization: Bearer <JWT_TOKEN>"
+```
+Respostas possíveis:
+- 200 OK — sucesso
+- 404 Not Found — post não encontrado
+- 409 Conflict — usuário já curtiu o post
+
+### 5) Descurtir Post
+
+- Endpoint: `DELETE /post/{postId}/like`
+- Autenticação: obrigatória
+- Parâmetros: `postId` (UUID) na URL
+
+Comportamento:
+- O usuário remove o like do post identificado por `postId`.
+- Se o post não existir, retorna 404 Not Found.
+- Se o like não existir, retorna 404 Not Found.
+- Se o deslike for realizado com sucesso, retorna 200 OK (corpo vazio).
+
+Exemplo com curl:
+```bash
+curl -i -X DELETE http://localhost:8080/post/6f7a3b2a-...-abcd/like \
+  -H "Authorization: Bearer <JWT_TOKEN>"
+```
+Respostas possíveis:
+- 200 OK — sucesso
+- 404 Not Found — post ou like não encontrado
+
+---
+
+## Observações sobre Likes
+- O backend previne likes duplicados: se o usuário já curtiu, retorna erro 409 Conflict.
+- O contador de likes do post é atualizado automaticamente ao curtir/descurtir.
+- Para consultar quem curtiu, utilize o endpoint de detalhes do post (`GET /post/{postId}`), que retorna a lista de usuários que curtiram.
+
 ---
 
 ## Segurança / JWT
