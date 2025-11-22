@@ -31,6 +31,8 @@ public class AuthService {
         user.setUsername(request.username());
         user.setPassword(passwordEncoder.encode(request.password()));
         user.setType(request.type() != null ? request.type() : ProfileType.user);
+        user.setFollowersCount(0);
+        user.setFollowingCount(0);
         user.setCreatedAt(Instant.now());
         Profile savedUser = profileRepository.save(user);
 

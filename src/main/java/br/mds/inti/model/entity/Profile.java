@@ -49,6 +49,9 @@ public class Profile implements UserDetails {
     @Column(name = "public_email", nullable = true, length = 255)
     private String publicEmail;
 
+    @Column(name = "phone", nullable = true)
+    private String phone;
+
     @Enumerated(EnumType.STRING)
     @Column(nullable = false, name = "type", length = 50)
     private ProfileType type;

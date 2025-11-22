@@ -23,24 +23,14 @@ public class BlobService {
 
     private BlobServiceClient blobServiceClient;
 
-    @Value("${azure.blob-storage.connection-string}")
-    private String connectionString;
-
     @Value("${spring.cloud.azure.storage.blob.container-name}")
     private String containerName;
 
-    @PostConstruct
-    public void init() {
-        try {
-            blobServiceClient = new BlobServiceClientBuilder()
-                    .connectionString(connectionString)
-                    .buildClient();
-        } catch (Exception e) {
-            log.error("Failed to initialize BlobServiceClient", e);
-        }
+    public BlobService(BlobServiceClient blobServiceClient) {
+        this.blobServiceClient = blobServiceClient;
     }
 
-    public String uploadImageWithDescription(UUID userId, MultipartFile file) throws IOException {
+    public String uploadImage(UUID userId, MultipartFile file) throws IOException {
 
         if (!isImage(file))
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "File is not an image");
