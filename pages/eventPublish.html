@@ -86,6 +86,7 @@ body {
 
 .event-publish-screen {
   padding-bottom: 80px;
+  display: grid;
 }
 
 .header-event-publish {
@@ -149,18 +150,50 @@ body {
 
 .event-img-description img {
     width: 350px;
-    height: 165px;
+    height: 175px;
+    border-radius: 16px;
 }
 
+.event-img-description{
+    height: 175px;
+    border-radius: 16px;
+    flex-direction: column;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding-left: 20px;
+    padding-right: 20px;
+}
 
+.description{
+  text-align: left;
+  padding: 15px 20px;
+}
+.info{
+  color: var(--primary);
+}
+.info-complement{
+  text-align: right;
+}
 
+.event-description{
+    display: flex;
+    gap: 87px;
+    flex-direction: row;
+    padding: 0px 20px;
+}
 
+.friends-going{
+  padding: 0px 20px;
+}
 
+/*-----botão-de-confirmação------*/
 
-
-
-
-
+.button{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
 
 .confirm-attendance{
     background-color: var(--primary-lighter);
@@ -283,9 +316,9 @@ body {
 
             <div class="event-img-description">
                 <img src="event-img" alt="event-img">
-                <p class="description">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt u</p>
             </div>
             
+              <p class="description">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt u</p>
 
             <div class="event-description">
                 <div class="info">
@@ -309,10 +342,13 @@ body {
 
             <div class="friends-going">
                 <p class="friends">Amigos que vão</p>
-                
+                <div class="friends-icons"></div>
+                <p class="friends-quantity"></p>
             </div>
-
-            <button class="confirm-attendance">Confirmar Presença</button>
+            <div class="button">
+                 <button class="confirm-attendance">Confirmar Presença</button>
+            </div>
+           
 
 
 
