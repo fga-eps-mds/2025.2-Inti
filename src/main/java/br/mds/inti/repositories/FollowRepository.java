@@ -29,4 +29,19 @@ public interface FollowRepository extends JpaRepository<Follow, FollowsPK> {
     // IDs of profiles followed by any of the given user IDs (second degree)
     @Query("select distinct f.followingProfile.id from Follow f where f.followerProfile.id in :userIds")
     List<UUID> findFollowedByUsers(@Param("userIds") List<UUID> userIds);
+
+    // IDs of second degree connections (people followed by your followers,
+    // excluding yourself and direct follows)
+    @Query("""
+                SELECT DISTINCT f2.followerProfile.id
+                FROM Follow f1
+                JOIN Follow f2 ON f1.followerProfile.id = f2.followingProfile.id
+                WHERE f1.followingProfile.id = :profileId
+                AND f2.followerProfile.id != :profileId
+                AND f2.followerProfile.id NOT IN (
+                    SELECT f3.followerProfile.id FROM Follow f3
+                    WHERE f3.followingProfile.id = :profileId
+                )
+            """)
+    List<UUID> findSecondDegreeConnectionIds(@Param("profileId") UUID profileId);
 }

@@ -23,7 +23,7 @@ public interface PostRepository extends JpaRepository<Post, UUID> {
 
     @Modifying
     @Query("update Post p set p.deletedAt = CURRENT_TIMESTAMP where p.id = ?1")
-    void softDeletePost(@Param(value = "id") UUID postId);
+    void softDeletePost(UUID postId);
 
     // diferença dessa pra primeira query é por conta da ordenação por criação
     @Query("select p from Post p where p.profile.id in :userIds and p.deletedAt is null order by p.createdAt desc")
@@ -37,5 +37,10 @@ public interface PostRepository extends JpaRepository<Post, UUID> {
     List<Post> findRecentPostsExcludingUsers(@Param("excludedUserIds") List<UUID> excludedUserIds, Pageable pageable);
 
     @Query("select p from Post p where p.profile.id in :organizationIds and p.deletedAt is null order by p.createdAt desc")
-    List<Post> findPostByOrganizationAndNotDeleted(@Param("organizationIds") List<UUID> organizationIds, Pageable pageable);
+    List<Post> findPostByOrganizationAndNotDeleted(@Param("organizationIds") List<UUID> organizationIds,
+            Pageable pageable);
+
+    @Modifying
+    @Query("update Post p set p.likesCount = ?1 where p.id = ?2")
+    void updateLikesCount(int likesCount, UUID id);
 }

@@ -6,8 +6,10 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
@@ -17,6 +19,8 @@ import org.springframework.stereotype.Service;
 
 import br.mds.inti.model.entity.Post;
 import br.mds.inti.model.entity.Profile;
+import br.mds.inti.model.enums.PostType;
+import br.mds.inti.model.enums.ProfileType;
 import br.mds.inti.repositories.FollowRepository;
 import br.mds.inti.repositories.PostRepository;
 import br.mds.inti.repositories.ProfileRepository;
@@ -38,91 +42,170 @@ public class FeedService {
     @Autowired
     private ProfileRepository profileRepository;
 
-    public List<Post> generateFeed(Profile currentProfile, int pageSize) {
+    public record ClassifiedPost(Post post, PostType type, String reason) {
+    }
 
-        List<Post> feed = new ArrayList<>();
+    public List<ClassifiedPost> generateFeed(Profile currentProfile, int page, int pageSize) {
 
-        // post de quem voce segue
-        List<UUID> followedIds = followRepository.findFollowedUserIds(currentProfile.getId());
+        // Buscar IDs
+        List<UUID> followedIdsList = followRepository.findFollowedUserIds(currentProfile.getId());
+        Set<UUID> followedIds = new HashSet<>(followedIdsList);
 
-        if (!followedIds.isEmpty()) {
-            int followedCount = (int) (pageSize * FOLLOWED_RATIO);
-            List<Post> followedPosts = getFollowedUsersPosts(followedIds, followedCount);
-            feed.addAll(followedPosts);
+        List<UUID> secondDegreeIdsList = followRepository.findSecondDegreeConnectionIds(currentProfile.getId());
+        Set<UUID> secondDegreeIds = new HashSet<>(secondDegreeIdsList);
+
+        List<Post> allPosts = new ArrayList<>();
+
+        // Coletar posts de TODAS as fontes (sempre página 0, com limites maiores)
+        int poolSize = pageSize * 10; // Buscar pool maior para ter variedade
+
+        // POSTS DE SEGUIDOS
+        if (!followedIdsList.isEmpty()) {
+            int followedLimit = Math.max(10, (int) (poolSize * FOLLOWED_RATIO));
+            List<Post> followedPosts = getFollowedUsersPosts(followedIdsList, followedLimit);
+            allPosts.addAll(followedPosts);
         }
 
-        // post de seguidores de seguidores
-        int secondDegreeCount = (int) (pageSize * SECOND_DEGREE_RATIO);
-        List<Post> secondDegreePosts = getSecondDegreePosts(currentProfile.getId(),
-                secondDegreeCount);
-        feed.addAll(secondDegreePosts);
+        // POSTS SEGUNDO GRAU
+        int secondDegreeLimit = Math.max(10, (int) (poolSize * SECOND_DEGREE_RATIO));
+        List<Post> secondDegreePosts = getSecondDegreePosts(currentProfile.getId(), secondDegreeLimit);
+        allPosts.addAll(secondDegreePosts);
 
-        int organizationCount = (int) (pageSize * ORGANIZATION_RATIO);
-        List<Post> organizationPosts = getOrganizationPost(organizationCount);
-        feed.addAll(organizationPosts);
+        // POSTS ORGANIZAÇÃO
+        int organizationLimit = Math.max(10, (int) (poolSize * ORGANIZATION_RATIO));
+        List<Post> organizationPosts = getOrganizationPost(organizationLimit);
+        allPosts.addAll(organizationPosts);
 
-        int remaining = pageSize - feed.size();
-        if (remaining > 0) {
+        // RANDOM (preenche o resto)
+        int randomLimit = Math.max(20, poolSize - allPosts.size());
+        List<Post> randomPosts = getRandomPosts(currentProfile.getId(), randomLimit);
+        allPosts.addAll(randomPosts);
 
-            List<Post> randomPosts = getRandomPosts(currentProfile.getId(), remaining);
-            feed.addAll(randomPosts);
+        // Remove duplicatas (mesmo post pode vir de várias fontes)
+        Set<UUID> seenIds = new HashSet<>();
+        List<Post> uniquePosts = allPosts.stream()
+                .filter(post -> seenIds.add(post.getId()))
+                .collect(Collectors.toList());
 
+        // ORDERNAÇÃO FINAL
+        List<Post> sortedPosts = applyFinalSorting(uniquePosts);
+
+        // PAGINAÇÃO REAL (aplicada no resultado agregado)
+        int start = page * pageSize;
+        int end = Math.min(start + pageSize, sortedPosts.size());
+
+        List<Post> pagedPosts = (start < sortedPosts.size())
+                ? sortedPosts.subList(start, end)
+                : Collections.emptyList();
+
+        // Classificar e retornar
+        return pagedPosts.stream()
+                .map(post -> {
+                    PostType type = classifyPost(post, currentProfile, followedIds, secondDegreeIds);
+                    String reason = getReasonForPost(type);
+                    return new ClassifiedPost(post, type, reason);
+                })
+                .collect(Collectors.toList());
+    }
+
+    private PostType classifyPost(Post post, Profile currentProfile, Set<UUID> followedIds, Set<UUID> secondDegreeIds) {
+        if (post.getProfile() == null) {
+            return PostType.RANDOM;
         }
 
-        return applyFinalSorting(feed);
+        UUID postAuthorId = post.getProfile().getId();
+
+        // 1. Verifica se é post de organização
+        if (post.getProfile().getType() != null
+                && post.getProfile().getType().name().equalsIgnoreCase("organization")) {
+            return PostType.ORGANIZATION;
+        }
+
+        // 2. Verifica se é próprio post
+        if (postAuthorId.equals(currentProfile.getId())) {
+            return PostType.FOLLOWED;
+        }
+
+        // 3. Verifica se é de alguém que você segue diretamente
+        if (followedIds.contains(postAuthorId)) {
+            return PostType.FOLLOWED;
+        }
+
+        // 4. Verifica se é de conexão de segundo grau
+        if (secondDegreeIds.contains(postAuthorId)) {
+            return PostType.SECOND_DEGREE;
+        }
+
+        // 5. Verifica se é popular
+        if (post.getLikesCount() != null && post.getLikesCount() > 10) {
+            return PostType.POPULAR;
+        }
+
+        // 6. Caso contrário, é aleatório
+        return PostType.RANDOM;
+    }
+
+    private String getReasonForPost(PostType type) {
+        return switch (type) {
+            case ORGANIZATION -> "Post de organização";
+            case FOLLOWED -> "Perfil seguido / próprio";
+            case POPULAR -> "Post popular";
+            case SECOND_DEGREE -> "Conexão de segundo grau";
+            case RANDOM -> "Descoberta";
+        };
     }
 
     private List<Post> getFollowedUsersPosts(List<UUID> followedIds, int limit) {
-
-        List<Post> posts = postRepository.findByUserIdsAndNotDeleted(followedIds, PageRequest.of(0, limit * 2));
+        // sempre página 0
+        List<Post> posts = postRepository.findByUserIdsAndNotDeleted(
+                followedIds,
+                PageRequest.of(0, limit * 2));
 
         return limitPostsPerUser(posts, MAX_POSTS_FROM_SAME_USER, limit);
     }
 
     private List<Post> getOrganizationPost(int limit) {
 
-        List<UUID> organizationsIds = profileRepository.findByOrganization("organization", PageRequest.of(0, 5));
+        List<UUID> organizationsIds = profileRepository.findByOrganization(
+                ProfileType.organization,
+                PageRequest.of(0, 10));
 
-        List<Post> organizationPosts = postRepository.findPostByOrganizationAndNotDeleted(organizationsIds,
+        return postRepository.findPostByOrganizationAndNotDeleted(
+                organizationsIds,
                 PageRequest.of(0, limit));
-
-        if (organizationPosts.isEmpty()) {
-            return Collections.emptyList();
-        }
-
-        return organizationPosts;
-
     }
 
     private List<Post> getSecondDegreePosts(UUID currentUserId, int limit) {
-        // quem me segue
+
         List<UUID> myFollowers = followRepository.findFollowerIds(currentUserId);
-
-        if (myFollowers.isEmpty()) {
+        if (myFollowers.isEmpty())
             return Collections.emptyList();
-        }
 
-        // quem meus seguidores seguem
         List<UUID> followedByMyFollowers = followRepository.findFollowedByUsers(myFollowers);
-        List<UUID> iAlreadyFollow = followRepository.findFollowedUserIds(currentUserId);
+        List<UUID> iFollow = followRepository.findFollowedUserIds(currentUserId);
 
-        List<UUID> secondDegreeUsers = followedByMyFollowers.stream().filter(userId -> !userId.equals(currentUserId))
-                .filter(userId -> !iAlreadyFollow.contains(userId)).distinct().collect(Collectors.toList());
+        List<UUID> secondDegreeUsers = followedByMyFollowers.stream()
+                .filter(id -> !id.equals(currentUserId))
+                .filter(id -> !iFollow.contains(id))
+                .distinct()
+                .toList();
 
-        if (secondDegreeUsers.isEmpty()) {
+        if (secondDegreeUsers.isEmpty())
             return Collections.emptyList();
-        }
 
-        return postRepository.findByUserIdsAndNotDeleted(secondDegreeUsers, PageRequest.of(0, limit));
+        return postRepository.findByUserIdsAndNotDeleted(
+                secondDegreeUsers,
+                PageRequest.of(0, limit));
     }
 
     private List<Post> getRandomPosts(UUID currentUserId, int limit) {
 
-        List<UUID> followedIds = followRepository.findFollowedUserIds(currentUserId);
-        followedIds.add(currentUserId);
+        List<UUID> ids = followRepository.findFollowedUserIds(currentUserId);
+        ids.add(currentUserId);
 
-        return postRepository.findRecentPostsExcludingUsers(followedIds, PageRequest.of(0, limit));
-
+        return postRepository.findRecentPostsExcludingUsers(
+                ids,
+                PageRequest.of(0, limit));
     }
 
     private List<Post> applyFinalSorting(List<Post> posts) {
@@ -133,19 +216,18 @@ public class FeedService {
     private double calculatePostScore(Post post) {
         double score = 0;
 
-        // post das ultimas 24h tem bonus
         long hoursOld = Duration.between(post.getCreatedAt(), Instant.now()).toHours();
 
         if (hoursOld <= 24) {
-
-            score += (24 - hoursOld) * 0.5; // bonus vai decrescendo
+            score += (24 - hoursOld) * 0.5;
         }
 
-        // engajamento
         if (post.getLikesCount() != null) {
-
-            score += Math.log(post.getLikesCount() + 1) * 0.3; // log para não dominar
+            score += Math.log(post.getLikesCount() + 1) * 0.3;
         }
+
+        // ruído controlado para dar variedade
+        score += Math.random() * 0.5;
 
         return score;
     }

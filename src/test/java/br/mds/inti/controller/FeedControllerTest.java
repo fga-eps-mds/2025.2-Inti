@@ -4,6 +4,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.http.ResponseEntity;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -16,28 +17,31 @@ class FeedControllerTest {
     @Test
     void getOrganizationDashboard_ShouldReturnWelcomeMessage() {
         // Act
-        String result = feedController.getOrganizationDashboard();
+        ResponseEntity<String> response = feedController.getOrganizationDashboard();
 
         // Assert
-        assertNotNull(result);
-        assertEquals("Bem-vindo à área exclusiva de organizações!", result);
+        assertNotNull(response);
+        assertNotNull(response.getBody());
+        assertEquals("Bem-vindo à área exclusiva de organizações!", response.getBody());
     }
 
     @Test
     void getOrganizationDashboard_ShouldReturnStringType() {
         // Act
-        String result = feedController.getOrganizationDashboard();
+        ResponseEntity<String> response = feedController.getOrganizationDashboard();
 
         // Assert
-        assertInstanceOf(String.class, result);
+        assertNotNull(response.getBody());
+        assertInstanceOf(String.class, response.getBody());
     }
 
     @Test
     void getOrganizationDashboard_ShouldNotReturnEmptyString() {
         // Act
-        String result = feedController.getOrganizationDashboard();
+        ResponseEntity<String> response = feedController.getOrganizationDashboard();
 
         // Assert
-        assertFalse(result.isEmpty());
+        assertNotNull(response.getBody());
+        assertFalse(response.getBody().isEmpty());
     }
 }

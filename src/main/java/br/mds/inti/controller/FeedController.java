@@ -13,7 +13,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import br.mds.inti.model.entity.Post;
 import br.mds.inti.model.entity.Profile;
 import br.mds.inti.model.enums.PostType;
 import br.mds.inti.service.FeedService;
@@ -38,6 +37,7 @@ public class FeedController {
 
     @GetMapping
     public ResponseEntity<List<FeedItem>> getFeedWithMetadata(
+            @RequestParam(name = "page", defaultValue = "0") int page,
             @RequestParam(name = "size", defaultValue = "20") int size) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         if (auth == null || !(auth.getPrincipal() instanceof Profile)) {
@@ -45,20 +45,16 @@ public class FeedController {
         }
         Profile currentProfile = (Profile) auth.getPrincipal();
 
-        List<Post> posts = feedService.generateFeed(currentProfile, size);
+        List<FeedService.ClassifiedPost> classifiedPosts = feedService.generateFeed(currentProfile, page, size);
 
-        List<FeedItem> items = posts.stream()
-                .map(post -> {
-                    PostType type = classifyPost(post, currentProfile);
-                    String reason = getReasonForPost(post, type, currentProfile);
-                    return new FeedItem(
-                            post.getId(),
-                            post.getDescription(),
-                            post.getBlobName() == null ? null : "/images/" + post.getBlobName(),
-                            post.getLikesCount(),
-                            type,
-                            reason);
-                })
+        List<FeedItem> items = classifiedPosts.stream()
+                .map(cp -> new FeedItem(
+                        cp.post().getId(),
+                        cp.post().getDescription(),
+                        cp.post().getBlobName() == null ? null : "/images/" + cp.post().getBlobName(),
+                        cp.post().getLikesCount(),
+                        cp.type(),
+                        cp.reason()))
                 .collect(Collectors.toList());
 
         return ResponseEntity.ok(items);
@@ -67,29 +63,5 @@ public class FeedController {
     @GetMapping("/organization")
     public ResponseEntity<String> getOrganizationDashboard() {
         return ResponseEntity.ok("Bem-vindo à área exclusiva de organizações!");
-    }
-
-    private PostType classifyPost(Post post, Profile currentProfile) {
-        if (post.getProfile() != null && post.getProfile().getType() != null
-                && post.getProfile().getType().name().equalsIgnoreCase("organization")) {
-            return PostType.ORGANIZATION;
-        }
-        if (post.getProfile() != null && post.getProfile().getId().equals(currentProfile.getId())) {
-            return PostType.FOLLOWED; // own or followed - simplified
-        }
-        if (post.getLikesCount() != null && post.getLikesCount() > 10) {
-            return PostType.POPULAR;
-        }
-        return PostType.RANDOM;
-    }
-
-    private String getReasonForPost(Post post, PostType type, Profile currentProfile) {
-        return switch (type) {
-            case ORGANIZATION -> "Post de organização";
-            case FOLLOWED -> "Perfil seguido / próprio";
-            case POPULAR -> "Post popular";
-            case SECOND_DEGREE -> "Conexão de segundo grau"; // currently not distinguished
-            case RANDOM -> "Descoberta";
-        };
     }
 }

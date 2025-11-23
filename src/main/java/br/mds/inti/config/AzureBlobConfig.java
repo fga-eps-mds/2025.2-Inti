@@ -11,6 +11,7 @@ import com.azure.storage.blob.BlobServiceClientBuilder;
 @Configuration
 @Profile("!test")
 public class AzureBlobConfig {
+
     @Value("${azure.blob-storage.connection-string}")
     private String connectionString;
 

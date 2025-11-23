@@ -1,6 +1,8 @@
 package br.mds.inti.repositories;
 
 import br.mds.inti.model.entity.Profile;
+import br.mds.inti.model.enums.ProfileType;
+
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -19,5 +21,5 @@ public interface ProfileRepository extends JpaRepository<Profile, UUID> {
     Boolean findIfUsernameIsUsed(@Param("username") String username);
 
     @Query("select p.id from Profile p where p.type = :type order by random()")
-    List<UUID> findByOrganization(@Param("type") String type, Pageable pageable);
+    List<UUID> findByOrganization(@Param("type") ProfileType type, Pageable pageable);
 }

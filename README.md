@@ -10,8 +10,8 @@ Este projeto utiliza uma arquitetura baseada em microsserviços, composta por:
 
 ## Pré-requisitos
 
-- ![Docker](https://www.docker.com/sites/default/files/d8/2019-07/Moby-logo.png) [Docker](https://www.docker.com/)
-- ![Docker Compose](https://seeklogo.com/images/D/docker-compose-logo-6B6C1D8C18-seeklogo.com.png) [Docker Compose](https://docs.docker.com/compose/)
+- [Docker](https://www.docker.com/)
+- [Docker Compose](https://docs.docker.com/compose/)
 
 ## Como Executar o Projeto
 
@@ -184,6 +184,56 @@ Exemplo de Resposta:
 }
 ```
 
+### 4) Curtir Post
+
+- Endpoint: `POST /post/{postId}/like`
+- Autenticação: obrigatória
+- Parâmetros: `postId` (UUID) na URL
+
+Comportamento:
+- O usuário curte o post identificado por `postId`.
+- Se o post não existir, retorna 404 Not Found.
+- Se o usuário já curtiu, retorna 409 Conflict.
+- Se o post for curtido com sucesso, retorna 200 OK (corpo vazio).
+
+Exemplo com curl:
+```bash
+curl -i -X POST http://localhost:8080/post/6f7a3b2a-...-abcd/like \
+  -H "Authorization: Bearer <JWT_TOKEN>"
+```
+Respostas possíveis:
+- 200 OK — sucesso
+- 404 Not Found — post não encontrado
+- 409 Conflict — usuário já curtiu o post
+
+### 5) Descurtir Post
+
+- Endpoint: `DELETE /post/{postId}/like`
+- Autenticação: obrigatória
+- Parâmetros: `postId` (UUID) na URL
+
+Comportamento:
+- O usuário remove o like do post identificado por `postId`.
+- Se o post não existir, retorna 404 Not Found.
+- Se o like não existir, retorna 404 Not Found.
+- Se o deslike for realizado com sucesso, retorna 200 OK (corpo vazio).
+
+Exemplo com curl:
+```bash
+curl -i -X DELETE http://localhost:8080/post/6f7a3b2a-...-abcd/like \
+  -H "Authorization: Bearer <JWT_TOKEN>"
+```
+Respostas possíveis:
+- 200 OK — sucesso
+- 404 Not Found — post ou like não encontrado
+
+---
+
+## Observações sobre Likes
+- O backend previne likes duplicados: se o usuário já curtiu, retorna erro 409 Conflict.
+- O contador de likes do post é atualizado automaticamente ao curtir/descurtir.
+- Para consultar quem curtiu, utilize o endpoint de detalhes do post (`GET /post/{postId}`), que retorna a lista de usuários que curtiram.
+
 ---
 
 ## Segurança / JWT
@@ -213,5 +263,125 @@ mvn spring-boot:run
 
 ---
 
-Se quiser que eu adicione exemplos de request/response em Java (RestTemplate/WebClient) ou em JS (fetch/axios), diga
-qual você prefere e eu adiciono.
+## AuthController (Autenticação e Registro)
+
+### 1) Registrar Usuário
+- Endpoint: `POST /auth/register`
+- Envia dados de registro (nome, username, senha, etc.) no corpo da requisição (JSON).
+- Retorna 201 Created com dados do perfil criado.
+
+Exemplo curl:
+```bash
+curl -i -X POST http://localhost:8080/auth/register \
+  -H "Content-Type: application/json" \
+  -d '{"name":"Lucas","username":"lucas","password":"123456"}'
+```
+Resposta exemplo:
+```json
+{
+  "id": "uuid-gerado",
+  "username": "lucas",
+  "name": "Lucas",
+  ...
+}
+```
+
+### 2) Login
+- Endpoint: `POST /auth/login`
+- Envia username e senha no corpo da requisição (JSON).
+- Retorna 200 OK com JWT no corpo.
+
+Exemplo curl:
+```bash
+curl -i -X POST http://localhost:8080/auth/login \
+  -H "Content-Type: application/json" \
+  -d '{"username":"lucas","password":"123456"}'
+```
+Resposta exemplo:
+```
+<JWT_TOKEN>
+```
+
+---
+
+## ImageController (Imagens)
+
+### 1) Download de Imagem
+- Endpoint: `GET /images/{blobName}`
+- Retorna a imagem correspondente ao blobName.
+- Content-Type: detectado automaticamente (jpeg/png/gif/webp).
+- Retorna 404 se não encontrar.
+
+Exemplo curl:
+```bash
+curl -i -X GET http://localhost:8080/images/minha-foto.png
+```
+
+---
+
+## ProfileController (Perfil e Seguidores)
+
+### 1) Perfil do Usuário Autenticado
+- Endpoint: `GET /profile/me?size=10&page=0`
+- Retorna dados do perfil do usuário logado, paginado.
+
+Exemplo curl:
+```bash
+curl -i -X GET "http://localhost:8080/profile/me?size=10&page=0" \
+  -H "Authorization: Bearer <JWT_TOKEN>"
+```
+
+### 2) Perfil Público de Outro Usuário
+- Endpoint: `GET /profile/{username}?size=10&page=0`
+- Retorna dados públicos do perfil, paginado.
+
+Exemplo curl:
+```bash
+curl -i -X GET "http://localhost:8080/profile/lucas?size=10&page=0"
+```
+
+### 3) Upload de Foto de Perfil
+- Endpoint: `POST /profile/upload-me`
+- Envia imagem como multipart/form-data (campo: myImage).
+- Retorna 201 Created em caso de sucesso.
+
+Exemplo curl:
+```bash
+curl -i -X POST http://localhost:8080/profile/upload-me \
+  -H "Authorization: Bearer <JWT_TOKEN>" \
+  -F "myImage=@/caminho/para/foto.jpg"
+```
+
+### 4) Atualizar Dados do Usuário
+- Endpoint: `PATCH /profile/update`
+- Envia dados via multipart/form-data (campos do usuário).
+- Retorna 201 Created em caso de sucesso.
+
+Exemplo curl:
+```bash
+curl -i -X PATCH http://localhost:8080/profile/update \
+  -H "Authorization: Bearer <JWT_TOKEN>" \
+  -F "name=Novo Nome" -F "bio=Nova bio"
+```
+
+### 5) Seguir Perfil
+- Endpoint: `POST /profile/{username}/follow`
+- Segue o usuário indicado por username.
+- Retorna dados do follow.
+
+Exemplo curl:
+```bash
+curl -i -X POST http://localhost:8080/profile/lucas/follow \
+  -H "Authorization: Bearer <JWT_TOKEN>"
+```
+
+### 6) Deixar de Seguir Perfil
+- Endpoint: `DELETE /profile/{username}/unfollow`
+- Remove o follow do usuário indicado por username.
+- Retorna dados do unfollow.
+
+Exemplo curl:
+```bash
+curl -i -X DELETE http://localhost:8080/profile/lucas/unfollow \
+  -H "Authorization: Bearer <JWT_TOKEN>"
+```
