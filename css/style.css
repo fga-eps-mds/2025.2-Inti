@@ -722,6 +722,108 @@ body {
   margin-bottom: 40px;
 }
 
+
+
+/* ============================================
+   PÁGINA - NOVO PRODUTO / SERVIÇOS
+   ============================================ */
+
+/* Container interno da tela "Novo produto" */
+.screen-services {
+  width: 100%;
+  max-width: 320px;
+  margin: 0 auto;                /* centraliza horizontalmente */
+  display: flex;
+  flex-direction: column;
+  align-items: center;           /* centraliza filhos */
+  gap: var(--spacing-lg);        /* separação entre título e formulário */
+  padding-top: 40px;             /* distância do topo */
+}
+
+
+
+/* Header simples com título centralizado */
+.header-new-product {
+  width: 100%;
+  padding-bottom: var(--spacing-lg);
+}
+
+/* Reutiliza .page-title, só ajustamos um pouco o tamanho pra caber melhor aqui */
+.header-new-product .page-title {
+  font-family: "Libre Bodoni", serif;
+  font-weight: 700;
+  font-size: 48px;
+  color: var(--primary);
+  text-align: center;
+  letter-spacing: 1.92px;
+  margin-bottom: 60px;
+}
+
+
+/* área interna da tela de novo produto */
+.new-product-content {
+  width: 100%;
+  padding: var(--spacing-md) var(--spacing-lg);
+}
+
+/* aproveita o .form, mas ajusta o espaçamento */
+.form-new-product {
+  margin-top: var(--spacing-md);
+  gap: var(--spacing-lg);
+}
+
+/* Campo de texto maior para descrição */
+.textarea-field {
+  min-height: 100px;
+  resize: none;
+  padding-top: 12px;
+  padding-bottom: 12px;
+}
+
+
+image-upload-group {
+  margin-top: var(--spacing-lg);
+}
+
+.image-upload-area {
+  display: block;
+  width: 100%;
+  height: 200px;
+  background: var(--gray-200);
+  border-radius: var(--radius-lg);
+  cursor: pointer;
+  overflow: hidden;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.image-input {
+  display: none; /* esconde o input de arquivo */
+}
+
+.image-upload-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--spacing-sm);
+}
+
+.image-placeholder-icon {
+  width: 48px;
+  height: 48px;
+  object-fit: contain;
+}
+
+.image-placeholder-text {
+  font-family: "Maitree", serif;
+  font-size: 14px;
+  color: var(--primary);
+}
+
+
+
 /* ============================================
    RESPONSIVIDADE
    ============================================ */

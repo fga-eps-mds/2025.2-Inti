@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>MUSA - Novo produto</title>
+    <link rel="stylesheet" href="../css/style.css" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Maitree:wght@300;400;500;600&family=Libre+Bodoni:wght@400;700&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
+    <div class="screen-container">
+      <div class="screen-services">
+
+        <header class="header-new-product">
+            <h1 class="page-title">Novo Produto</h1>  
+        </header>
+
+        <main class="new-product-content">
+        <form class="form form-new-product">
+          <!-- Campo: Título -->
+                    <!-- Campo: Título -->
+          <div class="form-group">
+            <div class="input-wrapper">
+              <label for="title" class="input-label">Título</label>
+              <input
+                type="text"
+                id="title"
+                name="title"
+                class="input-field"
+                placeholder="Digite o título"
+              />
+            </div>
+          </div>
+
+          <!-- Campo: Descrição -->
+          <div class="form-group">
+            <div class="input-wrapper">
+              <label for="description" class="input-label">Descrição</label>
+              <textarea
+                id="description"
+                name="description"
+                class="input-field textarea-field"
+                placeholder="Descreva seu produto ou serviço"
+              ></textarea>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <div class="input-wrapper">
+              <label for="price" class="input-label">Preço</label>
+              <input
+                type="text"
+                id="price"
+                name="price"
+                class="input-field price-field"
+                placeholder="R$"
+              />
+            </div>
+          </div>
+
+           <div class="form-group image-upload-group">
+            <label for="image" class="image-upload-area">
+              <input
+                type="file"
+                id="image"
+                name="image"
+                accept="image/*"
+                class="image-input"
+              />
+              <div class="image-upload-content">
+                <!-- se não tiver esse ícone, depois você troca o src por algum que exista -->
+                <img
+                  src="../assets/image-placeholder-icon.svg"
+                  alt="Selecionar imagem"
+                  class="image-placeholder-icon"
+                />
+                <p class="image-placeholder-text">Adicionar imagem de capa</p>
+              </div>
+            </label>
+          </div>
+
+        </form>
+      </main>
+      </div>
+    </div>
+
+    <script src="../js/app.js"></script>
+    <script src="../js/router.js"></script>
+  </body>
+</html>
