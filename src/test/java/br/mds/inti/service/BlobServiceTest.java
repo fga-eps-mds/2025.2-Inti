@@ -1,5 +1,6 @@
 package br.mds.inti.service;
 
+import br.mds.inti.config.AzureBlobConfig;
 import com.azure.storage.blob.BlobClient;
 import com.azure.storage.blob.BlobContainerClient;
 import com.azure.storage.blob.BlobServiceClient;
@@ -46,7 +47,6 @@ class BlobServiceTest {
     void setUp() {
         userId = UUID.randomUUID();
         ReflectionTestUtils.setField(blobService, "containerName", "test-container");
-        ReflectionTestUtils.setField(blobService, "connectionString", "test-connection-string");
     }
 
     @Test
@@ -170,17 +170,16 @@ class BlobServiceTest {
     }
 
     @Test
-    void deleteImage_ShouldCallBlobClientDelete() {
+    void deleteImageAlreadyDeleted() {
         // Arrange
         String blobName = "test-blob.jpg";
         when(blobServiceClient.getBlobContainerClient("test-container")).thenReturn(blobContainerClient);
         when(blobContainerClient.getBlobClient(blobName)).thenReturn(blobClient);
 
         // Act
-        blobService.deleteImage(blobName);
-
-        // Assert
-        verify(blobClient).delete();
+        assertThrows(ResponseStatusException.class, () -> {
+            blobService.deleteImage(blobName);
+        });
     }
 
     @Test

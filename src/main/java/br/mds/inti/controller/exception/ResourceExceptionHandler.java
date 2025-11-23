@@ -2,12 +2,12 @@ package br.mds.inti.controller.exception;
 
 import java.time.Instant;
 
+import br.mds.inti.service.exceptions.UsernameAlreadyExistsException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
-import br.mds.inti.service.exceptions.UsernameAlreadyExistsException;
 import br.mds.inti.service.exceptions.ImageNotFoundException;
 import br.mds.inti.service.exceptions.ProfileNotFoundException;
 import jakarta.servlet.http.HttpServletRequest;

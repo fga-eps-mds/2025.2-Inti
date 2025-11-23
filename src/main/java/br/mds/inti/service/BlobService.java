@@ -2,6 +2,8 @@ package br.mds.inti.service;
 
 import com.azure.storage.blob.BlobClient;
 import com.azure.storage.blob.BlobServiceClient;
+import com.azure.storage.blob.BlobServiceClientBuilder;
+import jakarta.annotation.PostConstruct;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
@@ -20,9 +22,6 @@ import java.util.UUID;
 public class BlobService {
 
     private BlobServiceClient blobServiceClient;
-
-    @Value("${azure.blob-storage.connection-string}")
-    private String connectionString;
 
     @Value("${spring.cloud.azure.storage.blob.container-name}")
     private String containerName;
@@ -64,6 +63,10 @@ public class BlobService {
         BlobClient blobClient = blobServiceClient
                 .getBlobContainerClient(containerName)
                 .getBlobClient(blobName);
+
+        if(!blobClient.exists()){
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Image already deleted");
+        }
 
         blobClient.delete();
     }
