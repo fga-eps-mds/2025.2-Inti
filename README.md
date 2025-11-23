@@ -10,8 +10,8 @@ Este projeto utiliza uma arquitetura baseada em microsserviços, composta por:
 
 ## Pré-requisitos
 
-- ![Docker](https://www.docker.com/sites/default/files/d8/2019-07/Moby-logo.png) [Docker](https://www.docker.com/)
-- ![Docker Compose](https://seeklogo.com/images/D/docker-compose-logo-6B6C1D8C18-seeklogo.com.png) [Docker Compose](https://docs.docker.com/compose/)
+- [Docker](https://www.docker.com/)
+- [Docker Compose](https://docs.docker.com/compose/)
 
 ## Como Executar o Projeto
 
@@ -263,5 +263,125 @@ mvn spring-boot:run
 
 ---
 
-Se quiser que eu adicione exemplos de request/response em Java (RestTemplate/WebClient) ou em JS (fetch/axios), diga
-qual você prefere e eu adiciono.
+## AuthController (Autenticação e Registro)
+
+### 1) Registrar Usuário
+- Endpoint: `POST /auth/register`
+- Envia dados de registro (nome, username, senha, etc.) no corpo da requisição (JSON).
+- Retorna 201 Created com dados do perfil criado.
+
+Exemplo curl:
+```bash
+curl -i -X POST http://localhost:8080/auth/register \
+  -H "Content-Type: application/json" \
+  -d '{"name":"Lucas","username":"lucas","password":"123456"}'
+```
+Resposta exemplo:
+```json
+{
+  "id": "uuid-gerado",
+  "username": "lucas",
+  "name": "Lucas",
+  ...
+}
+```
+
+### 2) Login
+- Endpoint: `POST /auth/login`
+- Envia username e senha no corpo da requisição (JSON).
+- Retorna 200 OK com JWT no corpo.
+
+Exemplo curl:
+```bash
+curl -i -X POST http://localhost:8080/auth/login \
+  -H "Content-Type: application/json" \
+  -d '{"username":"lucas","password":"123456"}'
+```
+Resposta exemplo:
+```
+<JWT_TOKEN>
+```
+
+---
+
+## ImageController (Imagens)
+
+### 1) Download de Imagem
+- Endpoint: `GET /images/{blobName}`
+- Retorna a imagem correspondente ao blobName.
+- Content-Type: detectado automaticamente (jpeg/png/gif/webp).
+- Retorna 404 se não encontrar.
+
+Exemplo curl:
+```bash
+curl -i -X GET http://localhost:8080/images/minha-foto.png
+```
+
+---
+
+## ProfileController (Perfil e Seguidores)
+
+### 1) Perfil do Usuário Autenticado
+- Endpoint: `GET /profile/me?size=10&page=0`
+- Retorna dados do perfil do usuário logado, paginado.
+
+Exemplo curl:
+```bash
+curl -i -X GET "http://localhost:8080/profile/me?size=10&page=0" \
+  -H "Authorization: Bearer <JWT_TOKEN>"
+```
+
+### 2) Perfil Público de Outro Usuário
+- Endpoint: `GET /profile/{username}?size=10&page=0`
+- Retorna dados públicos do perfil, paginado.
+
+Exemplo curl:
+```bash
+curl -i -X GET "http://localhost:8080/profile/lucas?size=10&page=0"
+```
+
+### 3) Upload de Foto de Perfil
+- Endpoint: `POST /profile/upload-me`
+- Envia imagem como multipart/form-data (campo: myImage).
+- Retorna 201 Created em caso de sucesso.
+
+Exemplo curl:
+```bash
+curl -i -X POST http://localhost:8080/profile/upload-me \
+  -H "Authorization: Bearer <JWT_TOKEN>" \
+  -F "myImage=@/caminho/para/foto.jpg"
+```
+
+### 4) Atualizar Dados do Usuário
+- Endpoint: `PATCH /profile/update`
+- Envia dados via multipart/form-data (campos do usuário).
+- Retorna 201 Created em caso de sucesso.
+
+Exemplo curl:
+```bash
+curl -i -X PATCH http://localhost:8080/profile/update \
+  -H "Authorization: Bearer <JWT_TOKEN>" \
+  -F "name=Novo Nome" -F "bio=Nova bio"
+```
+
+### 5) Seguir Perfil
+- Endpoint: `POST /profile/{username}/follow`
+- Segue o usuário indicado por username.
+- Retorna dados do follow.
+
+Exemplo curl:
+```bash
+curl -i -X POST http://localhost:8080/profile/lucas/follow \
+  -H "Authorization: Bearer <JWT_TOKEN>"
+```
+
+### 6) Deixar de Seguir Perfil
+- Endpoint: `DELETE /profile/{username}/unfollow`
+- Remove o follow do usuário indicado por username.
+- Retorna dados do unfollow.
+
+Exemplo curl:
+```bash
+curl -i -X DELETE http://localhost:8080/profile/lucas/unfollow \
+  -H "Authorization: Bearer <JWT_TOKEN>"
+```
