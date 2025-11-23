@@ -2,6 +2,7 @@ package br.mds.inti.controller;
 
 import br.mds.inti.model.dto.PostDetailResponse;
 import br.mds.inti.model.entity.Profile;
+import br.mds.inti.service.LikeService;
 import br.mds.inti.service.PostService;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
@@ -23,6 +24,9 @@ public class PostController {
 
     @Autowired
     private PostService postService;
+
+    @Autowired
+    private LikeService likeService;
 
     @PostMapping(consumes = "multipart/form-data")
     public ResponseEntity<Void> createPost(
@@ -51,4 +55,25 @@ public class PostController {
         PostDetailResponse post = postService.getPostById(postId);
         return ResponseEntity.ok(post);
     }
+
+    @PostMapping("/{postId}/like")
+    public ResponseEntity<Void> likePost(@PathVariable UUID postId) {
+
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        Profile profile = (Profile) authentication.getPrincipal();
+
+        likeService.likePost(profile, postId);
+        return ResponseEntity.status(HttpStatus.OK).build();
+    }
+
+    @DeleteMapping("/{postId}/like")
+    public ResponseEntity<Void> unlikePost(@PathVariable UUID postId) {
+
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        Profile profile = (Profile) authentication.getPrincipal();
+
+        likeService.unlikePost(profile, postId);
+        return ResponseEntity.status(HttpStatus.OK).build();
+    }
+
 }

@@ -22,5 +22,9 @@ public interface PostRepository extends JpaRepository<Post, UUID> {
 
     @Modifying
     @Query("update Post p set p.deletedAt = CURRENT_TIMESTAMP where p.id = ?1")
-    void softDeletePost(@Param(value = "id") UUID postId);
+    void softDeletePost(UUID postId);
+
+    @Modifying
+    @Query("update Post p set p.likesCount = ?1 where p.id = ?2")
+    void updateLikesCount(int likesCount, UUID id);
 }
