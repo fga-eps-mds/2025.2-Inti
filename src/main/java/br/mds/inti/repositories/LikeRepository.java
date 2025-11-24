@@ -1,7 +1,6 @@
 package br.mds.inti.repositories;
 
 import br.mds.inti.model.entity.Like;
-import br.mds.inti.model.entity.Post;
 import br.mds.inti.model.entity.Profile;
 import br.mds.inti.model.entity.pk.LikePk;
 import org.springframework.data.jpa.repository.JpaRepository;

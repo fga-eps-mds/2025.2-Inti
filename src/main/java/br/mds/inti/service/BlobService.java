@@ -2,8 +2,6 @@ package br.mds.inti.service;
 
 import com.azure.storage.blob.BlobClient;
 import com.azure.storage.blob.BlobServiceClient;
-import com.azure.storage.blob.BlobServiceClientBuilder;
-import jakarta.annotation.PostConstruct;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
@@ -64,7 +62,7 @@ public class BlobService {
                 .getBlobContainerClient(containerName)
                 .getBlobClient(blobName);
 
-        if(!blobClient.exists()){
+        if (!blobClient.exists()) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Image already deleted");
         }
 
