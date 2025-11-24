@@ -1,5 +1,6 @@
 package br.mds.inti.service;
 
+import br.mds.inti.model.dto.EventListResponse;
 import br.mds.inti.model.dto.EventRequestDTO;
 import br.mds.inti.model.dto.EventResponseDTO;
 import br.mds.inti.model.entity.Event;
@@ -14,6 +15,10 @@ import org.springframework.web.server.ResponseStatusException;
 
 import java.io.IOException;
 import java.time.Instant;
+import java.time.ZoneId;
+import java.util.List;
+import java.util.stream.Collector;
+import java.util.stream.Collectors;
 
 @Service
 public class EventService {
@@ -53,4 +58,9 @@ public class EventService {
         return new EventResponseDTO(event.getId(), EVENTO_CRIADO);
     }
 
+    public List <EventListResponse> getListEvent() {
+        List <Event> events = eventRepository.findAll();
+        List <EventListResponse> response = events.stream().map(event -> new EventListResponse(event.getTitle(), "/images/" + event.getBlobName(), event.getEventTime().atZone(ZoneId.of("America/Sao_Paulo")).toLocalDateTime(), event.getId())).collect(Collectors.toList()); 
+        return  response;
+    }
 }
