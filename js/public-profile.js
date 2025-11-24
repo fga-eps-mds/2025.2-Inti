@@ -1,12 +1,8 @@
-const AUTH_TOKEN =
-  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJub3ZvdCIsImV4cCI6MTc2NjA5ODg4MH0.BIBmMxWoq7em60fQWioz2qTin4g0TwZUaMHwioLe6JU";
-window.AUTH_TOKEN = AUTH_TOKEN;
+const AUTH_TOKEN = (window.AUTH_TOKEN = AUTH_TOKEN);
 
 const urlParams = new URLSearchParams(window.location.search);
 
-const username = "morettipdr";
-
-document.addEventListener("DOMContentLoaded", () => {
+const username = document.addEventListener("DOMContentLoaded", () => {
   if (!AUTH_TOKEN) {
     console.error("Token não encontrado.");
     return;

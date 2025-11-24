@@ -331,6 +331,7 @@
         align-items: center;
         font-family: "Julius Sans One", sans-serif;
       }
+
       .container-header {
         display: flex;
         flex-direction: column;
@@ -338,15 +339,19 @@
         align-items: center;
         font-family: "Julius Sans One", sans-serif;
         flex: 1;
-        min-width: 0; /* permite que o conteúdo encolha corretamente em flexbox */
+        min-width: 0;
+        /* permite que o conteúdo encolha corretamente em flexbox */
       }
 
       .user-name {
         font-size: 24px;
         font-family: "Jost", sans-serif;
-        white-space: nowrap; /* impede quebra em múltiplas linhas */
-        overflow: hidden; /* esconde o texto que ultrapassar */
-        text-overflow: ellipsis; /* adiciona reticências quando necessário */
+        white-space: nowrap;
+        /* impede quebra em múltiplas linhas */
+        overflow: hidden;
+        /* esconde o texto que ultrapassar */
+        text-overflow: ellipsis;
+        /* adiciona reticências quando necessário */
         max-width: 100%;
         display: block;
         margin-top: 39px;
@@ -360,7 +365,7 @@
       .container-data-user {
         margin-top: 0px;
         display: flex;
-        justify-content: space-between;
+        justify-content: space-around;
         align-items: center;
         font-family: "Jost", sans-serif;
       }
@@ -444,6 +449,7 @@
         background-color: var(--primary);
         flex-shrink: 0;
       }
+
       .edit {
         width: 38px;
         height: 38px;
@@ -575,7 +581,8 @@
         grid-template-columns: repeat(2, 1fr);
         gap: 10px;
         padding-top: 20px;
-        padding-bottom: 80px; /* Espaço para navbar */
+        padding-bottom: 80px;
+        /* Espaço para navbar */
       }
 
       .user-post-item {
@@ -655,10 +662,12 @@
         .container {
           max-width: 100%;
         }
+
         .contact-info-box {
           max-width: 100%;
           max-height: auto;
         }
+
         .events-grid {
           gap: var(--spacing-md);
           padding: var(--spacing-md);
@@ -671,10 +680,11 @@
         .filter-nav {
           padding: var(--spacing-md);
         }
+
         .container-data-user {
-          max-width: 100%;
-          gap: 30px;
+          width: 100%;
         }
+
         .grid-products {
           max-width: 100%;
           gap: 80px;
@@ -688,6 +698,7 @@
         .products {
           margin-right: 40px;
         }
+
         .divider {
           width: 100%;
         }
@@ -727,6 +738,7 @@
           height: 40px;
           width: 2px;
         }
+
         .divider {
           width: 100%;
         }

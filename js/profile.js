@@ -1,6 +1,4 @@
-const AUTH_TOKEN =
-  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJub3ZvdCIsImV4cCI6MTc2NjA5ODg4MH0.BIBmMxWoq7em60fQWioz2qTin4g0TwZUaMHwioLe6JU";
-window.AUTH_TOKEN = AUTH_TOKEN;
+const AUTH_TOKEN = (window.AUTH_TOKEN = AUTH_TOKEN);
 
 document.addEventListener("DOMContentLoaded", function () {
   if (!AUTH_TOKEN) {
