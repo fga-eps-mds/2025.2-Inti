@@ -3,7 +3,9 @@ package br.mds.inti.controller;
 import br.mds.inti.model.dto.EventDetailResponse;
 import br.mds.inti.model.dto.EventRequestDTO;
 import br.mds.inti.model.dto.EventResponseDTO;
+import br.mds.inti.model.entity.EventParticipant;
 import br.mds.inti.model.entity.Profile;
+import br.mds.inti.model.entity.pk.EventParticipantPK;
 import br.mds.inti.model.enums.ProfileType;
 import br.mds.inti.service.EventService;
 import jakarta.validation.Valid;
@@ -48,13 +50,18 @@ public class EventController {
     }
 
     @PostMapping("/{eventid}/attendees")
-    public ResponseEntity<Void> eventInscription(@PathVariable UUID eventid) {
+    public ResponseEntity<EventParticipant> eventInscription(@PathVariable UUID eventid) {
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         Profile profile = (Profile) authentication.getPrincipal();
-        
-        eventService.eventInscription(eventid, profile);
 
-        return ResponseEntity.created(null).build();
+        return ResponseEntity.ok().body(eventService.eventInscription(eventid, profile));
+    }
+
+    @DeleteMapping("/{eventid}/attendees")
+    public ResponseEntity<Void> deleteInscription(@PathVariable EventParticipantPK eventParticipantId) {
+        eventService.deleteInscription(eventParticipantId);
+
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 }

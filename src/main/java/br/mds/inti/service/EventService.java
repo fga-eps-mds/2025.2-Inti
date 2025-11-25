@@ -90,8 +90,8 @@ public class EventService {
                 event.getFinishedAt());
     }
     
-    public void eventInscription(UUID eventid, Profile profile) {
-        
+    public EventParticipant eventInscription(UUID eventid, Profile profile) {
+
         Event event = eventRepository.findById(eventid)
                 .orElseThrow(() -> new RuntimeException(EVENTO_NAO_ENCONTRADO));
 
@@ -106,7 +106,14 @@ public class EventService {
         eventParticipantPK.setProfileId(profile.getId());
 
         eventParticipant.setId(eventParticipantPK);
-        
-        eventParticipantsRepository.save(eventParticipant);
+
+        return eventParticipantsRepository.save(eventParticipant);
+    }
+    
+    public void deleteInscription(EventParticipantPK eventParticipantId) {
+        EventParticipant eventParticipant2 = eventParticipantsRepository.findById(eventParticipantId)
+                .orElseThrow(() -> new RuntimeException("Erro ao deletar o profile do evento"));
+
+        eventParticipantsRepository.delete(eventParticipant2);
     }
 }
