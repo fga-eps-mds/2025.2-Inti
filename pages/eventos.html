@@ -1,0 +1,86 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>MUSA - Eventos</title>
+    <link rel="stylesheet" href="../css/style.css" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Tilt+Warp&family=Teachers&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
+    <div class="screen-container">
+      <div class="screen-eventos">
+        <button class="seta-voltar" onclick="window.history.back()">
+          <svg viewBox="0 0 23 16" fill="none">
+            <line
+              x1="2.12132"
+              y1="2.12132"
+              x2="13.435"
+              y2="13.435"
+              stroke="#A38BBA"
+              stroke-width="6"
+            />
+            <line
+              x1="9.17867"
+              y1="13.435"
+              x2="20.4924"
+              y2="2.12132"
+              stroke="#A38BBA"
+              stroke-width="6"
+            />
+          </svg>
+        </button>
+
+        <h1 class="eventos-title">Eventos Confirmados</h1>
+
+        <div class="evento-card evento-1">
+          <div class="evento-image"></div>
+          <p class="evento-desc">Nome do Evento 1</p>
+        </div>
+
+        <div class="evento-card evento-2">
+          <div class="evento-image"></div>
+          <p class="evento-desc">Nome do Evento 2</p>
+        </div>
+
+        <div class="evento-card evento-3">
+          <div class="evento-image"></div>
+          <p class="evento-desc">Nome do Evento 3</p>
+        </div>
+
+        <div class="line-navbar"></div>
+
+        <nav class="navbar-home">
+          <button
+            class="nav-icon nav-home"
+            onclick="window.location.href='home.html'"
+          ></button>
+          <button
+            class="nav-icon nav-search"
+            onclick="window.location.href='search.html'"
+          ></button>
+          <button
+            class="nav-icon nav-create"
+            onclick="window.location.href='create.html'"
+          ></button>
+          <button
+            class="nav-icon nav-calendar active"
+            onclick="window.location.href='eventos.html'"
+          ></button>
+          <button
+            class="nav-icon nav-user"
+            onclick="window.location.href='user.html'"
+          ></button>
+        </nav>
+      </div>
+    </div>
+
+    <script src="../js/app.js"></script>
+    <script src="../js/router.js"></script>
+  </body>
+</html>
