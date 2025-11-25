@@ -17,6 +17,9 @@ import org.springframework.web.server.ResponseStatusException;
 
 import java.io.IOException;
 import java.util.UUID;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+
 
 @RestController
 @RequestMapping("/event")
@@ -39,8 +42,19 @@ public class EventController {
     }
 
     @GetMapping("/{eventid}")
-    public ResponseEntity<EventDetailResponse> getEventById(@PathVariable UUID id) {
-        EventDetailResponse eventDetails = eventService.getEventById(id);
+    public ResponseEntity<EventDetailResponse> getEventById(@PathVariable UUID eventid) {
+        EventDetailResponse eventDetails = eventService.getEventById(eventid);
         return ResponseEntity.ok(eventDetails);
+    }
+
+    @PostMapping("/{eventid}/attendees")
+    public ResponseEntity<Void> eventInscription(@PathVariable UUID eventid) {
+
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        Profile profile = (Profile) authentication.getPrincipal();
+        
+        eventService.eventInscription(eventid, profile);
+
+        return ResponseEntity.created(null).build();
     }
 }

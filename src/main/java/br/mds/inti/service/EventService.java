@@ -5,7 +5,10 @@ import br.mds.inti.model.dto.EventRequestDTO;
 import br.mds.inti.model.dto.EventResponseDTO;
 import br.mds.inti.model.dto.LocalAddress;
 import br.mds.inti.model.entity.Event;
+import br.mds.inti.model.entity.EventParticipant;
 import br.mds.inti.model.entity.Profile;
+import br.mds.inti.model.entity.pk.EventParticipantPK;
+import br.mds.inti.repositories.EventParticipantsRepository;
 import br.mds.inti.repositories.EventRepository;
 import jakarta.validation.constraints.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,6 +28,9 @@ public class EventService {
 
     @Autowired
     EventRepository eventRepository;
+
+    @Autowired
+    EventParticipantsRepository eventParticipantsRepository;
 
     final String EVENTO_CRIADO = "Evento criado com sucesso";
     final String EVENTO_NAO_ENCONTRADO = "Evento não encontrado";
@@ -72,15 +78,35 @@ public class EventService {
 
     private EventDetailResponse convertToDetailResponse(Event event) {
         return new EventDetailResponse(
-            event.getId(),
-            event.getTitle(),
-            "/images/" + event.getBlobName(),
-            event.getEventTime(),
-            event.getDescription(), 
-            new LocalAddress(event.getStreetAddress(), event.getAdministrativeRegion(), event.getCity(), event.getState(), event.getReferencePoint()),       
-            event.getLatitude(),
-            event.getLongitude(),
-            event.getFinishedAt()
-        );
+                event.getId(),
+                event.getTitle(),
+                "/images/" + event.getBlobName(),
+                event.getEventTime(),
+                event.getDescription(),
+                new LocalAddress(event.getStreetAddress(), event.getAdministrativeRegion(), event.getCity(),
+                        event.getState(), event.getReferencePoint()),
+                event.getLatitude(),
+                event.getLongitude(),
+                event.getFinishedAt());
+    }
+    
+    public void eventInscription(UUID eventid, Profile profile) {
+        
+        Event event = eventRepository.findById(eventid)
+                .orElseThrow(() -> new RuntimeException(EVENTO_NAO_ENCONTRADO));
+
+        EventParticipant eventParticipant = new EventParticipant();
+        eventParticipant.setEvent(event);
+        eventParticipant.setProfile(profile);
+        eventParticipant.setCreatedAt(Instant.now());
+
+        EventParticipantPK eventParticipantPK = new EventParticipantPK();
+
+        eventParticipantPK.setEventId(event.getId());
+        eventParticipantPK.setProfileId(profile.getId());
+
+        eventParticipant.setId(eventParticipantPK);
+        
+        eventParticipantsRepository.save(eventParticipant);
     }
 }
