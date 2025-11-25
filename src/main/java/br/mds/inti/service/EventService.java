@@ -1,16 +1,21 @@
 package br.mds.inti.service;
 
+import br.mds.inti.model.dto.EventDetailResponse;
 import br.mds.inti.model.dto.EventRequestDTO;
 import br.mds.inti.model.dto.EventResponseDTO;
+import br.mds.inti.model.dto.LocalAddress;
 import br.mds.inti.model.entity.Event;
 import br.mds.inti.model.entity.Profile;
 import br.mds.inti.repositories.EventRepository;
 import jakarta.validation.constraints.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.io.IOException;
 import java.time.Instant;
+import java.util.UUID;
 
 @Service
 public class EventService {
@@ -22,15 +27,15 @@ public class EventService {
     EventRepository eventRepository;
 
     final String EVENTO_CRIADO = "Evento criado com sucesso";
+    final String EVENTO_NAO_ENCONTRADO = "Evento não encontrado";
 
-    public EventResponseDTO createEvent(@NotNull Profile profile, @NotNull EventRequestDTO eventRequestDTO)
-            throws IOException {
+    public EventResponseDTO createEvent(@NotNull Profile profile, @NotNull EventRequestDTO eventRequestDTO) throws IOException {
         Event event = new Event();
         event.setProfile(profile);
         event.setTitle(eventRequestDTO.title());
 
         String blobName = null;
-        if (eventRequestDTO.image() != null) {
+        if(eventRequestDTO.image() != null) {
             blobName = blobService.uploadImage(profile.getId(), eventRequestDTO.image());
         }
 
@@ -51,4 +56,31 @@ public class EventService {
         return new EventResponseDTO(event.getId(), EVENTO_CRIADO);
     }
 
+    public EventDetailResponse getEventById(UUID eventId) {
+        Event event = eventRepository.findById(eventId)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, EVENTO_NAO_ENCONTRADO));
+        
+        return convertToDetailResponse(event);
+    }
+
+    public String generateImageUrl(String blobName) {
+        if (blobName == null || blobName.isEmpty()) {
+            return null;
+        }
+        return "/images/" + blobName;
+    }
+
+    private EventDetailResponse convertToDetailResponse(Event event) {
+        return new EventDetailResponse(
+            event.getId(),
+            event.getTitle(),
+            "/images/" + event.getBlobName(),
+            event.getEventTime(),
+            event.getDescription(), 
+            new LocalAddress(event.getStreetAddress(), event.getAdministrativeRegion(), event.getCity(), event.getState(), event.getReferencePoint()),       
+            event.getLatitude(),
+            event.getLongitude(),
+            event.getFinishedAt()
+        );
+    }
 }
