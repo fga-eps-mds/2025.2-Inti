@@ -20,3 +20,8 @@ document.addEventListener("DOMContentLoaded", function () {
     btn.addEventListener("click", logout);
   });
 });
+
+//adiciona verificação de publicação
+let popup = document.getElementById("alerta");
+popup.addEventListener("click", function() {
+  alert("Publicado com sucesso!")}, true);

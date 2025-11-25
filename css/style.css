@@ -575,6 +575,7 @@ body {
 .input-wrapper {
   position: relative;
   width: 100%;
+  display: block;
 }
 
 .input-field {
@@ -589,6 +590,8 @@ body {
   color: var(--primary);
   outline: none;
   transition: box-shadow 0.2s ease;
+  &::-webkit-calendar-picker-indicator {
+  opacity: 0;}
 }
 
 .input-field:focus {
@@ -734,8 +737,9 @@ body {
 /* Container interno da tela "Novo produto" */
 .screen-services {
   width: 100%;
+  height: 100%;
   max-width: 320px;
-  margin: 0 auto;                /* centraliza horizontalmente */
+  margin: 0 auto 10%;                /* centraliza horizontalmente */
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -744,7 +748,7 @@ body {
 
 /* Header simples com título centralizado */
 .header-new-product {
-  margin-top: -120px;
+  position: relative;
   width: 100%;
   padding-bottom: var(--spacing-lg);
 }
@@ -786,6 +790,7 @@ body {
   resize: none;
   padding-top: 12px;
   padding-bottom: 12px;
+  margin-bottom: -16px;
 }
 
 .image-upload-area {
@@ -828,6 +833,29 @@ body {
   font-size: 14px;
   color: var(--primary);
 }
+
+/* ============================================
+   PÁGINA - NOVO EVENTO
+   ============================================ */
+
+   .row-group {
+    display: flex;
+    gap: var(--spacing-md);
+   }
+
+   .imput-group-half {
+    flex: 1;
+   }
+
+   .input-field-icon {
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    top: 25%;
+    right: 19px;
+    pointer-events: none;
+    }
+   
 
 
 
