@@ -7,6 +7,8 @@
     <link
         href="https://fonts.googleapis.com/css2?family=Maitree:wght@300;400;500;600&family=Libre+Bodoni:wght@400;700&display=swap"
         rel="stylesheet">
+
+        <link rel="icon" type="image/png" href="../assets/MUSA-M.png">
     <title>HH UnB - Evento</title>
     <style>
         * {
@@ -439,10 +441,13 @@
             }
         }
 
-        @media (min-width: 1200px) {
+        @media (max-width: 1200px) {
             .event-publish-screen {
                 max-width: 1200px;
                 margin: 0 auto;
+            }
+            .navbar{
+                max-width: 92%;
             }
         }
     </style>
@@ -451,9 +456,9 @@
 <body>
     <div class="event-publish-screen">
         <header class="header-event-publish">
-            <button class="back-btn" aria-label="Voltar">
+           <a class="back-btn" href="../pages/eventList.html">
                 <img src="../assets/Seta Select.png" alt="Voltar">
-            </button>
+           </a>
             <div class="header-content">
                 <img class="logo-icon" src="../assets/MUSA-M.png" alt="Logo MUSA">
                 <h1 class="page-title">Publicação</h1>
