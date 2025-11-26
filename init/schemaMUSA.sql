@@ -91,6 +91,7 @@ CREATE TABLE "artist_products" (
   "profile_id" uuid NOT NULL,
   "title" varchar(255) NOT NULL,
   "blob_name" varchar(255),
+  "description" varchar(255) DEFAULT null,
   "price" decimal(10,2) NOT NULL,
   "created_at" timestamptz NOT NULL,
   "deleted_at" timestamptz
