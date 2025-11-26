@@ -10,6 +10,7 @@ import br.mds.inti.model.entity.Profile;
 import br.mds.inti.model.entity.pk.EventParticipantPK;
 import br.mds.inti.repositories.EventParticipantsRepository;
 import br.mds.inti.repositories.EventRepository;
+import br.mds.inti.service.exceptions.EntityNotFoundException;
 import jakarta.validation.constraints.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -111,9 +112,9 @@ public class EventService {
     }
     
     public void deleteInscription(EventParticipantPK eventParticipantId) {
-        EventParticipant eventParticipant2 = eventParticipantsRepository.findById(eventParticipantId)
-                .orElseThrow(() -> new RuntimeException("Erro ao deletar o profile do evento"));
-
-        eventParticipantsRepository.delete(eventParticipant2);
+        if (!eventParticipantsRepository.existsById(eventParticipantId)) {
+            throw new EntityNotFoundException("Inscrição não encontrada");
+        }
+        eventParticipantsRepository.deleteById(eventParticipantId);
     }
 }

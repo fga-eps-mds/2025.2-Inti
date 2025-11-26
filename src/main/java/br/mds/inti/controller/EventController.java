@@ -58,8 +58,10 @@ public class EventController {
         return ResponseEntity.ok().body(eventService.eventInscription(eventid, profile));
     }
 
-    @DeleteMapping("/{eventid}/attendees")
-    public ResponseEntity<Void> deleteInscription(@PathVariable EventParticipantPK eventParticipantId) {
+    @DeleteMapping("/{eventid}/attendees/{profileid}")
+    //fiz uma alteração no endpoint aqui para não precisar fazer um RequestParam
+    public ResponseEntity<Void> deleteInscription(@PathVariable UUID eventid, @PathVariable UUID profileid) {
+        EventParticipantPK eventParticipantId = new EventParticipantPK(profileid,eventid);
         eventService.deleteInscription(eventParticipantId);
 
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
