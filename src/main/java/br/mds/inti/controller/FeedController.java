@@ -28,6 +28,8 @@ public class FeedController {
 
     public record FeedItem(
             UUID id,
+            String imageProfileUrl,
+            String username,
             String description,
             String imageUrl,
             Integer likes,
@@ -50,6 +52,10 @@ public class FeedController {
         List<FeedItem> items = classifiedPosts.stream()
                 .map(cp -> new FeedItem(
                         cp.post().getId(),
+                        cp.post().getProfile().getProfilePictureUrl() == null
+                                ? null
+                                : "/images/" + cp.post().getProfile().getProfilePictureUrl(),
+                        cp.post().getProfile().getUsername(),
                         cp.post().getDescription(),
                         cp.post().getBlobName() == null ? null : "/images/" + cp.post().getBlobName(),
                         cp.post().getLikesCount(),
