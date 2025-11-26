@@ -199,7 +199,9 @@ body {
    ============================================ */
 .events-grid {
   padding: var(--spacing-md) var(--spacing-lg);
-  gap: var(--spacing-lg);
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
   margin-top: 30px;
 }
 

@@ -20,7 +20,7 @@ async function carregarFeed() {
   grid.innerHTML = "";
 
   try {
-    const response = await fetch(`${BASE_API}/feed`, {
+    const response = await fetch(`${BASE_API}/feed?page=0&size=5`, {
       headers: {
         'Authorization': 'Bearer ' + BEARER_TOKEN,
         'Accept': 'application/json'
@@ -61,4 +61,4 @@ async function carregarFeed() {
   }
 }
 
-document.addEventListener("DOMContentLoaded", carregarFeed);
+//document.addEventListener("DOMContentLoaded", carregarFeed);
