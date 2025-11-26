@@ -1,0 +1,665 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nova Publicação</title>
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <h1 class="title">Nova publicação</h1>
+        </header>
+
+        <div class="div-content">
+            <div class="img-selection" id="imgSelection">
+                <input type="file" id="fileInput" accept="image/*" style="display: none;">
+                <div class="img-placeholder" id="imgPlaceholder">
+                    <p>Selecionar imagem</p>
+                </div>
+                <img id="imagePreview" class="image-preview" style="display: none;" alt="Imagem selecionada">
+            </div>
+
+            <div class="description-label">
+                <p>Descrição</p>
+            </div>
+
+            <div class="description-container">
+                <textarea id="descriptionInput" class="description-input"
+                    placeholder="Adicione uma descrição"></textarea>
+            </div>
+
+            <div class="publish-button-container">
+                <button id="publishButton" class="publish-button" disabled>
+                    PUBLICAR
+                </button>
+            </div>
+        </div>
+
+
+        <nav class="navbar">
+            <button class="nav-btn active" aria-label="Home">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                    <path
+                        d="M3 9L12 2L21 9V20C21 20.5304 20.7893 21.0391 20.4142 21.4142C20.0391 21.7893 19.5304 22 19 22H5C4.46957 22 3.96086 21.7893 3.58579 21.4142C3.21071 21.0391 3 20.5304 3 20V9Z"
+                        stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                    <path d="M9 22V12H15V22" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round" />
+                </svg>
+            </button>
+            <button class="nav-btn" aria-label="Explorar">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                    <circle cx="11" cy="11" r="8" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round" />
+                    <path d="M21 21L16.65 16.65" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round" />
+                </svg>
+            </button>
+            <button class="nav-btn nav-btn-add" aria-label="Adicionar">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                    <line x1="12" y1="5" x2="12" y2="19" stroke="currentColor" stroke-width="2"
+                        stroke-linecap="round" />
+                    <line x1="5" y1="12" x2="19" y2="12" stroke="currentColor" stroke-width="2"
+                        stroke-linecap="round" />
+                </svg>
+            </button>
+            <button class="nav-btn" aria-label="Calendário">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                    <rect x="3" y="4" width="18" height="18" rx="2" stroke="currentColor" stroke-width="2"
+                        stroke-linecap="round" stroke-linejoin="round" />
+                    <line x1="16" y1="2" x2="16" y2="6" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+                    <line x1="8" y1="2" x2="8" y2="6" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+                    <line x1="3" y1="10" x2="21" y2="10" stroke="currentColor" stroke-width="2"
+                        stroke-linecap="round" />
+                </svg>
+            </button>
+            <button class="nav-btn" aria-label="Perfil">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                    <path
+                        d="M20 21V19C20 17.9391 19.5786 16.9217 18.8284 16.1716C18.0783 15.4214 17.0609 15 16 15H8C6.93913 15 5.92172 15.4214 5.17157 16.1716C4.42143 16.9217 4 17.9391 4 19V21"
+                        stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                    <circle cx="12" cy="7" r="4" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round" />
+                </svg>
+            </button>
+        </nav>
+        
+        <div id="loadingOverlay" class="loading-overlay" style="display: none;">
+            <div class="spinner"></div>
+            <p>Enviando...</p>
+        </div>
+    </div>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            /* Cores principais */
+            --primary: #592e83;
+            --primary-light: #7a4fa3;
+            --primary-lighter: #f2ebfb;
+            --accent: #a38bba;
+
+            /* Tons neutros */
+            --gray-50: #fafafa;
+            --gray-100: #f5f5f5;
+            --gray-200: #e5e5e5;
+            --gray-300: #d4d4d4;
+            --gray-400: #a3a3a3;
+            --gray-500: #737373;
+            --gray-600: #525252;
+            --gray-900: #171717;
+
+            /* Espaçamentos */
+            --spacing-xs: 4px;
+            --spacing-sm: 8px;
+            --spacing-md: 16px;
+            --spacing-lg: 24px;
+            --spacing-xl: 32px;
+
+            /* Bordas */
+            --radius-sm: 8px;
+            --radius-md: 12px;
+            --radius-lg: 16px;
+            --radius-full: 9999px;
+
+            /* Sombras */
+            --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+            --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+        }
+
+        body {
+            font-family: "Maitree", serif;
+            background: var(--gray-50);
+            color: var(--gray-900);
+            line-height: 1.6;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+    
+        .container {
+            position: relative;
+            width: 100%;
+            max-width: 390px;
+            min-height: 100vh;
+            margin: 0 auto;
+            background-color: #ffffff;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+        }
+
+
+        .header{
+            position: relative;
+            width: 100%;
+            padding: 30px 20px 20px;
+            background-color: #ffffff;
+        }
+
+        .title{
+            font-size: 32px;
+            text-align: center;
+            font-family: 'Tilt Warp', regular;
+            color: #592e83;  
+            margin: 0;
+        }
+
+        
+        .div-content{
+            position: relative;
+            padding: 20px;
+            padding-bottom: 80px;
+        }
+
+        
+        .img-selection{
+            position: relative;
+            width: 100%;
+            height: 150px;
+            background-color: #d9d9d9;
+            border: 1px solid #8e8e93;
+            border-radius: 16px;
+            overflow: hidden;
+            cursor: pointer;
+            margin-top: 30px;
+        }
+
+        .img-placeholder{
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: #8e8e93;
+            font-size: 15px;
+            letter-spacing: 0.48px;
+            text-align: center;
+            pointer-events: none;
+        }
+
+        .image-preview{
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .description-label{
+            margin-bottom: 10px;
+            margin-top: 20px;
+        }
+
+        .description-label p{
+            font-family: 'Teachers', serif;
+            font-size: 25px;
+            color: #592e83;
+            letter-spacing: 1px;
+            text-align: center;
+            padding: 37px 0px;
+        }
+
+        .description-container{
+            width: 100%;
+            height: 100px;
+            border: 1px solid #8e8e93;
+            border-radius: 16px;
+            overflow: hidden;
+            margin-bottom: 30px;
+        }
+
+        .description-input{
+            width: 100%;
+            height: 100%;
+            padding: 16px;
+            border: none;
+            outline: none;
+            resize: none;
+            font-family: 'Maitree', sans-serif;
+            font-size: 12px;
+            color: #8e8e93;
+            background-color: transparent;
+        }
+
+        .description-input::placeholder{
+            color: #8e8e93;
+        }
+
+        .publish-button-container{
+            display: flex;
+            justify-content: center;
+            margin-top: 20px;
+        }
+
+        .publish-button{
+            width: 100px;
+            height: 30px;
+            background-color: #d9d9d9;
+            border: none;
+            border-radius: 10px;
+            color: #8e8e93;
+            font-family: 'Maitree', sans-serif;
+            font-size: 12px;
+            cursor: pointer;
+        }
+
+        
+
+
+        .navbar {
+            position: fixed;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100%;
+            height: 70px;
+            background: white;
+            display: flex;
+            align-items: center;
+            justify-content: space-around;
+            padding: 0 20px;
+            border-top: 1px solid var(--gray-200);
+            z-index: 1000;
+        }
+
+        .nav-btn {
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 8px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            color: var(--gray-400);
+            transition: all 0.2s ease;
+            position: relative;
+            flex: 1;
+        }
+
+        .nav-btn:hover {
+            color: var(--primary);
+        }
+
+        .nav-btn.active {
+            color: var(--primary);
+        }
+
+        .nav-btn svg {
+            width: 28px;
+            height: 28px;
+        }
+
+        .nav-btn-add {
+            width: 56px;
+            height: 56px;
+            background: var(--primary);
+            border-radius: 50%;
+            color: white;
+            flex: 0 0 56px;
+            position: relative;
+            top: -8px;
+        }
+
+        .nav-btn-add:hover {
+            background: var(--primary-light);
+            color: white;
+            transform: scale(1.05);
+        }
+
+        .nav-btn-add svg {
+            width: 32px;
+            height: 32px;
+        }
+
+
+        /* Loading Overlay */
+        .loading-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.7);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+
+        .spinner {
+            width: 50px;
+            height: 50px;
+            border: 5px solid #f3f3f3;
+            border-top: 5px solid #592e83;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% {
+                transform: rotate(0deg);
+            }
+
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+
+        .loading-overlay p {
+            color: #ffffff;
+            font-size: 18px;
+            margin-top: 20px;
+        }
+
+        /* Responsividade para tablets */
+        @media (min-width: 391px) and (max-width: 768px) {
+            .container {
+                max-width: 600px;
+            }
+
+            .navbar {
+                max-width: 600px;
+            }
+
+            .title {
+                font-size: 40px;
+            }
+
+            .img-selection {
+                height: 200px;
+            }
+
+            .description-label p {
+                font-size: 30px;
+            }
+
+            .description-container {
+                height: 120px;
+            }
+
+            .description-input {
+                font-size: 14px;
+            }
+
+            .publish-button {
+                width: 120px;
+                height: 40px;
+                font-size: 14px;
+            }
+
+            .nav-icon {
+                width: 40px;
+                height: 40px;
+            }
+        }
+
+        @media (min-width: 769px) {
+            .container {
+                max-width: 100%;
+            }
+
+            .navbar {
+                max-width: 100%;
+            }
+
+            .title {
+                font-size: 48px;
+            }
+
+            .img-selection {
+                height: 300px;
+            }
+
+            .img-placeholder p {
+                font-size: 16px;
+            }
+
+            .description-label p {
+                font-size: 35px;
+            }
+
+            .description-container {
+                height: 150px;
+            }
+
+            .description-input {
+                font-size: 16px;
+                padding: 20px;
+            }
+
+            .publish-button {
+                width: 150px;
+                height: 50px;
+                font-size: 16px;
+            }
+
+            .navbar {
+                height: 60px;
+            }
+
+            .nav-icon {
+                width: 45px;
+                height: 45px;
+            }
+        }
+
+        
+        @media (min-width: 1024px) {
+            .div-content {
+                padding: 40px 60px 100px;
+            }
+
+            .img-selection {
+                height: 400px;
+            }
+
+            .description-container {
+                height: 180px;
+            }
+        }
+
+        @media(max-width: 360px){
+            .title{
+                font-size: 28px;
+            }
+            .img-selection{
+                height: 120px;
+            }
+
+            .description-label p{
+                font-size: 22px;
+            }
+
+            .description-container{
+                height: 80px;
+            }
+
+            .publish-button{
+                width: 90px;
+                height: 28px;
+                font-size: 11px;
+            }
+        }
+    </style>
+    <script>
+        const imgSelection = document.getElementById('imgSelection');
+        const fileInput = document.getElementById('fileInput');
+        const imgPlaceholder = document.getElementById('imgPlaceholder');
+        const imagePreview = document.getElementById('imagePreview');
+        const descriptionInput = document.getElementById('descriptionInput');
+        const publishButton = document.getElementById('publishButton');
+        const loadingOverlay = document.getElementById('loadingOverlay');
+
+        
+        let selectedImg = null;
+
+        imgSelection.addEventListener('click', () => {
+            fileInput.click();
+        });
+
+        fileInput.addEventListener('change', (event) => {
+            const file = event.target.files[0];
+
+            if (file){
+                if (!file.type.startsWith('image/')){
+                    return;
+                }
+
+                // tamanho max da img
+                const maxSize = 10 * 1024 * 1024; // 10mb
+                if (file.size > maxSize) {
+                    return;
+                }
+
+                selectedImg = file;
+
+        
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    imagePreview.src = e.target.result;
+                    imagePreview.style.display = 'block';
+                    imgPlaceholder.style.display = 'none';
+                };
+                reader.readAsDataURL(file);
+
+                // Verificar se pode habilitar o botão
+                checkFormValidity();
+            }
+        });
+
+        descriptionInput.addEventListener('input', () => {
+            checkFormValidity();
+        });
+
+        function checkFormValidity() {
+            const hasImage = selectedImg !== null;
+            const hasDescription = descriptionInput.value.trim().length > 0;
+
+            if (hasImage && hasDescription) {
+                publishButton.disabled = false;
+            } else {
+                publishButton.disabled = true;
+            }
+        }
+
+        // Evento de clique no botão de publicar
+        publishButton.addEventListener('click', async () => {
+            if (!selectedImg || !descriptionInput.value.trim()){
+                return;
+            }
+            loadingOverlay.style.display = 'flex';
+
+            try {
+                const formData = new FormData();
+                formData.append('image', selectedImg);
+                formData.append('description', descriptionInput.value.trim());
+
+                // tem que colocar o endpoint aqui do nosso backend
+                const response = await fetch('', {
+                    method: 'POST',
+                    body: formData,
+                });
+
+                if (response.ok) {
+                    const data = await response.json();
+                    showSuccessMessage('Publicação criada com sucesso!');
+                    resetForm();
+                } else {
+                    const errorData = await response.json().catch(() => ({}));
+                    showErrorMessage('Erro ao publicar. Tente novamente.');
+                }
+            } catch (error) {
+                showErrorMessage('Erro ao conectar com o servidor. Verifique sua conexão.');
+            }
+        });
+
+        
+        function resetForm() {
+            selectedImg = null;
+            fileInput.value = '';
+            descriptionInput.value = '';
+            imagePreview.style.display = 'none';
+            imgPlaceholder.style.display = 'block';
+            imagePreview.src = '';
+            publishButton.disabled = true;
+        }
+
+        function showSuccessMessage(message) {
+            const messageDiv = createMessageDiv(message, 'success');
+            document.body.appendChild(messageDiv);
+
+            setTimeout(() => {
+                messageDiv.classList.add('fade-out');
+                setTimeout(() => {
+                    document.body.removeChild(messageDiv);
+                }, 300);
+            }, 3000);
+        }
+
+    
+        function showErrorMessage(message) {
+            const messageDiv = createMessageDiv(message, 'error');
+            document.body.appendChild(messageDiv);
+
+            setTimeout(() => {
+                messageDiv.classList.add('fade-out');
+                setTimeout(() => {
+                    document.body.removeChild(messageDiv);
+                }, 300);
+            }, 3000);
+        }
+
+        // Função para criar elemento de mensagem
+        function createMessageDiv(message, type) {
+            const div = document.createElement('div');
+            div.className = `message-toast ${type}`;
+            div.textContent = message;
+            div.style.position = 'fixed';
+            div.style.top = '20px';
+            div.style.left = '50%';
+            div.style.transform = 'translateX(-50%)';
+            div.style.padding = '15px 30px';
+            div.style.borderRadius = '10px';
+            div.style.color = '#ffffff';
+            div.style.fontFamily = 'Maitree, sans-serif';
+            div.style.fontSize = '14px';
+            div.style.fontWeight = 'bold';
+            div.style.zIndex = '2000';
+            div.style.boxShadow = '0 4px 12px rgba(0, 0, 0, 0.15)';
+
+            if (type === 'success') {
+                div.style.backgroundColor = '#4caf50';
+            } else {
+                div.style.backgroundColor = '#f44336';
+            }
+
+            return div;
+        }
+    </script>
+</body>
+
+</html>
