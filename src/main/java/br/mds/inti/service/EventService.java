@@ -1,6 +1,7 @@
 package br.mds.inti.service;
 
 import br.mds.inti.model.dto.EventDetailResponse;
+import br.mds.inti.model.dto.EventParticipantResponse;
 import br.mds.inti.model.dto.EventRequestDTO;
 import br.mds.inti.model.dto.EventResponseDTO;
 import br.mds.inti.model.dto.LocalAddress;
@@ -11,6 +12,7 @@ import br.mds.inti.model.entity.pk.EventParticipantPK;
 import br.mds.inti.repositories.EventParticipantsRepository;
 import br.mds.inti.repositories.EventRepository;
 import br.mds.inti.service.exceptions.EntityNotFoundException;
+import br.mds.inti.service.exceptions.EventParticipantAlreadyExistsException;
 import jakarta.validation.constraints.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -91,24 +93,27 @@ public class EventService {
                 event.getFinishedAt());
     }
     
-    public EventParticipant eventInscription(UUID eventid, Profile profile) {
+    public EventParticipantResponse eventInscription(UUID eventid, Profile profile) {
 
         Event event = eventRepository.findById(eventid)
                 .orElseThrow(() -> new RuntimeException(EVENTO_NAO_ENCONTRADO));
 
-        EventParticipant eventParticipant = new EventParticipant();
-        eventParticipant.setEvent(event);
-        eventParticipant.setProfile(profile);
-        eventParticipant.setCreatedAt(Instant.now());
+        EventParticipantPK eventParticipantPK = new EventParticipantPK(event.getId(), profile.getId());
 
-        EventParticipantPK eventParticipantPK = new EventParticipantPK();
+        if (eventParticipantsRepository.existsByEventIdAndProfileId(event.getId(), profile.getId())) {
+            throw new EventParticipantAlreadyExistsException("Você já está inscrito neste evento");
+        }
 
-        eventParticipantPK.setEventId(event.getId());
-        eventParticipantPK.setProfileId(profile.getId());
+        EventParticipant eventParticipant = new EventParticipant(
+            eventParticipantPK,
+            profile,
+            event,
+            Instant.now()
+        );
 
-        eventParticipant.setId(eventParticipantPK);
+        eventParticipantsRepository.save(eventParticipant);
 
-        return eventParticipantsRepository.save(eventParticipant);
+        return new EventParticipantResponse(event.getId(), profile.getId(), eventParticipant.getCreatedAt());
     }
     
     public void deleteInscription(EventParticipantPK eventParticipantId) {
