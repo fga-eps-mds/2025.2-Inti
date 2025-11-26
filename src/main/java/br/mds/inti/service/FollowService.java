@@ -44,14 +44,14 @@ public class FollowService {
 
             // Create new follow relationship
             FollowsPK primaryKey = new FollowsPK();
-            primaryKey.setFollowerProfileId(profileToFollow.getId());
-            primaryKey.setFollowingProfileId(me.getId());
+            primaryKey.setFollowerProfileId(me.getId());
+            primaryKey.setFollowingProfileId(profileToFollow.getId());
 
             Follow action = new Follow();
             action.setId(primaryKey);
             action.setCreatedAt(Instant.now());
-            action.setFollowerProfile(profileToFollow);
-            action.setFollowingProfile(me);
+            action.setFollowerProfile(me);
+            action.setFollowingProfile(profileToFollow);
 
             Follow saved = followRepository.save(action);
 

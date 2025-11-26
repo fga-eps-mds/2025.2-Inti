@@ -200,7 +200,7 @@ public class FeedService {
 
     private List<Post> getRandomPosts(UUID currentUserId, int limit) {
 
-        List<UUID> ids = followRepository.findFollowedUserIds(currentUserId);
+        List<UUID> ids = new ArrayList<>(followRepository.findFollowedUserIds(currentUserId));
         ids.add(currentUserId);
 
         return postRepository.findRecentPostsExcludingUsers(
