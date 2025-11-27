@@ -19,8 +19,6 @@ import org.springframework.web.server.ResponseStatusException;
 
 import java.io.IOException;
 import java.util.UUID;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
 
 
 @RestController
@@ -61,7 +59,7 @@ public class EventController {
     @DeleteMapping("/{eventid}/attendees/{profileid}")
     //fiz uma alteração no endpoint aqui para não precisar fazer um RequestParam
     public ResponseEntity<Void> deleteInscription(@PathVariable UUID eventid, @PathVariable UUID profileid) {
-        EventParticipantPK eventParticipantId = new EventParticipantPK(profileid,eventid);
+        EventParticipantPK eventParticipantId = new EventParticipantPK(profileid, eventid);
         eventService.deleteInscription(eventParticipantId);
 
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
