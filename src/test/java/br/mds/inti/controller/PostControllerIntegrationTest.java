@@ -8,7 +8,6 @@ import br.mds.inti.repositories.ProfileRepository;
 import br.mds.inti.service.BlobService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -158,7 +157,7 @@ class PostControllerIntegrationTest {
         doNothing().when(blobService).deleteImage(any());
 
         mockMvc.perform(delete("/post/{postId}", post.getId().toString())
-                        .with(user(testProfile)))
+                .with(user(testProfile)))
                 .andExpect(status().isNoContent());
         // Verify post was soft deleted (assuming softDeletePost sets deletedAt)
         // Since softDeletePost is not shown, assume it sets deletedAt
@@ -170,7 +169,7 @@ class PostControllerIntegrationTest {
         UUID nonExistentId = UUID.randomUUID();
 
         mockMvc.perform(delete("/post/{postId}", nonExistentId.toString())
-                        .with(user(testProfile)))
+                .with(user(testProfile)))
                 .andExpect(status().isNotFound());
     }
 
@@ -192,7 +191,7 @@ class PostControllerIntegrationTest {
         postRepository.save(post);
 
         mockMvc.perform(delete("/post/{postId}", post.getId().toString())
-                        .with(user(testProfile)))
+                .with(user(testProfile)))
                 .andExpect(status().isUnauthorized());
     }
 

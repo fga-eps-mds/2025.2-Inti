@@ -207,10 +207,12 @@ class FollowServiceTest {
         when(followRepository.save(any(Follow.class))).thenAnswer(invocation -> {
             Follow savedFollow = invocation.getArgument(0);
             // Verify that the FollowsPK is created correctly
-            assertEquals(mockProfileToFollow.getId(), savedFollow.getId().getFollowerProfileId());
-            assertEquals(mockProfileMe.getId(), savedFollow.getId().getFollowingProfileId());
-            assertEquals(mockProfileToFollow, savedFollow.getFollowerProfile());
-            assertEquals(mockProfileMe, savedFollow.getFollowingProfile());
+            // followerProfileId = who is following (me)
+            // followingProfileId = who is being followed (profileToFollow)
+            assertEquals(mockProfileMe.getId(), savedFollow.getId().getFollowerProfileId());
+            assertEquals(mockProfileToFollow.getId(), savedFollow.getId().getFollowingProfileId());
+            assertEquals(mockProfileMe, savedFollow.getFollowerProfile());
+            assertEquals(mockProfileToFollow, savedFollow.getFollowingProfile());
             assertNotNull(savedFollow.getCreatedAt());
             return savedFollow;
         });
