@@ -36,7 +36,6 @@ public class ProductService {
         Page<ArtistProducts> productsPage =
                 artistProductsRepository.findByProfileAndDeletedAtIsNullOrderByCreatedAtDesc(profile, pageable);
 
-        // Só produtos com deleted_at IS NULL já estão sendo retornados pelo repositório (regra da US11)
         return productsPage.map(this::toProductSummaryDTO);
     }
 
@@ -53,7 +52,6 @@ public class ProductService {
         return productsPage.map(this::toProductSummaryDTO);
     }
 
-    // ---------- Helpers internos ----------
 
     private ProductSummaryDTO toProductSummaryDTO(ArtistProducts product) {
         return new ProductSummaryDTO(
@@ -61,6 +59,7 @@ public class ProductService {
                 product.getTitle(),
                 buildImageLink(product.getBlobName()),
                 bigDecimalToDoubleOrNull(product.getPrice()),
+                product.getDescription(),
                 null 
         );
     }

@@ -40,5 +40,9 @@ public class ArtistProducts {
 
     @Column(name = "deleted_at", nullable = true)
     private Instant deletedAt;
+    
+    @Column(name = "description", nullable = true, length = 1000)
+    private String description;
+
 
 }

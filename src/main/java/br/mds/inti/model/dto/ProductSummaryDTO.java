@@ -7,5 +7,5 @@ public record ProductSummaryDTO(
         String title,
         String imgLink,
         Double price,
-        String shortDescription
+        String description
 ) {}
