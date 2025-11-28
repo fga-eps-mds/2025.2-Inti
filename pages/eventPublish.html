@@ -450,6 +450,33 @@
                 max-width: 92%;
             }
         }
+
+        /* Animações de notificação */
+        @keyframes slideIn {
+            from {
+                transform: translateX(400px);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        @keyframes slideOut {
+            from {
+                transform: translateX(0);
+                opacity: 1;
+            }
+            to {
+                transform: translateX(400px);
+                opacity: 0;
+            }
+        }
+
+        .notification {
+            animation: slideIn 0.3s ease-out;
+        }
     </style>
 </head>
 
@@ -555,31 +582,8 @@
             </button>
         </nav>
     </div>
-    <script>
-        const botao = document.getElementById('btn-confirm');
 
-        botao.addEventListener('click', function () {
-            // Verifica se o botão tem a classe 'confirmar'
-            if (this.classList.contains('confirm-attendance')) {
-
-                // Ação: Mudar para estado de "Cancelar"
-                this.classList.remove('confirm-attendance');
-                this.classList.add('cancelar');
-                this.innerText = "Cancelar Inscrição";
-
-                // Aqui você colocaria o código para salvar no banco de dados
-
-            } else {
-
-                // Ação: Voltar para estado de "Confirmar"
-                this.classList.remove('cancelar');
-                this.classList.add('confirm-attendance');
-                this.innerText = "Confirmar Presença";
-
-                // Aqui você colocaria o código para remover do banco de dados
-            }
-        });
-    </script>
+    <script src="../js/event-publish.js"></script>
 </body>
 
 </html>
