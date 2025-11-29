@@ -95,7 +95,7 @@ class FeedControllerTest {
         // Arrange
         Post post = createPost();
         FeedService.ClassifiedPost classifiedPost = new FeedService.ClassifiedPost(
-                post, PostType.FOLLOWED, "Perfil seguido / próprio");
+                post, PostType.FOLLOWED, "Perfil seguido / próprio", true);
 
         when(securityContext.getAuthentication()).thenReturn(authentication);
         when(authentication.getPrincipal()).thenReturn(currentProfile);
@@ -119,6 +119,7 @@ class FeedControllerTest {
             assertThat(item.description()).isEqualTo(post.getDescription());
             assertThat(item.type()).isEqualTo(PostType.FOLLOWED);
             assertThat(item.reason()).isEqualTo("Perfil seguido / próprio");
+            assertThat(item.liked()).isTrue();
         }
     }
 
@@ -164,7 +165,7 @@ class FeedControllerTest {
         post.getProfile().setProfilePictureUrl("profile-pic.png");
 
         FeedService.ClassifiedPost classifiedPost = new FeedService.ClassifiedPost(
-                post, PostType.RANDOM, "Descoberta");
+                post, PostType.RANDOM, "Descoberta", false);
 
         when(securityContext.getAuthentication()).thenReturn(authentication);
         when(authentication.getPrincipal()).thenReturn(currentProfile);
@@ -193,7 +194,7 @@ class FeedControllerTest {
         post.getProfile().setProfilePictureUrl(null);
 
         FeedService.ClassifiedPost classifiedPost = new FeedService.ClassifiedPost(
-                post, PostType.RANDOM, "Descoberta");
+                post, PostType.RANDOM, "Descoberta", false);
 
         when(securityContext.getAuthentication()).thenReturn(authentication);
         when(authentication.getPrincipal()).thenReturn(currentProfile);
@@ -263,11 +264,12 @@ class FeedControllerTest {
         Post secondDegreePost = createPostWithType("seconddegree", PostType.SECOND_DEGREE);
 
         List<FeedService.ClassifiedPost> classifiedPosts = List.of(
-                new FeedService.ClassifiedPost(followedPost, PostType.FOLLOWED, "Perfil seguido / próprio"),
-                new FeedService.ClassifiedPost(orgPost, PostType.ORGANIZATION, "Post de organização"),
-                new FeedService.ClassifiedPost(randomPost, PostType.RANDOM, "Descoberta"),
-                new FeedService.ClassifiedPost(popularPost, PostType.POPULAR, "Post popular"),
-                new FeedService.ClassifiedPost(secondDegreePost, PostType.SECOND_DEGREE, "Conexão de segundo grau"));
+                new FeedService.ClassifiedPost(followedPost, PostType.FOLLOWED, "Perfil seguido / próprio", true),
+                new FeedService.ClassifiedPost(orgPost, PostType.ORGANIZATION, "Post de organização", false),
+                new FeedService.ClassifiedPost(randomPost, PostType.RANDOM, "Descoberta", false),
+                new FeedService.ClassifiedPost(popularPost, PostType.POPULAR, "Post popular", false),
+                new FeedService.ClassifiedPost(secondDegreePost, PostType.SECOND_DEGREE, "Conexão de segundo grau",
+                        false));
 
         when(securityContext.getAuthentication()).thenReturn(authentication);
         when(authentication.getPrincipal()).thenReturn(currentProfile);

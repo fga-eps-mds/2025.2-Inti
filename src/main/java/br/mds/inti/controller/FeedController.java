@@ -23,51 +23,55 @@ import br.mds.inti.service.FeedService;
 @RequestMapping("/feed")
 public class FeedController {
 
-    @Autowired
-    private FeedService feedService;
+        @Autowired
+        private FeedService feedService;
 
-    public record FeedItem(
-            UUID id,
-            String imageProfileUrl,
-            String username,
-            String description,
-            String imageUrl,
-            Integer likes,
-            PostType type,
-            String reason) {
-    }
-
-    @GetMapping
-    public ResponseEntity<List<FeedItem>> getFeedWithMetadata(
-            @RequestParam(name = "page", defaultValue = "0") int page,
-            @RequestParam(name = "size", defaultValue = "20") int size) {
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        if (auth == null || !(auth.getPrincipal() instanceof Profile)) {
-            return ResponseEntity.status(401).build();
+        public record FeedItem(
+                        UUID id,
+                        String imageProfileUrl,
+                        String username,
+                        String description,
+                        String imageUrl,
+                        Integer likes,
+                        PostType type,
+                        String reason,
+                        boolean liked) {
         }
-        Profile currentProfile = (Profile) auth.getPrincipal();
 
-        List<FeedService.ClassifiedPost> classifiedPosts = feedService.generateFeed(currentProfile, page, size);
+        @GetMapping
+        public ResponseEntity<List<FeedItem>> getFeedWithMetadata(
+                        @RequestParam(name = "page", defaultValue = "0") int page,
+                        @RequestParam(name = "size", defaultValue = "20") int size) {
+                Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+                if (auth == null || !(auth.getPrincipal() instanceof Profile)) {
+                        return ResponseEntity.status(401).build();
+                }
+                Profile currentProfile = (Profile) auth.getPrincipal();
 
-        List<FeedItem> items = classifiedPosts.stream()
-                .map(cp -> new FeedItem(
-                        cp.post().getId(),
-                        cp.post().getProfile().getProfilePictureUrl() == null
-                                ? null
-                                : "/images/" + cp.post().getProfile().getProfilePictureUrl(),
-                        cp.post().getProfile().getUsername(),
-                        cp.post().getDescription(),
-                        cp.post().getBlobName() == null ? null : "/images/" + cp.post().getBlobName(),
-                        cp.post().getLikesCount(),
-                        cp.type(),
-                        cp.reason()))
-                .collect(Collectors.toList());
+                List<FeedService.ClassifiedPost> classifiedPosts = feedService.generateFeed(currentProfile, page, size);
 
-        return ResponseEntity.ok(items);
-    }
+                List<FeedItem> items = classifiedPosts.stream()
+                                .map(cp -> new FeedItem(
+                                                cp.post().getId(),
+                                                cp.post().getProfile().getProfilePictureUrl() == null
+                                                                ? null
+                                                                : "/images/" + cp.post().getProfile()
+                                                                                .getProfilePictureUrl(),
+                                                cp.post().getProfile().getUsername(),
+                                                cp.post().getDescription(),
+                                                cp.post().getBlobName() == null ? null
+                                                                : "/images/" + cp.post().getBlobName(),
+                                                cp.post().getLikesCount(),
+                                                cp.type(),
+                                                cp.reason(),
+                                                cp.liked()))
+                                .collect(Collectors.toList());
 
-    @GetMapping("/organization")
-    public ResponseEntity<String> getOrganizationDashboard() {
-        return ResponseEntity.ok("Bem-vindo à área exclusiva de organizações!");
-    }
+                return ResponseEntity.ok(items);
+        }
+
+        @GetMapping("/organization")
+        public ResponseEntity<String> getOrganizationDashboard() {
+                return ResponseEntity.ok("Bem-vindo à área exclusiva de organizações!");
+        }
 }

@@ -22,6 +22,7 @@ import br.mds.inti.model.entity.Profile;
 import br.mds.inti.model.enums.PostType;
 import br.mds.inti.model.enums.ProfileType;
 import br.mds.inti.repositories.FollowRepository;
+import br.mds.inti.repositories.LikeRepository;
 import br.mds.inti.repositories.PostRepository;
 import br.mds.inti.repositories.ProfileRepository;
 
@@ -42,7 +43,10 @@ public class FeedService {
     @Autowired
     private ProfileRepository profileRepository;
 
-    public record ClassifiedPost(Post post, PostType type, String reason) {
+    @Autowired
+    private LikeRepository likeRepository;
+
+    public record ClassifiedPost(Post post, PostType type, String reason, boolean liked) {
     }
 
     public List<ClassifiedPost> generateFeed(Profile currentProfile, int page, int pageSize) {
@@ -99,11 +103,14 @@ public class FeedService {
                 : Collections.emptyList();
 
         // Classificar e retornar
+        Set<UUID> likedPostIds = findLikedPostIds(currentProfile.getId(), pagedPosts);
+
         return pagedPosts.stream()
                 .map(post -> {
                     PostType type = classifyPost(post, currentProfile, followedIds, secondDegreeIds);
                     String reason = getReasonForPost(type);
-                    return new ClassifiedPost(post, type, reason);
+                    boolean liked = likedPostIds.contains(post.getId());
+                    return new ClassifiedPost(post, type, reason, liked);
                 })
                 .collect(Collectors.toList());
     }
@@ -206,6 +213,15 @@ public class FeedService {
         return postRepository.findRecentPostsExcludingUsers(
                 ids,
                 PageRequest.of(0, limit));
+    }
+
+    private Set<UUID> findLikedPostIds(UUID profileId, List<Post> posts) {
+        if (posts.isEmpty()) {
+            return Collections.emptySet();
+        }
+
+        List<UUID> postIds = posts.stream().map(Post::getId).toList();
+        return likeRepository.findLikedPostIds(profileId, postIds);
     }
 
     private List<Post> applyFinalSorting(List<Post> posts) {
