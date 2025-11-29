@@ -1,76 +1,108 @@
 package br.mds.inti.service;
 
-import br.mds.inti.model.dto.ProductSummaryDTO;
-import br.mds.inti.model.entity.ArtistProducts;
+import br.mds.inti.model.dto.CreateProductDTO;
+import br.mds.inti.model.dto.ProductResponseDTO;
+import br.mds.inti.model.entity.Product;
 import br.mds.inti.model.entity.Profile;
-import br.mds.inti.repositories.ArtistProductsRepository;
-import br.mds.inti.repositories.ProfileRepository;
-import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.*;
+import br.mds.inti.repositories.ProductRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.math.BigDecimal;
+import java.time.Instant;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Service
-@RequiredArgsConstructor
 public class ProductService {
 
-    private final ArtistProductsRepository artistProductsRepository;
-    private final ProfileRepository profileRepository;
-   
-    public Page<ProductSummaryDTO> getProductsByProfile(UUID profileId,
-                                                        UUID viewerProfileId,
-                                                        int page,
-                                                        int size) {
+    @Autowired
+    private ProductRepository productRepository;
 
-        Profile profile = profileRepository.findById(profileId)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Profile not found"));
+    @Autowired
+    private ProfileService profileService;
 
-       
+    public ProductResponseDTO createProduct(CreateProductDTO dto, UUID profileId) {
+        Profile profile = profileService.getProfileById(profileId);
 
-        Pageable pageable = PageRequest.of(page, size);
+        Product product = new Product();
+        product.setProfile(profile);
+        product.setTitle(dto.getTitle());
+        product.setDescription(dto.getDescription());
+        product.setPrice(dto.getPrice());
+        product.setImgLink(dto.getImgLink());
+        product.setContactInfo(dto.getContactInfo());
+        product.setVisibility(dto.getVisibility());
+        product.setTags(dto.getTags().stream().collect(Collectors.joining(",")));
 
-        Page<ArtistProducts> productsPage =
-                artistProductsRepository.findByProfileAndDeletedAtIsNullOrderByCreatedAtDesc(profile, pageable);
-
-        return productsPage.map(this::toProductSummaryDTO);
-    }
-
-    
-    public Page<ProductSummaryDTO> getProductsByProfileUsername(String username, int page, int size) {
-        Profile profile = profileRepository.findByUsername(username)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Profile not found"));
-
-        Pageable pageable = PageRequest.of(page, size);
-
-        Page<ArtistProducts> productsPage =
-                artistProductsRepository.findByProfileAndDeletedAtIsNullOrderByCreatedAtDesc(profile, pageable);
-
-        return productsPage.map(this::toProductSummaryDTO);
-    }
-
-
-    private ProductSummaryDTO toProductSummaryDTO(ArtistProducts product) {
-        return new ProductSummaryDTO(
-                product.getId(),
-                product.getTitle(),
-                buildImageLink(product.getBlobName()),
-                bigDecimalToDoubleOrNull(product.getPrice()),
-                product.getDescription()
-        );
-    }
-
-    private Double bigDecimalToDoubleOrNull(BigDecimal value) {
-        return value != null ? value.doubleValue() : null;
-    }
-
-    private String buildImageLink(String blobName) {
-        if (blobName == null || blobName.isBlank()) {
-            return null;
+        // Validação de preço
+        if (product.getPrice() != null && product.getPrice().compareTo(BigDecimal.ZERO) < 0) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "O preço não pode ser negativo.");
         }
-        return blobName;
+
+        // Validação de URL simples (pode ser melhorada)
+        if (product.getImgLink() != null && !product.getImgLink().matches("^(http|https)://.*")) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "O link da imagem deve ser uma URL válida.");
+        }
+
+        product = productRepository.save(product);
+        return ProductResponseDTO.fromEntity(product);
+    }
+
+    public Page<ProductResponseDTO> getPublicProducts(String tag, String text, BigDecimal minPrice, BigDecimal maxPrice, Pageable pageable) {
+        return productRepository.findPublicProductsWithFilters(tag, text, minPrice, maxPrice, pageable)
+                .map(ProductResponseDTO::fromEntity);
+    }
+
+    public ProductResponseDTO getProductById(UUID id) {
+        Product product = productRepository.findByIdAndDeletedAtIsNull(id)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Anúncio não encontrado."));
+        return ProductResponseDTO.fromEntity(product);
+    }
+
+    public ProductResponseDTO updateProduct(UUID id, CreateProductDTO dto, UUID profileId) {
+        Product product = productRepository.findByIdAndDeletedAtIsNull(id)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Anúncio não encontrado."));
+
+        if (!product.getProfile().getId().equals(profileId)) {
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Você não tem permissão para editar este anúncio.");
+        }
+
+        product.setTitle(dto.getTitle());
+        product.setDescription(dto.getDescription());
+        product.setPrice(dto.getPrice());
+        product.setImgLink(dto.getImgLink());
+        product.setContactInfo(dto.getContactInfo());
+        product.setVisibility(dto.getVisibility());
+        product.setTags(dto.getTags().stream().collect(Collectors.joining(",")));
+
+        // Validação de preço
+        if (product.getPrice() != null && product.getPrice().compareTo(BigDecimal.ZERO) < 0) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "O preço não pode ser negativo.");
+        }
+
+        // Validação de URL simples (pode ser melhorada)
+        if (product.getImgLink() != null && !product.getImgLink().matches("^(http|https)://.*")) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "O link da imagem deve ser uma URL válida.");
+        }
+
+        product = productRepository.save(product);
+        return ProductResponseDTO.fromEntity(product);
+    }
+
+    public void deleteProduct(UUID id, UUID profileId) {
+        Product product = productRepository.findByIdAndDeletedAtIsNull(id)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Anúncio não encontrado."));
+
+        if (!product.getProfile().getId().equals(profileId)) {
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Você não tem permissão para remover este anúncio.");
+        }
+
+        product.setDeletedAt(Instant.now());
+        productRepository.save(product);
     }
 }
