@@ -43,6 +43,4 @@ public class ArtistProducts {
     
     @Column(name = "description", nullable = true, length = 1000)
     private String description;
-
-
 }
