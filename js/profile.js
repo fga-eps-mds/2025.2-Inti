@@ -1,162 +1,136 @@
-const AUTH_TOKEN = (window.AUTH_TOKEN = AUTH_TOKEN);
+// Check authentication
+function checkAuth() {
+  const isAuthenticated = localStorage.getItem("isAuthenticated");
+  const token = localStorage.getItem("authToken");
 
-document.addEventListener("DOMContentLoaded", function () {
-  if (!AUTH_TOKEN) {
-    console.error("Token não encontrado.");
-    return;
+  if (isAuthenticated !== "true" || !token) {
+    window.location.href = "../index.html";
+    return false;
   }
 
-  fetchProfileData();
-});
+  // Set token in apiService
+  if (apiService) {
+    apiService.setAuthToken(token);
+  }
+  return true;
+}
 
-async function fetchProfileData() {
+// Global variable to store profile data
+let currentProfileData = null;
+
+// Load profile data
+async function loadProfile() {
+  if (!checkAuth()) return;
+
   try {
-    const token = AUTH_TOKEN;
-    const size = 10;
-    const page = 0;
+    // Get profile data from API
+    // Note: The API endpoint is /profile/me
+    const profileData = await apiService.getMyProfile();
+    currentProfileData = profileData;
 
-    console.log("Fazendo requisição para /me...");
+    // Update UI with profile data
+    updateProfileUI(profileData);
 
-    const response = await fetch(
-      `https://20252-inti-production.up.railway.app/profile/me?size=${size}&page=${page}`,
-      {
-        method: "GET",
-        headers: {
-          Authorization: `Bearer ${token}`,
-          "Content-Type": "application/json",
-        },
-      }
-    );
-
-    if (!response.ok) {
-      throw new Error(`Erro na requisição: ${response.status}`);
-    }
-
-    const profileData = await response.json();
-    console.log("Dados recebidos:", profileData);
-
-    populateProfileData(profileData);
+    // Load posts
+    loadUserPosts(profileData.posts || []);
   } catch (error) {
-    console.error("Erro ao carregar perfil:", error);
-    showError("Erro ao carregar perfil. Tente novamente.");
-  }
-}
-
-function populateProfileData(data) {
-  const userNameElement = document.querySelector(
-    ".container-header .user-name"
-  );
-  const userUsernameElement = document.querySelector(
-    ".container-header .user-username"
-  );
-
-  if (userNameElement) {
-    userNameElement.textContent = data.name || "Nome não informado";
-  } else {
-    console.error("Elemento .user-name não encontrado");
-  }
-
-  if (userUsernameElement) {
-    userUsernameElement.textContent = data.username
-      ? `@${data.username}`
-      : "@usuário";
-  } else {
-    console.error("Elemento .user-username não encontrado");
-  }
-
-  const profileImg = document.querySelector(".img-user-icon");
-  if (profileImg) {
-    if (data.profile_picture_url) {
-      const backendUrl = "https://20252-inti-production.up.railway.app";
-      const fullImageUrl = backendUrl + data.profile_picture_url;
-      setBackgroundImageWithBearer(profileImg, fullImageUrl, AUTH_TOKEN);
+    console.error("Error loading profile:", error);
+    if (
+      error.message &&
+      (error.message.includes("401") || error.message.includes("403"))
+    ) {
+      localStorage.removeItem("isAuthenticated");
+      localStorage.removeItem("authToken");
+      localStorage.removeItem("userData");
+      window.location.href = "../index.html";
     } else {
-      // imagem padrão local
-      profileImg.style.backgroundImage = `url("../assets/image-user-icon.png")`;
-      profileImg.style.backgroundSize = "cover";
-      profileImg.style.backgroundPosition = "center";
+      if (typeof toast !== "undefined") {
+        toast.error("Erro ao carregar perfil.");
+      }
     }
   }
-
-  const contactInfo = document.querySelector(".contact-text");
-  if (contactInfo && data.bio) {
-    contactInfo.innerHTML = data.bio.replace(/\n/g, "<br>");
-  }
-
-  updateProfileCounters(data);
-
-  populateUserPosts(data.posts || []);
 }
 
-function updateProfileCounters(data) {
-  console.log("Atualizando contadores...");
+function updateProfileUI(data) {
+  // Update name and username
+  const nameElement = document.querySelector(".user-name");
+  const usernameElement = document.querySelector(".user-username");
 
-  const profileItems = document.querySelectorAll(".profile-item");
+  if (nameElement) nameElement.textContent = data.name || "Usuário";
+  if (usernameElement)
+    usernameElement.textContent = `@${data.username || "usuario"}`;
 
-  profileItems.forEach((item) => {
-    const label = item.querySelector(
-      ".profile-seguindo, .profile-post, .profile-seguidores"
+  // Update stats
+  const postsCount = document.querySelector(".posts-count");
+  const followersCount = document.querySelector(".followers-count");
+  const followingCount = document.querySelector(".following-count");
+
+  if (postsCount) postsCount.textContent = data.posts ? data.posts.length : 0;
+  if (followersCount) followersCount.textContent = data.followersCount || 0;
+  if (followingCount) followingCount.textContent = data.followingCount || 0;
+
+  // Update bio and contact info if available
+  const contactText = document.querySelector(".contact-text");
+  if (contactText) {
+    let info = [];
+    if (data.bio) info.push(data.bio);
+    if (data.publicEmail) info.push(data.publicEmail);
+    if (data.phone) info.push(data.phone);
+
+    contactText.innerHTML = info.join("<br>");
+  }
+
+  // Update profile picture
+  const profilePhoto = document.querySelector(".img-user-icon");
+  if (profilePhoto && data.profile_picture_url) {
+    const backendUrl = "https://20252-inti-production.up.railway.app";
+    const fullProfileImageUrl = data.profile_picture_url.startsWith("http")
+      ? data.profile_picture_url
+      : backendUrl + data.profile_picture_url;
+
+    setBackgroundImageWithBearer(
+      profilePhoto,
+      fullProfileImageUrl,
+      apiService.token
     );
-    const numberElement = item.querySelector(".profile-number");
-
-    if (!label || !numberElement) return;
-
-    if (label.classList.contains("profile-seguidores")) {
-      numberElement.textContent = formatNumber(data.followersCount);
-    } else if (label.classList.contains("profile-seguindo")) {
-      numberElement.textContent = formatNumber(data.followingCount);
-    } else if (label.classList.contains("profile-post")) {
-      numberElement.textContent = formatNumber(
-        data.posts ? data.posts.length : 0
-      );
-    }
-  });
+  }
 }
 
-function populateUserPosts(posts) {
+function loadUserPosts(posts) {
   const postsGrid = document.querySelector(".user-posts-grid");
-
-  if (!postsGrid) {
-    console.error("Elemento .user-posts-grid não encontrado");
-    return;
-  }
+  if (!postsGrid) return;
 
   postsGrid.innerHTML = "";
 
-  if (!posts || posts.length === 0) {
+  if (posts.length === 0) {
+    postsGrid.innerHTML =
+      '<p style="grid-column: 1/-1; text-align: center; padding: 20px;">Nenhuma publicação ainda.</p>';
     return;
   }
 
-  const sortedPosts = [...posts].sort((a, b) => {
-    const dateA = new Date(a.createdAt);
-    const dateB = new Date(b.createdAt);
-    return dateB - dateA;
-  });
+  posts.forEach((post) => {
+    const postItem = document.createElement("div");
+    postItem.className = "user-post-item";
 
-  sortedPosts.forEach((post, index) => {
-    const postItem = createPostElement(post, index);
+    if (post.imgLink) {
+      const backendUrl = "https://20252-inti-production.up.railway.app";
+      const fullImageUrl = post.imgLink.startsWith("http")
+        ? post.imgLink
+        : backendUrl + post.imgLink;
+      setBackgroundImageWithBearer(postItem, fullImageUrl, apiService.token);
+    } else {
+      postItem.style.backgroundColor = getRandomColor();
+    }
+
+    // Add click event to open post details
+    postItem.addEventListener("click", () => {
+      // Redirect to post detail or open modal
+      // For now, let's assume we want to open the modal if available, or just log
+      console.log("Clicked post:", post.id);
+    });
+
     postsGrid.appendChild(postItem);
   });
-}
-
-function createPostElement(post, index) {
-  const postDiv = document.createElement("div");
-  postDiv.className = `user-post-item rect-${(index % 5) + 1}`;
-
-  if (post.imgLink) {
-    const backendUrl = "https://20252-inti-production.up.railway.app";
-    const fullImageUrl = backendUrl + post.imgLink;
-    setBackgroundImageWithBearer(postDiv, fullImageUrl, AUTH_TOKEN);
-  } else {
-    postDiv.style.backgroundColor = getRandomColor();
-    postDiv.style.display = "flex";
-    postDiv.style.alignItems = "center";
-    postDiv.style.justifyContent = "center";
-    postDiv.style.color = "white";
-    postDiv.style.fontWeight = "bold";
-  }
-
-  return postDiv;
 }
 
 async function setBackgroundImageWithBearer(element, imageUrl, token) {
@@ -185,54 +159,54 @@ async function setBackgroundImageWithBearer(element, imageUrl, token) {
 }
 
 function getRandomColor() {
-  const colors = [
-    "#FF6B6B",
-    "#4ECDC4",
-    "#45B7D1",
-    "#96CEB4",
-    "#FFEAA7",
-    "#DDA0DD",
-    "#98D8C8",
-  ];
+  const colors = ["#FF6B6B", "#4ECDC4", "#45B7D1", "#96CEB4", "#FFEAA7"];
   return colors[Math.floor(Math.random() * colors.length)];
 }
 
-function formatNumber(num) {
-  if (num === null || num === undefined || isNaN(num)) {
-    return "0";
+// Logout function
+function logout() {
+  localStorage.removeItem("isAuthenticated");
+  localStorage.removeItem("authToken");
+  localStorage.removeItem("userData");
+  window.location.href = "../index.html";
+}
+
+// Initialize
+document.addEventListener("DOMContentLoaded", () => {
+  loadProfile();
+
+  // Tab switching functionality
+  const publicacoesTab = document.querySelector(".grid-btn"); // Using existing class from HTML
+  const produtosTab = document.querySelector(".product-btn"); // Using existing class from HTML
+  const postsGrid = document.querySelector(".user-posts-grid");
+
+  // Create a container for products if it doesn't exist
+  let productsGrid = document.querySelector(".user-products-grid");
+  if (!productsGrid && postsGrid) {
+    productsGrid = document.createElement("div");
+    productsGrid.className = "user-products-grid";
+    productsGrid.style.display = "none";
+    productsGrid.innerHTML =
+      '<p style="text-align: center; padding: 20px;">Nenhum produto/serviço cadastrado.</p>';
+    postsGrid.parentNode.insertBefore(productsGrid, postsGrid.nextSibling);
   }
 
-  if (num >= 1000) {
-    return (num / 1000).toFixed(1) + "k";
+  if (publicacoesTab && produtosTab) {
+    publicacoesTab.addEventListener("click", () => {
+      publicacoesTab.classList.add("active");
+      produtosTab.classList.remove("active");
+      if (postsGrid) postsGrid.style.display = "grid";
+      if (productsGrid) productsGrid.style.display = "none";
+    });
+
+    produtosTab.addEventListener("click", () => {
+      produtosTab.classList.add("active");
+      publicacoesTab.classList.remove("active");
+      if (postsGrid) postsGrid.style.display = "none";
+      if (productsGrid) productsGrid.style.display = "block"; // Or grid
+    });
   }
-  return num.toString();
-}
+});
 
-function showError(message) {
-  const errorDiv = document.createElement("div");
-  errorDiv.className = "error-message";
-  errorDiv.textContent = message;
-  errorDiv.style.cssText = `
-       position: fixed;
-       top: 20px;
-       right: 20px;
-       background: #ff4444;
-       color: white;
-       padding: 15px;
-       border-radius: 5px;
-       z-index: 1000;
-   `;
-
-  document.body.appendChild(errorDiv);
-
-  setTimeout(() => {
-    errorDiv.remove();
-  }, 5000);
-}
-
-const editIcon = document.querySelector(".edit-icon");
-if (editIcon) {
-  editIcon.addEventListener("click", function () {});
-} else {
-  console.warn("Elemento .edit-icon não encontrado");
-}
+// Expose logout globally
+window.logout = logout;

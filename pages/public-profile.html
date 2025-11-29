@@ -774,5 +774,141 @@
         }
       }
     </style>
+    <!-- Post Detail Modal -->
+    <div id="postModal" class="modal">
+      <div class="modal-content">
+        <span class="close">&times;</span>
+        <img
+          id="modalPostImage"
+          class="modal-post-image"
+          src=""
+          alt="Post Image"
+          style="display: none"
+        />
+        <div class="modal-post-info">
+          <div class="modal-profile">
+            <div id="modalProfilePic" class="modal-profile-pic"></div>
+            <div id="modalUsername" class="modal-username"></div>
+          </div>
+          <p id="modalDescription" class="modal-description"></p>
+          <p id="modalDate" class="modal-date"></p>
+          <p id="modalLikes" class="modal-likes"></p>
+        </div>
+      </div>
+    </div>
+
+    <style>
+      /* Modal styles */
+      .modal {
+        display: none;
+        position: fixed;
+        z-index: 10000;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.8);
+        animation: fadeIn 0.3s ease;
+      }
+
+      .modal-content {
+        background-color: #fff;
+        margin: 5% auto;
+        padding: 0;
+        border-radius: 10px;
+        width: 90%;
+        max-width: 500px;
+        position: relative;
+        animation: slideIn 0.3s ease;
+      }
+
+      .close {
+        color: #aaa;
+        float: right;
+        font-size: 28px;
+        font-weight: bold;
+        position: absolute;
+        top: 10px;
+        right: 15px;
+        z-index: 10001;
+        cursor: pointer;
+      }
+
+      .close:hover,
+      .close:focus {
+        color: black;
+        text-decoration: none;
+        cursor: pointer;
+      }
+
+      .modal-post-image {
+        width: 100%;
+        height: auto;
+        max-height: 400px;
+        object-fit: cover;
+        border-radius: 10px 10px 0 0;
+      }
+
+      .modal-post-info {
+        padding: 15px;
+      }
+
+      .modal-profile {
+        display: flex;
+        align-items: center;
+        margin-bottom: 15px;
+      }
+
+      .modal-profile-pic {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        background-size: cover;
+        background-position: center;
+        margin-right: 10px;
+      }
+
+      .modal-username {
+        font-weight: bold;
+      }
+
+      .modal-description {
+        margin: 10px 0;
+        line-height: 1.4;
+      }
+
+      .modal-date {
+        color: #666;
+        font-size: 0.9em;
+        margin-bottom: 10px;
+      }
+
+      .modal-likes {
+        font-weight: bold;
+        color: #333;
+      }
+
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+        }
+
+        to {
+          opacity: 1;
+        }
+      }
+
+      @keyframes slideIn {
+        from {
+          transform: translateY(-50px);
+          opacity: 0;
+        }
+
+        to {
+          transform: translateY(0);
+          opacity: 1;
+        }
+      }
+    </style>
   </body>
 </html>

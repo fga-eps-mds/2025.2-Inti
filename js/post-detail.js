@@ -31,7 +31,8 @@ async function loadPostDetails(postId) {
   } catch (error) {
     console.error("Error loading post:", error);
     if (error.response && error.response.status === 404) {
-      alert("Post not found");
+      if (typeof toast !== "undefined") toast.error("Post not found");
+      else alert("Post not found");
     } else {
       console.log("Error loading post details");
     }
