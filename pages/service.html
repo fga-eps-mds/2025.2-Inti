@@ -97,7 +97,46 @@
       </div>
     </div>
 
-     <!-- Navigation Bar -->
+         <script src="../js/config.js"></script>
+    <script src="../js/app.js"></script>
+    <script type="module">
+        import { createProduct } from '../js/product.js';
+
+        document.querySelector('.form-new-product').addEventListener('submit', async function(event) {
+            event.preventDefault();
+
+            const title = document.getElementById('title').value;
+            const description = document.getElementById('description').value;
+            const price = document.getElementById('price').value.replace('R$', '').trim(); // Remove R$ e espaços
+            // Como o HTML não tem campo para imgLink e contactInfo, vamos usar valores mockados ou vazios por enquanto
+            // O campo de imagem é um input type="file", que precisa de lógica de upload.
+            // Por enquanto, vamos usar um link mockado para que o back-end aceite.
+            const imgLink = "https://via.placeholder.com/150"; 
+            const contactInfo = "Contato via chat"; 
+
+            const productData = {
+                title: title,
+                description: description,
+                price: price ? parseFloat(price.replace(',', '.')) : null,
+                imgLink: imgLink,
+                contactInfo: contactInfo,
+                tags: ["servico"], 
+                visibility: 'PUBLIC'
+            };
+
+            try {
+                const newProduct = await createProduct(productData);
+                alert('Anúncio de Serviço/Produto criado com sucesso! ID: ' + newProduct.id);
+                // Redirecionar para a lista de produtos ou home
+                window.location.href = 'home.html'; 
+            } catch (error) {
+                alert('Erro ao criar anúncio: ' + error.message);
+                console.error(error);
+            }
+        });
+    </script>
+
+    <!-- Navigation Bar -->
         <nav class="navbar">
           <button class="nav-btn" aria-label="Home">
             <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
