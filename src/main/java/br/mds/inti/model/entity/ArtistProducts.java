@@ -36,7 +36,10 @@ public class ArtistProducts {
 
     @Column(name = "created_at", nullable = false)
     private Instant createdAt;
+<<<<<<< HEAD
 
     @Column(name = "deleted_at")
     private Instant deletedAt;
+=======
+>>>>>>> 72a9430c485be3309a07bbf42c0bf21a049ab45b
 }

@@ -1,5 +1,6 @@
 package br.mds.inti.service;
 
+import br.mds.inti.model.dto.EventListResponse;
 import br.mds.inti.model.dto.EventRequestDTO;
 import br.mds.inti.model.dto.EventResponseDTO;
 import br.mds.inti.model.entity.Event;
@@ -7,13 +8,13 @@ import br.mds.inti.model.entity.Profile;
 import br.mds.inti.repositories.EventRepository;
 import jakarta.validation.constraints.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.server.ResponseStatusException;
 
 import java.io.IOException;
 import java.time.Instant;
+import java.time.ZoneId;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class EventService {
@@ -26,13 +27,14 @@ public class EventService {
 
     final String EVENTO_CRIADO = "Evento criado com sucesso";
 
-    public EventResponseDTO createEvent(@NotNull Profile profile, @NotNull EventRequestDTO eventRequestDTO) throws IOException {
+    public EventResponseDTO createEvent(@NotNull Profile profile, @NotNull EventRequestDTO eventRequestDTO)
+            throws IOException {
         Event event = new Event();
         event.setProfile(profile);
         event.setTitle(eventRequestDTO.title());
 
         String blobName = null;
-        if(eventRequestDTO.image() != null) {
+        if (eventRequestDTO.image() != null) {
             blobName = blobService.uploadImage(profile.getId(), eventRequestDTO.image());
         }
 
@@ -53,4 +55,12 @@ public class EventService {
         return new EventResponseDTO(event.getId(), EVENTO_CRIADO);
     }
 
+    public List<EventListResponse> getListEvent() {
+        List<Event> events = eventRepository.findAll();
+        List<EventListResponse> response = events.stream()
+                .map(event -> new EventListResponse(event.getTitle(), "/images/" + event.getBlobName(),
+                        event.getEventTime().atZone(ZoneId.of("America/Sao_Paulo")).toLocalDateTime(), event.getId()))
+                .collect(Collectors.toList());
+        return response;
+    }
 }
