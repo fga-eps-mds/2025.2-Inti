@@ -1,4 +1,4 @@
-package br.mds.inti.model.repositories;
+package br.mds.inti.repositories;
 
 import br.mds.inti.model.entity.ArtistProducts;
 import br.mds.inti.model.entity.Profile;

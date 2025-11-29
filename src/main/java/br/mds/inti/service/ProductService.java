@@ -3,8 +3,8 @@ package br.mds.inti.service;
 import br.mds.inti.model.dto.ProductSummaryDTO;
 import br.mds.inti.model.entity.ArtistProducts;
 import br.mds.inti.model.entity.Profile;
-import br.mds.inti.model.repositories.ArtistProductsRepository;
-import br.mds.inti.model.repositories.ProfileRepository;
+import br.mds.inti.repositories.ArtistProductsRepository;
+import br.mds.inti.repositories.ProfileRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.*;
 import org.springframework.http.HttpStatus;
@@ -59,8 +59,7 @@ public class ProductService {
                 product.getTitle(),
                 buildImageLink(product.getBlobName()),
                 bigDecimalToDoubleOrNull(product.getPrice()),
-                product.getDescription(),
-                null 
+                product.getDescription()
         );
     }
 
