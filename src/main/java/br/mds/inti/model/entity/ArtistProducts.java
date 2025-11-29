@@ -1,9 +1,7 @@
 package br.mds.inti.model.entity;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
@@ -12,8 +10,6 @@ import java.util.UUID;
 
 @Data
 @NoArgsConstructor
-@AllArgsConstructor
-@EqualsAndHashCode
 @Entity
 @Table(name = "artist_products")
 public class ArtistProducts {
@@ -40,10 +36,4 @@ public class ArtistProducts {
 
     @Column(name = "created_at", nullable = false)
     private Instant createdAt;
-
-    @Column(name = "deleted_at", nullable = true)
-    private Instant deletedAt;
-    
-    @Column(name = "description", nullable = true, length = 1000)
-    private String description;
 }

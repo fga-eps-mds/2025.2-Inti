@@ -12,8 +12,10 @@ import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.data.domain.*;
-
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.math.BigDecimal;
@@ -43,7 +45,7 @@ class ProductServiceTest {
     @BeforeEach
     void setUp() {
         profileId = UUID.randomUUID();
-        profile = new Profile(); 
+        profile = new Profile(); // assumindo que tem construtor sem argumentos
     }
 
     @Test
@@ -51,31 +53,27 @@ class ProductServiceTest {
         // given
         int page = 0;
         int size = 10;
-        UUID viewerProfileId = UUID.randomUUID(); 
+        UUID viewerProfileId = UUID.randomUUID(); // ainda não usado no service
 
         when(profileRepository.findById(profileId)).thenReturn(Optional.of(profile));
 
-        ArtistProducts product1 = new ArtistProducts(
-                UUID.randomUUID(),
-                profile,
-                "Produto 1",
-                "blob-1.png",
-                new BigDecimal("19.90"),
-                Instant.now(),
-                null,
-                "Descrição 1"
-        );
+        ArtistProducts product1 = new ArtistProducts();
+        product1.setId(UUID.randomUUID());
+        product1.setProfile(profile);
+        product1.setTitle("Produto 1");
+        product1.setBlobName("blob-1.png");
+        product1.setPrice(new BigDecimal("19.90"));
+        product1.setDescription("Descrição 1");
+        product1.setCreatedAt(Instant.now());
 
-        ArtistProducts product2 = new ArtistProducts(
-                UUID.randomUUID(),
-                profile,
-                "Produto 2",
-                null,
-                null,
-                Instant.now(),
-                null,
-                "Descrição 2"
-        );
+        ArtistProducts product2 = new ArtistProducts();
+        product2.setId(UUID.randomUUID());
+        product2.setProfile(profile);
+        product2.setTitle("Produto 2");
+        product2.setBlobName(null); // sem imagem
+        product2.setPrice(null);    // sem preço
+        product2.setDescription("Descrição 2");
+        product2.setCreatedAt(Instant.now());
 
         Page<ArtistProducts> productsPage =
                 new PageImpl<>(List.of(product1, product2), PageRequest.of(page, size), 2);
@@ -84,9 +82,11 @@ class ProductServiceTest {
                 .findByProfileAndDeletedAtIsNullOrderByCreatedAtDesc(eq(profile), any(Pageable.class)))
                 .thenReturn(productsPage);
 
+        // when
         Page<ProductSummaryDTO> result =
                 productService.getProductsByProfile(profileId, viewerProfileId, page, size);
 
+        // then
         assertNotNull(result);
         assertEquals(2, result.getTotalElements());
 
@@ -104,6 +104,7 @@ class ProductServiceTest {
         assertNull(dto2.price());
         assertEquals("Descrição 2", dto2.description());
 
+        // garante que o pageable foi montado certo
         ArgumentCaptor<Pageable> pageableCaptor = ArgumentCaptor.forClass(Pageable.class);
         verify(artistProductsRepository)
                 .findByProfileAndDeletedAtIsNullOrderByCreatedAtDesc(eq(profile), pageableCaptor.capture());
@@ -128,19 +129,18 @@ class ProductServiceTest {
 
     @Test
     void getProductsByProfileUsername_shouldReturnMappedPage_whenProfileExists() {
+        // given
         String username = "artist_user";
         when(profileRepository.findByUsername(username)).thenReturn(Optional.of(profile));
 
-        ArtistProducts product = new ArtistProducts(
-                UUID.randomUUID(),
-                profile,
-                "Produto Username",
-                "blob-user.png",
-                new BigDecimal("50.00"),
-                Instant.now(),
-                null,
-                "Desc username"
-        );
+        ArtistProducts product = new ArtistProducts();
+        product.setId(UUID.randomUUID());
+        product.setProfile(profile);
+        product.setTitle("Produto Username");
+        product.setBlobName("blob-user.png");
+        product.setPrice(new BigDecimal("50.00"));
+        product.setDescription("Desc username");
+        product.setCreatedAt(Instant.now());
 
         Page<ArtistProducts> page =
                 new PageImpl<>(List.of(product), PageRequest.of(0, 5), 1);
@@ -149,9 +149,11 @@ class ProductServiceTest {
                 .findByProfileAndDeletedAtIsNullOrderByCreatedAtDesc(eq(profile), any(Pageable.class)))
                 .thenReturn(page);
 
+        // when
         Page<ProductSummaryDTO> result =
                 productService.getProductsByProfileUsername(username, 0, 5);
 
+        // then
         assertEquals(1, result.getTotalElements());
         ProductSummaryDTO dto = result.getContent().get(0);
 
