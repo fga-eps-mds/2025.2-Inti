@@ -1,5 +1,6 @@
 package br.mds.inti.controller;
 
+import br.mds.inti.model.dto.EventListResponse;
 import br.mds.inti.model.dto.EventRequestDTO;
 import br.mds.inti.model.dto.EventResponseDTO;
 import br.mds.inti.model.entity.Profile;
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.io.IOException;
+import java.util.List;
 
 @RestController // define como um controller
 @RequestMapping("/event") // request ter como endpoint base "/events"
@@ -34,6 +36,13 @@ public class EventController {
 
         EventResponseDTO eventResponseDTO = eventService.createEvent(profile, eventRequestDTO);
         return ResponseEntity.status(HttpStatus.CREATED).body(eventResponseDTO);
+    }
+
+    @GetMapping("/lists")
+    public ResponseEntity<List <EventListResponse>> listEvents() {
+        List <EventListResponse> list = eventService.getListEvent();
+        
+        return ResponseEntity.ok().body(list);
     }
 
 }

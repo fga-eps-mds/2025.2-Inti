@@ -23,9 +23,6 @@ import br.mds.inti.service.exceptions.UsernameAlreadyExistsException;
 import br.mds.inti.service.exceptions.ImageNotFoundException;
 import br.mds.inti.service.exceptions.ProfileNotFoundException;
 
-import java.time.Instant;
-import java.util.Arrays;
-
 @Service
 public class ProfileService {
 

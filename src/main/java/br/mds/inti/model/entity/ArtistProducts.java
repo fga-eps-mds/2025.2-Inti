@@ -35,6 +35,9 @@ public class ArtistProducts {
     @Column(name = "price", nullable = false, precision = 10, scale = 2)
     private BigDecimal price;
 
+    @Column(name = "description", nullable = false, length = 255)
+    private String description;
+
     @Column(name = "created_at", nullable = false)
     private Instant createdAt;
 

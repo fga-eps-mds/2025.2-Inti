@@ -1,6 +1,5 @@
 package br.mds.inti.service;
 
-import br.mds.inti.config.AzureBlobConfig;
 import com.azure.storage.blob.BlobClient;
 import com.azure.storage.blob.BlobContainerClient;
 import com.azure.storage.blob.BlobServiceClient;
