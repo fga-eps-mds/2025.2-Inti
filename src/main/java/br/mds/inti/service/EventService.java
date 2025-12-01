@@ -42,13 +42,14 @@ public class EventService {
     final String EVENTO_CRIADO = "Evento criado com sucesso";
     final String EVENTO_NAO_ENCONTRADO = "Evento não encontrado";
 
-    public EventResponseDTO createEvent(@NotNull Profile profile, @NotNull EventRequestDTO eventRequestDTO) throws IOException {
+    public EventResponseDTO createEvent(@NotNull Profile profile, @NotNull EventRequestDTO eventRequestDTO)
+            throws IOException {
         Event event = new Event();
         event.setProfile(profile);
         event.setTitle(eventRequestDTO.title());
 
         String blobName = null;
-        if(eventRequestDTO.image() != null) {
+        if (eventRequestDTO.image() != null) {
             blobName = blobService.uploadImage(profile.getId(), eventRequestDTO.image());
         }
 
@@ -72,7 +73,7 @@ public class EventService {
     public EventDetailResponse getEventById(UUID eventId) {
         Event event = eventRepository.findById(eventId)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, EVENTO_NAO_ENCONTRADO));
-        
+
         return convertToDetailResponse(event);
     }
 
@@ -96,7 +97,7 @@ public class EventService {
                 event.getLongitude(),
                 event.getFinishedAt());
     }
-    
+
     public EventParticipantResponse eventInscription(UUID eventid, Profile profile) {
 
         Event event = eventRepository.findById(eventid)
@@ -109,24 +110,23 @@ public class EventService {
         }
 
         EventParticipant eventParticipant = new EventParticipant(
-            eventParticipantPK,
-            profile,
-            event,
-            Instant.now()
-        );
+                eventParticipantPK,
+                profile,
+                event,
+                Instant.now());
 
         eventParticipantsRepository.save(eventParticipant);
 
         return new EventParticipantResponse(event.getId(), profile.getId(), eventParticipant.getCreatedAt());
     }
-    
+
     public void deleteInscription(EventParticipantPK eventParticipantId) {
         if (!eventParticipantsRepository.existsById(eventParticipantId)) {
             throw new EntityNotFoundException("Inscrição não encontrada");
         }
         eventParticipantsRepository.deleteById(eventParticipantId);
     }
-}
+
     public List<EventListResponse> getListEvent() {
         List<Event> events = eventRepository.findAll();
         List<EventListResponse> response = events.stream()

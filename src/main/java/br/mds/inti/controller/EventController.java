@@ -22,7 +22,6 @@ import java.io.IOException;
 import java.util.UUID;
 import java.util.List;
 
-
 @RestController
 @RequestMapping("/event")
 public class EventController {
@@ -31,12 +30,13 @@ public class EventController {
     EventService eventService;
 
     @PostMapping(consumes = "multipart/form-data")
-    public ResponseEntity<EventResponseDTO> createEvent(@ModelAttribute @Valid EventRequestDTO eventRequestDTO) throws IOException {
+    public ResponseEntity<EventResponseDTO> createEvent(@ModelAttribute @Valid EventRequestDTO eventRequestDTO)
+            throws IOException {
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         Profile profile = (Profile) authentication.getPrincipal();
 
-        if(profile.getType() != ProfileType.organization) 
+        if (profile.getType() != ProfileType.organization)
             throw new ResponseStatusException(HttpStatus.FORBIDDEN, "User type is not an organization");
 
         EventResponseDTO eventResponseDTO = eventService.createEvent(profile, eventRequestDTO);
@@ -59,18 +59,18 @@ public class EventController {
     }
 
     @DeleteMapping("/{eventid}/attendees/{profileid}")
-    //fiz uma alteração no endpoint aqui para não precisar fazer um RequestParam
+    // fiz uma alteração no endpoint aqui para não precisar fazer um RequestParam
     public ResponseEntity<Void> deleteInscription(@PathVariable UUID eventid, @PathVariable UUID profileid) {
         EventParticipantPK eventParticipantId = new EventParticipantPK(profileid, eventid);
         eventService.deleteInscription(eventParticipantId);
 
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
-}
+
     @GetMapping("/lists")
-    public ResponseEntity<List <EventListResponse>> listEvents() {
-        List <EventListResponse> list = eventService.getListEvent();
-        
+    public ResponseEntity<List<EventListResponse>> listEvents() {
+        List<EventListResponse> list = eventService.getListEvent();
+
         return ResponseEntity.ok().body(list);
     }
 
