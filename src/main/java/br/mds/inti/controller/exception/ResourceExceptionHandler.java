@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
 import br.mds.inti.service.exceptions.ImageNotFoundException;
+import br.mds.inti.service.exceptions.ProfileAlreadyExistsException;
 import br.mds.inti.service.exceptions.ProfileNotFoundException;
 import jakarta.servlet.http.HttpServletRequest;
 
@@ -43,6 +44,18 @@ public class ResourceExceptionHandler {
 
         String error = "error trying to find image: ";
         HttpStatus status = HttpStatus.NOT_FOUND;
+        StandardError err = new StandardError(Instant.now(), status.value(), error, e.getMessage(),
+                request.getRequestURI());
+
+        return ResponseEntity.status(status).body(err);
+    }
+
+    @ExceptionHandler(ProfileAlreadyExistsException.class)
+    public ResponseEntity<StandardError> profileAlreadyExist(ProfileAlreadyExistsException e,
+            HttpServletRequest request) {
+
+        String error = "error trying to create new user";
+        HttpStatus status = HttpStatus.CONFLICT;
         StandardError err = new StandardError(Instant.now(), status.value(), error, e.getMessage(),
                 request.getRequestURI());
 
