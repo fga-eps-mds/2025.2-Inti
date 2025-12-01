@@ -2,6 +2,7 @@ package br.mds.inti.service;
 
 import br.mds.inti.model.dto.EventDetailResponse;
 import br.mds.inti.model.dto.EventParticipantResponse;
+import br.mds.inti.model.dto.EventListResponse;
 import br.mds.inti.model.dto.EventRequestDTO;
 import br.mds.inti.model.dto.EventResponseDTO;
 import br.mds.inti.model.dto.LocalAddress;
@@ -22,6 +23,9 @@ import org.springframework.web.server.ResponseStatusException;
 import java.io.IOException;
 import java.time.Instant;
 import java.util.UUID;
+import java.time.ZoneId;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class EventService {
@@ -121,5 +125,14 @@ public class EventService {
             throw new EntityNotFoundException("Inscrição não encontrada");
         }
         eventParticipantsRepository.deleteById(eventParticipantId);
+    }
+}
+    public List<EventListResponse> getListEvent() {
+        List<Event> events = eventRepository.findAll();
+        List<EventListResponse> response = events.stream()
+                .map(event -> new EventListResponse(event.getTitle(), "/images/" + event.getBlobName(),
+                        event.getEventTime().atZone(ZoneId.of("America/Sao_Paulo")).toLocalDateTime(), event.getId()))
+                .collect(Collectors.toList());
+        return response;
     }
 }

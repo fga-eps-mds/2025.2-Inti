@@ -2,6 +2,7 @@ package br.mds.inti.controller;
 
 import br.mds.inti.model.dto.EventDetailResponse;
 import br.mds.inti.model.dto.EventParticipantResponse;
+import br.mds.inti.model.dto.EventListResponse;
 import br.mds.inti.model.dto.EventRequestDTO;
 import br.mds.inti.model.dto.EventResponseDTO;
 import br.mds.inti.model.entity.Profile;
@@ -19,6 +20,7 @@ import org.springframework.web.server.ResponseStatusException;
 
 import java.io.IOException;
 import java.util.UUID;
+import java.util.List;
 
 
 @RestController
@@ -64,4 +66,12 @@ public class EventController {
 
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
+}
+    @GetMapping("/lists")
+    public ResponseEntity<List <EventListResponse>> listEvents() {
+        List <EventListResponse> list = eventService.getListEvent();
+        
+        return ResponseEntity.ok().body(list);
+    }
+
 }

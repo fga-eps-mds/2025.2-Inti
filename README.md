@@ -1,258 +1,57 @@
-# Como Rodar o Projeto com Docker
+# Inti API & Operations Guide
 
-## Visão Geral da Arquitetura
+> Aplicação Spring Boot responsável pelo backend da rede social **Inti**. Este documento reúne as instruções para executar o projeto e a documentação das rotas expostas (método, payloads esperados, respostas e observações de autenticação).
 
-Este projeto utiliza uma arquitetura baseada em microsserviços, composta por:
+---
 
-- **Backend (Java Spring Boot):** Responsável pela lógica de negócio e API REST.
-- **Banco de Dados (PostgreSQL):** Armazena os dados da aplicação.
-- **Docker Compose:** Orquestra os containers do backend e do banco de dados, facilitando o desenvolvimento e a execução local.
+## 📦 Como rodar o projeto com Docker
 
-## Pré-requisitos
+### Arquitetura em alto nível
+
+- **Backend**: Java 17 + Spring Boot (REST API, autenticação, feed, posts, eventos etc.).
+- **PostgreSQL**: banco relacional para perfis, posts e eventos.
+- **Docker Compose**: orquestra os containers e garante rede interna compartilhada.
+
+### Pré-requisitos
 
 - [Docker](https://www.docker.com/)
 - [Docker Compose](https://docs.docker.com/compose/)
 
-## Como Executar o Projeto
+### Passo a passo
 
-1. **Clone o repositório:**
-   ```sh
-   git clone <URL_DO_REPOSITORIO>
-   cd <nome_da_pasta>
-   ```
-
-2. **Construa e suba os containers:**
-   ```sh
-   docker compose up --build
-   ```
-
-   Isso irá:
-   - Construir a imagem do backend (Java Spring Boot) usando o Maven.
-   - Baixar a imagem do PostgreSQL.
-   - Subir ambos os containers e garantir que o backend consiga se conectar ao banco de dados.
-
-3. **Acessando a aplicação:**
-   - O backend estará disponível em: `http://localhost:8080`
-   - O banco de dados estará acessível na porta padrão `5432` (caso precise conectar via cliente externo).
-
-## Estrutura dos Arquivos Importantes
-
-- `docker-compose.yml`: Define os serviços (backend e banco de dados), redes e volumes.
-- `Dockerfile`: Responsável por construir a imagem do backend.
-- `src/`: Código-fonte do backend (Java Spring Boot).
-- `docker-entrypoint.sh`: Script de inicialização customizado (se aplicável).
-
-## Variáveis de Ambiente
-
-Você pode configurar variáveis de ambiente no `docker-compose.yml` para customizar usuário, senha e nome do banco de dados PostgreSQL.
-
-Exemplo:
-```yaml
-environment:
-  POSTGRES_USER: usuario
-  POSTGRES_PASSWORD: senha
-  POSTGRES_DB: nome_do_banco
+```bash
+git clone <URL_DO_REPOSITORIO>
+cd 2025.2-Inti
+docker compose up --build
 ```
 
-## Parando os Containers
+- API disponível em `http://localhost:8080`
+- PostgreSQL disponível em `localhost:5432`
 
-Para parar e remover os containers, execute:
-```sh
+Para desligar os containers:
+
+```bash
 docker compose down
 ```
 
-## Observações
+### Arquivos importantes
 
-- Certifique-se de que as portas `8080` (backend) e `5432` (PostgreSQL) estejam livres.
-- O backend irá aguardar o banco de dados estar pronto antes de iniciar.
-- Logs dos serviços podem ser acompanhados diretamente pelo terminal.
+| Arquivo                | Função                                                |
+| ---------------------- | ----------------------------------------------------- |
+| `docker-compose.yml`   | Define serviços, volumes e variáveis de ambiente.     |
+| `Dockerfile`           | Build da imagem do backend (mvn clean package + JAR). |
+| `docker-entrypoint.sh` | Script de inicialização customizado.                  |
+| `src/`                 | Código-fonte (controllers, services, DTOs etc.).      |
 
----
-
-## PostController (Endpoints de Postagem)
-
-O backend expõe endpoints para criar e deletar posts. O controller está mapeado em `/post`.
-
-Resumo:
-
-- Criar post: POST /post
-- Deletar post: DELETE /post
-
-Observações gerais:
-
-- Os endpoints exigem autenticação (JWT). Envie o header `Authorization: Bearer <token>` em todas as requisições.
-- Upload de imagem deve ser multipart/form-data e o campo do arquivo é `image`.
-- A descrição do post deve ser enviada como `description` (parte do multipart request).
-- Tipos de imagem aceitos: `image/jpeg`, `image/png`, `image/webp`.
-
-### 1) Criar Post
-
-- Endpoint: `POST /post`
-- Autenticação: obrigatória
-- Content-Type: `multipart/form-data`
-- Partes esperadas:
-    - `image` (arquivo) — obrigatória
-    - `description` (string) — obrigatória, não vazia
-
-Comportamento:
-
-- O servidor faz upload da imagem para o armazenamento (BlobService) e salva um registro `Post` no banco com `blobName`,
-  `description`, `profile` (usuário autenticado) e `createdAt`.
-- Em caso de sucesso retorna HTTP 201 Created (corpo vazio).
-
-Erros comuns:
-
-- 400 Bad Request — falta `image` ou `description`, ou validação falhou.
-- 401 Unauthorized — requisição sem token válido.
-- 500 Internal Server Error — falha no upload da imagem (BlobService) ou erro interno.
-
-Exemplo com curl (upload multipart):
-
-```bash
-curl -i -X POST http://localhost:8080/post \
-  -H "Authorization: Bearer <JWT_TOKEN>" \
-  -F "image=@/caminho/para/minha-foto.jpg" \
-  -F "description=A bela paisagem"
-```
-
-Resposta de sucesso (exemplo):
-HTTP/1.1 201 Created
-Location: /post
-
-> Observação: atualmente o endpoint retorna 201 com corpo vazio; consulte o código se quiser retornar o ID criado.
-
-### 2) Deletar Post
-
-- Endpoint: `DELETE /post`
-- Autenticação: obrigatória
-- Parâmetros: `postId` (UUID) como query parameter
-
-Comportamento:
-
-- O endpoint busca o post pelo `postId`. Se não existir, retorna 404 Not Found.
-- Se o usuário autenticado não for o dono do post, retorna 401 Unauthorized.
-- Se o dono for o usuário, o serviço remove o blob no armazenamento e realiza um soft-delete no banco (por ex. setando
-  `deletedAt`). Retorna 204 No Content.
-
-Exemplo com curl:
-
-```bash
-curl -i -X DELETE "http://localhost:8080/post?postId=6f7a3b2a-...-abcd" \
-  -H "Authorization: Bearer <JWT_TOKEN>"
-```
-
-Respostas possíveis:
-
-- 204 No Content — sucesso
-- 401 Unauthorized — usuário não é o dono do post
-- 404 Not Found — post não encontrado
-
-### 3) Recuperar Detalhes do Post
-
-- Endpoint: `GET /post/{postId}`
-- Autenticação: obrigatória
-- Parâmetros: `postId` (UUID) na URL
-
-Comportamento:
-
-- Retorna os detalhes completos do post, incluindo URL da imagem, descrição, contagem de likes, autor e lista de quem curtiu.
-- Se o post não existir ou estiver deletado, retorna 404 Not Found.
-
-Exemplo de Resposta:
-
-```json
-{
-  "id": "uuid-do-post",
-  "imageUrl": "/images/blob-name.png",
-  "description": "Descrição do post",
-  "likesCount": 10,
-  "createdAt": "2023-10-27T10:00:00Z",
-  "author": {
-    "id": "uuid-do-autor",
-    "name": "Nome do Autor",
-    "username": "username_autor",
-    "profilePictureUrl": "http://url-da-foto"
-  },
-  "likedBy": [
-    {
-      "id": "uuid-usuario-que-curtiu",
-      "name": "Nome Usuario",
-      "username": "username_usuario",
-      "profilePictureUrl": "http://url-da-foto"
-    }
-  ]
-}
-```
-
-### 4) Curtir Post
-
-- Endpoint: `POST /post/{postId}/like`
-- Autenticação: obrigatória
-- Parâmetros: `postId` (UUID) na URL
-
-Comportamento:
-- O usuário curte o post identificado por `postId`.
-- Se o post não existir, retorna 404 Not Found.
-- Se o usuário já curtiu, retorna 409 Conflict.
-- Se o post for curtido com sucesso, retorna 200 OK (corpo vazio).
-
-Exemplo com curl:
-```bash
-curl -i -X POST http://localhost:8080/post/6f7a3b2a-...-abcd/like \
-  -H "Authorization: Bearer <JWT_TOKEN>"
-```
-Respostas possíveis:
-- 200 OK — sucesso
-- 404 Not Found — post não encontrado
-- 409 Conflict — usuário já curtiu o post
-
-### 5) Descurtir Post
-
-- Endpoint: `DELETE /post/{postId}/like`
-- Autenticação: obrigatória
-- Parâmetros: `postId` (UUID) na URL
-
-Comportamento:
-- O usuário remove o like do post identificado por `postId`.
-- Se o post não existir, retorna 404 Not Found.
-- Se o like não existir, retorna 404 Not Found.
-- Se o deslike for realizado com sucesso, retorna 200 OK (corpo vazio).
-
-Exemplo com curl:
-```bash
-curl -i -X DELETE http://localhost:8080/post/6f7a3b2a-...-abcd/like \
-  -H "Authorization: Bearer <JWT_TOKEN>"
-```
-Respostas possíveis:
-- 200 OK — sucesso
-- 404 Not Found — post ou like não encontrado
-
----
-
-## Observações sobre Likes
-- O backend previne likes duplicados: se o usuário já curtiu, retorna erro 409 Conflict.
-- O contador de likes do post é atualizado automaticamente ao curtir/descurtir.
-- Para consultar quem curtiu, utilize o endpoint de detalhes do post (`GET /post/{postId}`), que retorna a lista de usuários que curtiram.
-
----
-
-## Segurança / JWT
-
-A aplicação espera um segredo JWT na configuração (`api.security.token.secret`) — em produção isso deve vir de variáveis
-de ambiente (não comitar secrets no repositório).
-
-Sugestão para desenvolvimento: use um `.env` (não comitado) com as variáveis necessárias e carregue-as no ambiente antes
-de executar o app.
-
-Exemplo `.env` (adicionar a `.env` em `.gitignore`):
+### Variáveis de ambiente úteis
 
 ```ini
 JWT_SECRET=algum-segredo-muito-secreto
-AZURE_BLOB_CONNECTION_STRING=DefaultEndpointsProtocol=https;AccountName=...;AccountKey=...;EndpointSuffix=core.windows.net
+AZURE_BLOB_CONNECTION_STRING=DefaultEndpointsProtocol=...;AccountKey=...
 AZURE_BLOB_CONTAINER=musa-container
 ```
 
-Carregue as variáveis no shell (Linux/macOS):
+Carregue-as antes de rodar localmente para que o Spring reconheça:
 
 ```bash
 set -a
@@ -263,125 +62,343 @@ mvn spring-boot:run
 
 ---
 
-## AuthController (Autenticação e Registro)
+## 📘 Visão geral da API
 
-### 1) Registrar Usuário
-- Endpoint: `POST /auth/register`
-- Envia dados de registro (nome, username, senha, etc.) no corpo da requisição (JSON).
-- Retorna 201 Created com dados do perfil criado.
+| Item                 | Valor                                               |
+| -------------------- | --------------------------------------------------- |
+| **Base URL (local)** | `http://localhost:8080`                             |
+| **Formatos aceitos** | JSON (default) e `multipart/form-data` para uploads |
+| **Autenticação**     | JWT (`Authorization: Bearer <token>`)               |
+| **Versionamento**    | Não há prefixo de versão; utilize a raiz `/`        |
 
-Exemplo curl:
-```bash
-curl -i -X POST http://localhost:8080/auth/register \
-  -H "Content-Type: application/json" \
-  -d '{"name":"Lucas","username":"lucas","password":"123456"}'
-```
-Resposta exemplo:
+### Convenções
+
+- Se o endpoint exige autenticação e o header não for enviado ou for inválido, retorna **401 Unauthorized**.
+- Recursos inexistentes retornam **404 Not Found**.
+- Toda data/hora é enviada em ISO-8601 (`2025-11-25T14:30:00Z`).
+- Uploads de imagem aceitam `image/jpeg`, `image/png`, `image/gif` ou `image/webp`.
+
+### Códigos de status recorrentes
+
+| Código                    | Significado                                                           |
+| ------------------------- | --------------------------------------------------------------------- |
+| 200 OK                    | Operação concluída com sucesso.                                       |
+| 201 Created               | Recurso criado (normalmente sem corpo).                               |
+| 204 No Content            | Operação bem-sucedida sem payload.                                    |
+| 400 Bad Request           | Payload inválido ou campos faltando.                                  |
+| 401 Unauthorized          | Token ausente ou inválido.                                            |
+| 403 Forbidden             | Perfil autenticado sem permissão (ex.: eventos só para organizações). |
+| 404 Not Found             | Recurso inexistente.                                                  |
+| 409 Conflict              | Violação de regra de negócio (ex.: like duplicado).                   |
+| 500 Internal Server Error | Erro inesperado no servidor.                                          |
+
+### Sumário rápido de endpoints
+
+| Domínio      | Método | Caminho                        | Resumo                                         |
+| ------------ | ------ | ------------------------------ | ---------------------------------------------- |
+| Autenticação | POST   | `/auth/register`               | Cria usuário e retorna JWT + dados do perfil.  |
+| Autenticação | POST   | `/auth/login`                  | Valida credenciais e retorna JWT.              |
+| Autenticação | GET    | `/auth`                        | Endpoint simples para testes (retorna string). |
+| Perfil       | GET    | `/profile/me`                  | Perfil do usuário autenticado (paginado).      |
+| Perfil       | GET    | `/profile/{username}`          | Perfil público com posts paginados.            |
+| Perfil       | POST   | `/profile/upload-me`           | Atualiza foto de perfil (multipart).           |
+| Perfil       | PATCH  | `/profile/update`              | Atualiza dados cadastrais (multipart).         |
+| Perfil       | POST   | `/profile/{username}/follow`   | Segue usuário.                                 |
+| Perfil       | DELETE | `/profile/{username}/unfollow` | Deixa de seguir usuário.                       |
+| Post         | POST   | `/post`                        | Cria post com imagem.                          |
+| Post         | DELETE | `/post/{postId}`               | Remove post (owner).                           |
+| Post         | GET    | `/post/{postId}`               | Detalhes completos do post.                    |
+| Post         | POST   | `/post/{postId}/like`          | Curte post.                                    |
+| Post         | DELETE | `/post/{postId}/like`          | Remove like.                                   |
+| Feed         | GET    | `/feed`                        | Feed personalizado paginado.                   |
+| Feed         | GET    | `/feed/organization`           | Mensagem de boas-vindas para organizações.     |
+| Imagens      | GET    | `/images/{blobName}`           | Baixa imagem direto do Blob Storage.           |
+| Eventos      | POST   | `/event`                       | Cria evento (apenas organizações).             |
+| Eventos      | GET    | `/event/lists`                 | Lista eventos publicados.                      |
+
+---
+
+## 🔐 Autenticação (`/auth`)
+
+### POST `/auth/register`
+
+- **Corpo (JSON)**
+
 ```json
 {
-  "id": "uuid-gerado",
-  "username": "lucas",
-  "name": "Lucas",
-  ...
+  "name": "Lucas Moretti",
+  "username": "morettipdr",
+  "email": "lucas@example.com",
+  "password": "senhaSuperSecreta",
+  "type": "user" // ou "organization"
 }
 ```
 
-### 2) Login
-- Endpoint: `POST /auth/login`
-- Envia username e senha no corpo da requisição (JSON).
-- Retorna 200 OK com JWT no corpo.
+- **Resposta 201** (`ProfileCreationResponse`)
 
-Exemplo curl:
-```bash
-curl -i -X POST http://localhost:8080/auth/login \
-  -H "Content-Type: application/json" \
-  -d '{"username":"lucas","password":"123456"}'
+```json
+{
+  "id": "394a77ba-9e56-47e7-a3d4-715dba81eaf9",
+  "username": "morettipdr",
+  "name": "Lucas Moretti",
+  "email": "lucas@example.com",
+  "jwt": "<TOKEN_JWT>",
+  "type": "user",
+  "createdAt": "2025-11-25T17:08:15.123Z"
+}
 ```
-Resposta exemplo:
+
+### POST `/auth/login`
+
+- **Corpo (JSON)**
+
+```json
+{
+  "email": "lucas@example.com",
+  "password": "senhaSuperSecreta"
+}
 ```
-<JWT_TOKEN>
+
+- **Resposta 200**: string contendo o JWT.
+
+### GET `/auth`
+
+- Sem corpo; útil apenas para testar se o controller responde (retorna string "userid: ").
+
+---
+
+## 👤 Perfis & Social (`/profile`)
+
+Todos os endpoints abaixo **exigem JWT**.
+
+### GET `/profile/me`
+
+- **Query params obrigatórios**: `page`, `size` (inteiros).
+- **Resposta 200** (`ProfileResponse`):
+
+```json
+{
+  "name": "Lucas Moretti",
+  "username": "morettipdr",
+  "publicEmail": "lucas_public@example.com",
+  "phone": "+55 61 99999-0000",
+  "profile_picture_url": "/images/avatar.png",
+  "bio": "Engenheiro da UnB",
+  "followersCount": 150,
+  "followingCount": 88,
+  "posts": [
+    {
+      "id": "3d68bfe8-9613-4e1d-b8ef-d69e662ebdea",
+      "imgLink": "/images/blob.png",
+      "description": "Post 2 de Maria",
+      "likesCount": 12,
+      "createdAt": "2025-11-21T17:52:44.788Z"
+    }
+  ]
+}
+```
+
+### GET `/profile/{username}`
+
+- Mesmo payload acima, porém para o usuário solicitado.
+
+### POST `/profile/upload-me`
+
+- **Content-Type**: `multipart/form-data`
+- **Campo obrigatório**: `myImage` (arquivo).
+- **Resposta**: `201 Created` sem corpo.
+
+### PATCH `/profile/update`
+
+- **Content-Type**: `multipart/form-data`
+- **Campos aceitos** (`UpdateUserRequest`): `name`, `username`, `phone`, `publicemail`, `userBio`, `profilePicture`.
+- **Resposta**: `201 Created` sem corpo.
+
+### POST `/profile/{username}/follow`
+
+- Segue o usuário indicado.
+- **Resposta 200** (`FollowResponse`):
+
+```json
+{ "message": "Perfil seguido com sucesso." }
+```
+
+### DELETE `/profile/{username}/unfollow`
+
+- Cancela o follow.
+- Resposta igual ao follow (mensagem).
+
+### GET `/profile/string/teste/organization`
+
+- Protegido com `@PreAuthorize("hasRole('ORGANIZATION')")`.
+- Retorna apenas `"teste"` (endpoint de diagnóstico).
+
+---
+
+## 🖼️ Imagens (`/images`)
+
+### GET `/images/{blobName}`
+
+- Não exige autenticação.
+- Detecta o `Content-Type` pelo sufixo do arquivo (`.png`, `.gif`, `.webp`, `.jpg`).
+- **Resposta 200**: bytes da imagem.
+- **Resposta 404**: quando o blob não existe.
+
+---
+
+## 📝 Posts & Likes (`/post`)
+
+Todos os endpoints exigem JWT.
+
+### POST `/post`
+
+- **Content-Type**: `multipart/form-data`.
+- **Campos obrigatórios**:
+  - `image`: arquivo.
+  - `description`: texto.
+- **Resposta 201**: sem corpo.
+
+### DELETE `/post/{postId}`
+
+- Remove post criado pelo usuário autenticado.
+- **Resposta 204**: sucesso.
+- **Erros**: 401 (não é dono), 404 (post inexistente).
+
+### GET `/post/{postId}`
+
+- **Resposta 200** (`PostDetailResponse`):
+
+```json
+{
+  "id": "953f575e-ca17-428a-8d4c-095a312315d5",
+  "imageUrl": "/images/ac262053-...jpeg",
+  "description": "aodkaweoksopdwaopk!",
+  "likesCount": 0,
+  "createdAt": "2025-11-21T17:52:43.127Z",
+  "author": {
+    "id": "ac262053-0516-4095-8895-856a000a62fe",
+    "name": "Pedro Moretti",
+    "username": "morettipdr",
+    "profilePictureUrl": "/images/pic.png"
+  },
+  "likedBy": []
+}
+```
+
+### POST `/post/{postId}/like`
+
+- Cria like associado ao usuário autenticado.
+- **Resposta 200**: sem corpo.
+- **Erros**: 404 (post), 409 (like duplicado).
+
+### DELETE `/post/{postId}/like`
+
+- Remove like.
+- **Resposta 200**: sem corpo.
+- **Erros**: 404 (like inexistente ou post inexistente).
+
+---
+
+## 📰 Feed (`/feed`)
+
+### GET `/feed`
+
+- **Query params**: `page` (default 0), `size` (default 20).
+- **Resposta 200**: lista de itens do feed, cada um contendo metadados de classificação calculados no serviço.
+
+```json
+[
+  {
+    "id": "22c453d6-0f7c-4421-ba1e-fcd1cba603b4",
+    "imageProfileUrl": "/images/2d77e841-aa54-4a9d-b297-8d2f4a1feb4b_...png",
+    "username": "natan8643",
+    "description": "ICC norte do Darcy é maioral, UnB do gama melhore",
+    "imageUrl": "/images/2d77e841-aa54-4a9d-b297-8d2f4a1feb4b_...jpeg",
+    "likes": 2,
+    "type": "ORGANIZATION", // FOLLOWED | SECOND_DEGREE | POPULAR | RANDOM
+    "reason": "Post de organização"
+  }
+]
+```
+
+- Classificações possíveis (`PostType`): `ORGANIZATION`, `FOLLOWED`, `SECOND_DEGREE`, `POPULAR`, `RANDOM`.
+
+### GET `/feed/organization`
+
+- Retorna texto fixo: `"Bem-vindo à área exclusiva de organizações!"`.
+
+---
+
+## 🎟️ Eventos (`/event`)
+
+### POST `/event`
+
+- **Requer:** usuário autenticado com `ProfileType.organization`.
+- **Content-Type:** `multipart/form-data` usando `EventRequestDTO`.
+- **Campos principais**: `title`, `eventTime` (ISO-8601), `description`, `image`, `streetAddress`, `administrativeRegion`, `city`, `state`, `referencePoint`, `latitude`, `longitude`.
+- **Resposta 201**:
+
+```json
+{
+  "id": "a0c33f9f-0f9e-4d9d-b111-2b13997f6a63",
+  "message": "Evento criado com sucesso"
+}
+```
+
+### GET `/event/lists`
+
+- Lista resumida de eventos.
+
+```json
+[
+  {
+    "title": "Feira da Engenharia",
+    "imageUrl": "/images/evento.png",
+    "data": "2025-12-01T18:00:00",
+    "id": "b3e8f6b5-3c18-4874-86be-16a6d2d58b35"
+  }
+]
 ```
 
 ---
 
-## ImageController (Imagens)
+## 🧾 Erros comuns
 
-### 1) Download de Imagem
-- Endpoint: `GET /images/{blobName}`
-- Retorna a imagem correspondente ao blobName.
-- Content-Type: detectado automaticamente (jpeg/png/gif/webp).
-- Retorna 404 se não encontrar.
+| Situação                                         | Resposta                                             |
+| ------------------------------------------------ | ---------------------------------------------------- |
+| Upload sem imagem                                | `400 Bad Request` com mensagem do Spring Validation. |
+| JWT ausente                                      | `401 Unauthorized`.                                  |
+| Usuário (ProfileType user) tentando criar evento | `403 Forbidden`.                                     |
+| ID inexistente                                   | `404 Not Found`.                                     |
+| Like duplicado                                   | `409 Conflict`.                                      |
 
-Exemplo curl:
+---
+
+## 🧪 Testar mais rápido (cURL)
+
 ```bash
-curl -i -X GET http://localhost:8080/images/minha-foto.png
+# Registrar e obter token
+curl -X POST http://localhost:8080/auth/register \
+	-H "Content-Type: application/json" \
+	-d '{"name":"Org", "username":"org", "email":"org@example.com", "password":"123456", "type":"organization"}'
+
+# Login (retorna JWT)
+TOKEN=$(curl -s -X POST http://localhost:8080/auth/login \
+	-H "Content-Type: application/json" \
+	-d '{"email":"org@example.com","password":"123456"}')
+
+# Criar post
+curl -X POST http://localhost:8080/post \
+	-H "Authorization: Bearer ${TOKEN}" \
+	-F "image=@/tmp/pic.jpg" \
+	-F "description=Primeiro post"
 ```
 
 ---
 
-## ProfileController (Perfil e Seguidores)
+## ✅ Check-list rápido antes de integrar
 
-### 1) Perfil do Usuário Autenticado
-- Endpoint: `GET /profile/me?size=10&page=0`
-- Retorna dados do perfil do usuário logado, paginado.
-
-Exemplo curl:
-```bash
-curl -i -X GET "http://localhost:8080/profile/me?size=10&page=0" \
-  -H "Authorization: Bearer <JWT_TOKEN>"
-```
-
-### 2) Perfil Público de Outro Usuário
-- Endpoint: `GET /profile/{username}?size=10&page=0`
-- Retorna dados públicos do perfil, paginado.
-
-Exemplo curl:
-```bash
-curl -i -X GET "http://localhost:8080/profile/lucas?size=10&page=0"
-```
-
-### 3) Upload de Foto de Perfil
-- Endpoint: `POST /profile/upload-me`
-- Envia imagem como multipart/form-data (campo: myImage).
-- Retorna 201 Created em caso de sucesso.
-
-Exemplo curl:
-```bash
-curl -i -X POST http://localhost:8080/profile/upload-me \
-  -H "Authorization: Bearer <JWT_TOKEN>" \
-  -F "myImage=@/caminho/para/foto.jpg"
-```
-
-### 4) Atualizar Dados do Usuário
-- Endpoint: `PATCH /profile/update`
-- Envia dados via multipart/form-data (campos do usuário).
-- Retorna 201 Created em caso de sucesso.
-
-Exemplo curl:
-```bash
-curl -i -X PATCH http://localhost:8080/profile/update \
-  -H "Authorization: Bearer <JWT_TOKEN>" \
-  -F "name=Novo Nome" -F "bio=Nova bio"
-```
-
-### 5) Seguir Perfil
-- Endpoint: `POST /profile/{username}/follow`
-- Segue o usuário indicado por username.
-- Retorna dados do follow.
-
-Exemplo curl:
-```bash
-curl -i -X POST http://localhost:8080/profile/lucas/follow \
-  -H "Authorization: Bearer <JWT_TOKEN>"
-```
-
-### 6) Deixar de Seguir Perfil
-- Endpoint: `DELETE /profile/{username}/unfollow`
-- Remove o follow do usuário indicado por username.
-- Retorna dados do unfollow.
-
-Exemplo curl:
-```bash
-curl -i -X DELETE http://localhost:8080/profile/lucas/unfollow \
-  -H "Authorization: Bearer <JWT_TOKEN>"
-```
+- [x] Adicionar header `Authorization` em rotas protegidas.
+- [x] Enviar `Content-Type` correto (`application/json` ou `multipart/form-data`).
+- [x] Converter datas para ISO-8601 (UTC) ao chamar a API.
+- [x] Usar IDs UUID válidos nos paths.
