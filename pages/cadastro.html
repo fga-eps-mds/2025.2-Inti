@@ -99,7 +99,9 @@
       </div>
     </div>
 
+    <script src="../js/config.js"></script>
     <script src="../js/app.js"></script>
+    <script src="../js/toast.js"></script>
     <script src="../js/auth.js"></script>
     <script>
       document
@@ -115,19 +117,63 @@
       // Handle cadastro
       document
         .getElementById("cadastroForm")
-        .addEventListener("submit", function (e) {
+        .addEventListener("submit", async function (e) {
           e.preventDefault();
+
+          const form = e.target;
+          const name = form.querySelector(
+            'input[placeholder="Ex: Musa UnB"]'
+          ).value;
+          const username = form.querySelector(
+            'input[placeholder="Ex: musa123"]'
+          ).value;
+          const email = form.querySelector(
+            'input[placeholder="Ex: musa@aluno.unb.br"]'
+          ).value;
           const password = document.getElementById("cadastroPassword").value;
           const confirmPassword =
             document.getElementById("confirmPassword").value;
+          const isOrganizational =
+            document.getElementById("isOrganizational").checked;
 
+          // Validate password match
           if (password !== confirmPassword) {
-            alert("As senhas não coincidem!");
+            toast.error("As senhas não coincidem!");
             return;
           }
 
-          // Redireciona para home após cadastro
-          window.location.href = "home.html";
+          // Validate required fields
+          if (!name || !username || !email || !password) {
+            toast.warning("Por favor, preencha todos os campos obrigatórios!");
+            return;
+          }
+
+          // Determine account type
+          const type = isOrganizational ? "organization" : "user";
+
+          try {
+            // Call the register function from auth.js
+            const result = await window.register(
+              name,
+              username,
+              email,
+              password,
+              type
+            );
+
+            if (result.success) {
+              toast.success("Cadastro realizado com sucesso!");
+              // Redirect to home page after successful registration
+              setTimeout(() => (window.location.href = "home.html"), 1000);
+            } else {
+              toast.error("Erro no cadastro: " + result.error);
+            }
+          } catch (error) {
+            console.error("Registration error:", error);
+            toast.error(
+              "Erro ao realizar cadastro. Por favor, tente novamente."
+            );
+          }
         });
     </script>
   </body>

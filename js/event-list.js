@@ -1,71 +1,100 @@
-document.addEventListener('DOMContentLoaded', loadEvents);
-
-const BASE_API = 'http://localhost:8080';
-const BEARER_TOKEN = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJuYXRhbjg2NDMiLCJleHAiOjE3NjYzMzE1NzJ9.5RCNVk9mQBj2buXY-uMDXKQ34_nZ4loD3oE6flLSPos';
+document.addEventListener("DOMContentLoaded", loadEvents);
 
 async function loadEvents() {
-  const container = document.querySelector('.event-list');
-  container.innerHTML = '<p>Carregando eventos...</p>';
+  const container = document.querySelector(".event-list");
+  container.innerHTML = "<p>Carregando eventos...</p>";
+
+  if (!window.apiService) {
+    container.innerHTML =
+      "<p>Serviço de API indisponível. Recarregue a página após o login.</p>";
+    return;
+  }
+
   try {
-    const res = await fetch(`${BASE_API}/event/lists`, {
-      headers: {
-        'Authorization': 'Bearer ' + BEARER_TOKEN,
-        'Accept': 'application/json'
-      }
-    });
-    if (!res.ok) throw new Error('HTTP ' + res.status);
-    const data = await res.json();
-    if (!Array.isArray(data)) {
-      container.innerHTML = '<pre>Resposta inesperada: ' + JSON.stringify(data, null, 2) + '</pre>';
+    const events = await apiService.getEvents();
+
+    if (!Array.isArray(events)) {
+      container.innerHTML =
+        "<pre>Resposta inesperada: " +
+        JSON.stringify(events, null, 2) +
+        "</pre>";
       return;
     }
-    if (data.length === 0) {
-      container.innerHTML = '<p>Nenhum evento encontrado.</p>';
+
+    if (events.length === 0) {
+      container.innerHTML = "<p>Nenhum evento encontrado.</p>";
       return;
     }
-    container.innerHTML = '';
-    data.forEach(event => {
-      // Ajuste os campos conforme o seu backend
-      const title = event.title || 'Evento';
-      const imageUrl = event.imageUrl || event.image || `/images/${event.blobName}` || '';
-      const date = event.eventTime || event.data || event.date || '';
-      let formattedDate = '';
+
+    const baseURL = apiService?.baseURL || API_CONFIG?.baseURL || "";
+    container.innerHTML = "";
+
+    events.forEach((event) => {
+      const eventId =
+        event.id || event.eventId || event.uuid || event.guid || null;
+      const detailUrl =
+        (window.EventNavigation &&
+          EventNavigation.buildEventDetailUrl(eventId)) ||
+        null;
+      const title = event.title || "Evento";
+      const imagePath =
+        event.imageUrl ||
+        event.image ||
+        (event.blobName ? `/images/${event.blobName}` : "");
+      const date = event.eventTime || event.data || event.date || "";
+
+      let formattedDate = "";
       if (date) {
-        const d = new Date(date);
-        if (!isNaN(d)) {
-          // Formata como DD/MM (sem ano)
-          formattedDate = d.toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit' });
-        } else {
-          formattedDate = date;
-        }
+        const parsedDate = new Date(date);
+        formattedDate = isNaN(parsedDate)
+          ? date
+          : parsedDate.toLocaleDateString("pt-BR", {
+              day: "2-digit",
+              month: "2-digit",
+            });
       }
 
-      // Cria o card no mesmo modelo do seu HTML
-      const eventDiv = document.createElement('div');
-      eventDiv.className = 'event';
+      const eventDiv = document.createElement("div");
+      eventDiv.className = "event";
 
-      const eventText = document.createElement('div');
-      eventText.className = 'event-text';
+      const eventText = document.createElement("div");
+      eventText.className = "event-text";
 
-      const h2Title = document.createElement('h2');
+      const h2Title = document.createElement("h2");
       h2Title.textContent = title;
       eventText.appendChild(h2Title);
 
-      const h2Date = document.createElement('h2');
+      const h2Date = document.createElement("h2");
       h2Date.textContent = formattedDate;
       eventText.appendChild(h2Date);
 
       eventDiv.appendChild(eventText);
 
-      const img = document.createElement('img');
-      img.src = imageUrl.startsWith('http') ? imageUrl : `${BASE_API}${imageUrl}`;
-      img.alt = title;
-      eventDiv.appendChild(img);
+      if (typeof imagePath === "string" && imagePath.trim() !== "") {
+        const img = document.createElement("img");
+        const trimmedPath = imagePath.trim();
+        img.src = trimmedPath.startsWith("http")
+          ? trimmedPath
+          : `${baseURL}${trimmedPath}`;
+        img.alt = title;
+        eventDiv.appendChild(img);
+      }
+
+      if (detailUrl) {
+        eventDiv.style.cursor = "pointer";
+        eventDiv.addEventListener("click", () => {
+          window.location.href = detailUrl;
+        });
+      }
 
       container.appendChild(eventDiv);
     });
   } catch (err) {
-    container.innerHTML = '<pre>Erro ao carregar: ' + err.message + '</pre>';
+    const isAuthError =
+      err.message.includes("401") || err.message.includes("403");
+    container.innerHTML = isAuthError
+      ? "<p>Faça login novamente para visualizar os eventos.</p>"
+      : "<pre>Erro ao carregar: " + err.message + "</pre>";
     console.error(err);
   }
 }

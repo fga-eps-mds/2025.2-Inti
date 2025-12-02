@@ -1,12 +1,25 @@
-const AUTH_TOKEN = (window.AUTH_TOKEN = AUTH_TOKEN);
+const AUTH_TOKEN = localStorage.getItem("authToken");
 
 const urlParams = new URLSearchParams(window.location.search);
+// Get username from URL path if possible, otherwise from query param, otherwise default
+// The current logic seems to expect it from somewhere.
+// The user said "public-profile.html" so it might be /pages/public-profile.html?username=...
+// But the code uses `window.location.search` but doesn't extract `username` from it in the provided snippet?
+// Ah, line 5: `const username = document.addEventListener...` assigns the return of addEventListener to username? That's wrong.
+// I need to fix how username is retrieved.
 
-const username = document.addEventListener("DOMContentLoaded", () => {
+// Let's fix the whole file structure.
+
+document.addEventListener("DOMContentLoaded", () => {
   if (!AUTH_TOKEN) {
     console.error("Token não encontrado.");
+    // Redirect to login if needed, or just show error
+    window.location.href = "../index.html";
     return;
   }
+
+  const urlParams = new URLSearchParams(window.location.search);
+  const username = urlParams.get("username");
 
   if (!username) {
     showError("Nenhum username informado!");
@@ -14,6 +27,7 @@ const username = document.addEventListener("DOMContentLoaded", () => {
   }
 
   fetchProfileData(username);
+  setupModal();
 });
 
 async function fetchProfileData(username) {
@@ -59,16 +73,12 @@ function populateProfileData(data) {
 
   if (userNameElement) {
     userNameElement.textContent = data.name || "Nome não informado";
-  } else {
-    console.error("Elemento .user-name não encontrado");
   }
 
   if (userUsernameElement) {
     userUsernameElement.textContent = data.username
       ? `@${data.username}`
       : "@usuário";
-  } else {
-    console.error("Elemento .user-username não encontrado");
   }
 
   // Foto de perfil
@@ -76,7 +86,9 @@ function populateProfileData(data) {
   if (profileImg) {
     if (data.profile_picture_url) {
       const backendUrl = "https://20252-inti-production.up.railway.app";
-      const fullImageUrl = backendUrl + data.profile_picture_url;
+      const fullImageUrl = data.profile_picture_url.startsWith("http")
+        ? data.profile_picture_url
+        : backendUrl + data.profile_picture_url;
       setBackgroundImageWithBearer(profileImg, fullImageUrl, AUTH_TOKEN);
     } else {
       profileImg.style.backgroundImage = `url("../assets/image-user-icon.png")`;
@@ -96,6 +108,26 @@ function populateProfileData(data) {
 
   console.log("Chamando populateUserPosts com:", data.posts);
   populateUserPosts(data.posts || []);
+
+  // Setup tab switching
+  const viewBtns = document.querySelectorAll(".view-btn");
+  viewBtns.forEach((btn) => {
+    btn.addEventListener("click", () => {
+      // Remove active class from all
+      viewBtns.forEach((b) => b.classList.remove("active"));
+      // Add active to clicked
+      btn.classList.add("active");
+
+      const view = btn.dataset.view;
+      if (view === "posts") {
+        populateUserPosts(data.posts || []);
+      } else if (view === "products") {
+        // Assuming products might be in data.products or filtered from posts
+        // For now, let's assume data.products exists or pass empty
+        populateUserProducts(data.products || []);
+      }
+    });
+  });
 }
 
 function initializeFollowButton(data) {
@@ -113,7 +145,11 @@ function initializeFollowButton(data) {
 
   updateFollowButtonState(followBtn, isFollowing);
 
-  followBtn.addEventListener("click", handleFollowClick);
+  // Remove existing listeners to avoid duplicates if called multiple times
+  const newBtn = followBtn.cloneNode(true);
+  followBtn.parentNode.replaceChild(newBtn, followBtn);
+
+  newBtn.addEventListener("click", handleFollowClick);
 }
 
 function updateFollowButtonState(followBtn, isFollowing) {
@@ -121,12 +157,13 @@ function updateFollowButtonState(followBtn, isFollowing) {
 
   if (isFollowing) {
     followBtn.classList.add("active");
-    img.src = img.src.replace("follow-icon", "unfollow-icon");
+    img.src = "../assets/unfollow-icon.png"; // Ensure asset exists or use text
+    // Fallback if image doesn't exist, maybe change style
     followBtn.dataset.following = "true";
     followBtn.title = "Deixar de seguir";
   } else {
     followBtn.classList.remove("active");
-    img.src = img.src.replace("unfollow-icon", "follow-icon");
+    img.src = "../assets/follow-icon.png";
     followBtn.dataset.following = "false";
     followBtn.title = "Seguir";
   }
@@ -136,7 +173,6 @@ async function handleFollowClick(event) {
   event.preventDefault();
 
   const followBtn = event.currentTarget;
-  const img = followBtn.querySelector("img");
 
   if (followBtn.classList.contains("loading")) return;
 
@@ -169,7 +205,17 @@ async function handleFollowClick(event) {
     const newFollowingState = !isCurrentlyFollowing;
     updateFollowButtonState(followBtn, newFollowingState);
 
-    await updateFollowersCounter(newFollowingState);
+    // Update followers counter
+    const followersCountElement = document.querySelector(
+      ".profile-seguidores + .profile-number"
+    );
+    if (followersCountElement) {
+      let count =
+        parseInt(followersCountElement.textContent.replace("k", "000")) || 0; // Simple parsing
+      if (newFollowingState) count++;
+      else count = Math.max(0, count - 1);
+      followersCountElement.textContent = formatNumber(count);
+    }
 
     console.log(
       `Success: ${isCurrentlyFollowing ? "Unfollow" : "Follow"} realizado com sucesso`
@@ -183,33 +229,7 @@ async function handleFollowClick(event) {
 }
 
 async function updateFollowersCounter(isFollowing) {
-  try {
-    const response = await fetch(
-      `https://20252-inti-production.up.railway.app/profile/${username}?size=10&page=0`,
-      {
-        method: "GET",
-        headers: {
-          Authorization: `Bearer ${AUTH_TOKEN}`,
-          "Content-Type": "application/json",
-        },
-      }
-    );
-
-    if (response.ok) {
-      const profileData = await response.json();
-
-      const followersCountElement = document.querySelector(
-        ".profile-seguidores + .profile-number"
-      );
-      if (followersCountElement && profileData.followersCount !== undefined) {
-        followersCountElement.textContent = formatNumber(
-          profileData.followersCount
-        );
-      }
-    }
-  } catch (error) {
-    console.error("Erro ao atualizar contador de seguidores:", error);
-  }
+  // Optimized to just increment/decrement locally instead of refetching
 }
 
 function updateProfileCounters(data) {
@@ -240,10 +260,6 @@ function updateProfileCounters(data) {
 function populateUserPosts(posts) {
   const postsGrid = document.querySelector(".user-posts-grid");
 
-  console.log("populateUserPosts chamada");
-  console.log("Posts recebidos:", posts);
-  console.log("Grid element:", postsGrid);
-
   if (!postsGrid) {
     console.error("Elemento .user-posts-grid não encontrado");
     return;
@@ -263,38 +279,37 @@ function populateUserPosts(posts) {
     return dateB - dateA;
   });
 
-  console.log(`Renderizando ${sortedPosts.length} posts...`);
-
   sortedPosts.forEach((post, index) => {
     const postItem = createPostElement(post, index);
     postsGrid.appendChild(postItem);
   });
-
-  console.log("Posts renderizados com sucesso!");
 }
 
 function createPostElement(post, index) {
   const postDiv = document.createElement("div");
   postDiv.className = `user-post-item rect-${(index % 5) + 1}`;
   postDiv.style.position = "relative";
-
-  console.log(`Criando post ${index}:`, post);
+  postDiv.dataset.postId = post.id;
 
   if (post.imgLink) {
     const backendUrl = "https://20252-inti-production.up.railway.app";
-    const fullImageUrl = backendUrl + post.imgLink;
-    console.log("Carregando imagem:", fullImageUrl);
+    const fullImageUrl = post.imgLink.startsWith("http")
+      ? post.imgLink
+      : backendUrl + post.imgLink;
     setBackgroundImageWithBearer(postDiv, fullImageUrl, AUTH_TOKEN);
   } else {
     const randomColor = getRandomColor();
-    console.log("Sem imagem, usando cor:", randomColor);
     postDiv.style.backgroundColor = randomColor;
     postDiv.style.display = "flex";
     postDiv.style.alignItems = "center";
     postDiv.style.justifyContent = "center";
     postDiv.style.color = "white";
     postDiv.style.fontWeight = "bold";
+    postDiv.textContent = "Post";
   }
+
+  // Add click listener to open modal
+  postDiv.addEventListener("click", () => openPostModal(post.id));
 
   return postDiv;
 }
@@ -302,10 +317,7 @@ function createPostElement(post, index) {
 function populateUserProducts(products) {
   const postsGrid = document.querySelector(".user-posts-grid");
 
-  if (!postsGrid) {
-    console.error("Elemento .user-posts-grid não encontrado");
-    return;
-  }
+  if (!postsGrid) return;
 
   postsGrid.innerHTML = "";
 
@@ -337,7 +349,9 @@ function createProductElement(product, index) {
   if (product.imgLink || product.image_url || product.imageUrl) {
     const backendUrl = "https://20252-inti-production.up.railway.app";
     const imageUrl = product.imgLink || product.image_url || product.imageUrl;
-    const fullImageUrl = backendUrl + imageUrl;
+    const fullImageUrl = imageUrl.startsWith("http")
+      ? imageUrl
+      : backendUrl + imageUrl;
     setBackgroundImageWithBearer(productDiv, fullImageUrl, AUTH_TOKEN);
   } else {
     productDiv.style.backgroundColor = getRandomColor();
@@ -420,6 +434,110 @@ function showError(message) {
   setTimeout(() => {
     errorDiv.remove();
   }, 5000);
+}
+
+// Modal Logic
+function setupModal() {
+  const modal = document.getElementById("postModal");
+  const closeBtn = document.querySelector(".close");
+
+  if (closeBtn) {
+    closeBtn.addEventListener("click", function () {
+      modal.style.display = "none";
+    });
+  }
+
+  window.addEventListener("click", function (event) {
+    if (event.target === modal) {
+      modal.style.display = "none";
+    }
+  });
+}
+
+async function openPostModal(postId) {
+  console.log("Opening post modal for postId:", postId);
+
+  const modal = document.getElementById("postModal");
+  const modalImage = document.getElementById("modalPostImage");
+  const modalProfilePic = document.getElementById("modalProfilePic");
+  const modalUsername = document.getElementById("modalUsername");
+  const modalDescription = document.getElementById("modalDescription");
+  const modalDate = document.getElementById("modalDate");
+  const modalLikes = document.getElementById("modalLikes");
+
+  if (!modal) {
+    console.error("Modal not found!");
+    return;
+  }
+
+  // Show loading state
+  modalImage.style.display = "none";
+  modalUsername.textContent = "Carregando...";
+  modalDescription.textContent = "";
+  modalDate.textContent = "";
+  modalLikes.textContent = "";
+  modalProfilePic.style.backgroundColor = getRandomColor();
+
+  // Show modal
+  modal.style.display = "block";
+
+  try {
+    // Use apiService if available, otherwise fetch manually
+    // Assuming apiService is global or we fetch manually
+    const backendUrl = "https://20252-inti-production.up.railway.app";
+    const response = await fetch(`${backendUrl}/post/${postId}`, {
+      headers: {
+        Authorization: `Bearer ${AUTH_TOKEN}`,
+      },
+    });
+
+    if (!response.ok) throw new Error("Failed to fetch post details");
+
+    const post = await response.json();
+
+    // Update modal with post details
+    modalUsername.textContent = post.author.name || post.author.username;
+    modalDescription.textContent = post.description || "";
+    modalDate.textContent = new Date(post.createdAt).toLocaleDateString(
+      "pt-BR"
+    );
+    modalLikes.textContent = `${post.likesCount || 0} curtidas`;
+
+    // Load profile picture
+    if (
+      post.author.profilePictureUrl &&
+      post.author.profilePictureUrl.trim() !== ""
+    ) {
+      const fullProfileImageUrl = post.author.profilePictureUrl.startsWith(
+        "http"
+      )
+        ? post.author.profilePictureUrl
+        : backendUrl + post.author.profilePictureUrl;
+      setBackgroundImageWithBearer(
+        modalProfilePic,
+        fullProfileImageUrl,
+        AUTH_TOKEN
+      );
+    } else {
+      modalProfilePic.style.backgroundColor = getRandomColor();
+    }
+
+    // Load post image
+    if (post.imageUrl && post.imageUrl.trim() !== "") {
+      const fullImageUrl = post.imageUrl.startsWith("http")
+        ? post.imageUrl
+        : backendUrl + post.imageUrl;
+      modalImage.src = fullImageUrl;
+      modalImage.style.display = "block";
+    } else {
+      modalImage.style.display = "none";
+    }
+  } catch (error) {
+    console.error("Error loading post details:", error);
+    modalUsername.textContent = "Erro";
+    modalDescription.textContent =
+      "Não foi possível carregar os detalhes do post.";
+  }
 }
 
 // EXPORTAR FUNÇÕES GLOBALMENTE

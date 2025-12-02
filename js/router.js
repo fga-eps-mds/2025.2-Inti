@@ -8,10 +8,22 @@ function navigateTo(page) {
     cadastro: "pages/cadastro.html",
     profile: "pages/profile.html",
     dashboard: "pages/dashboard.html",
+    create: "pages/create.html",
+    "create-event": "pages/create-event.html",
+    events: "pages/eventos.html",
   };
 
   if (routes[page]) {
-    window.location.href = routes[page];
+    // Check if we're already in the pages directory
+    const isInPagesDir = window.location.pathname.includes("/pages/");
+    let route = routes[page];
+
+    // If we're in pages directory and the route doesn't start with ../, prepend ../
+    if (isInPagesDir && !route.startsWith("../")) {
+      route = "../" + route;
+    }
+
+    window.location.href = route;
   } else {
     console.error("Rota não encontrada:", page);
   }

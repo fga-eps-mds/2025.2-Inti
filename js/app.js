@@ -8,6 +8,10 @@ function checkAuth() {
 
 // Função para fazer logout
 function logout() {
+  // Clear auth token from API service
+  if (typeof apiService !== "undefined") {
+    apiService.clearAuthToken();
+  }
   localStorage.removeItem("isAuthenticated");
   localStorage.removeItem("userData");
   window.location.href = "../index.html";

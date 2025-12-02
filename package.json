@@ -20,5 +20,9 @@
   "homepage": "https://github.com/fga-eps-mds/2025.2-Inti#readme",
   "devDependencies": {
     "prettier": "^3.6.2"
+  },
+  "dependencies": {
+    "cors": "^2.8.5",
+    "express": "^4.18.2"
   }
 }
