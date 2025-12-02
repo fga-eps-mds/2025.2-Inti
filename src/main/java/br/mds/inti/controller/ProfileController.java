@@ -81,7 +81,5 @@ public class ProfileController {
 
         return ResponseEntity.ok("teste");
     }
-    // jwt 1:
-    // eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJsdWNhcyIsImV4cCI6MTc2NTE2NDcwM30.8qzxRDzIku8G-OXxHLl0Z7BFnJrS1MrMeITUaX139-E"
 
 }
