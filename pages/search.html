@@ -1,298 +1,196 @@
 <!doctype html>
 <html lang="pt-BR">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>MUSA - Buscar</title>
-    <link rel="stylesheet" href="../css/style.css" />
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Libre+Bodoni:wght@700&family=Maitree:wght@400&display=swap"
-      rel="stylesheet"
-    />
-    <style>
-      .search-container {
-        padding: 20px;
-        padding-top: 80px;
-        padding-bottom: 100px;
-        max-width: 600px;
-        margin: 0 auto;
-      }
 
-      .search-input-wrapper {
-        position: relative;
-        margin-bottom: 24px;
-      }
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>MUSA - Buscar</title>
+  <link rel="stylesheet" href="../css/style.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Libre+Bodoni:wght@700&family=Maitree:wght@400&display=swap"
+    rel="stylesheet" />
+  <style>
+    .search-container {
+      padding: 20px;
+      padding-top: 80px;
+      padding-bottom: 100px;
+      max-width: 600px;
+      margin: 0 auto;
+    }
 
-      .search-input {
-        width: 100%;
-        padding: 12px 16px 12px 44px;
-        border: 2px solid var(--gray-200);
-        border-radius: var(--radius-lg);
-        font-family: "Maitree", serif;
-        font-size: 16px;
-        outline: none;
-        transition: border-color 0.2s ease;
-      }
+    .search-input-wrapper {
+      position: relative;
+      margin-bottom: 24px;
+    }
 
-      .search-input:focus {
-        border-color: var(--primary);
-      }
+    .search-input {
+      width: 100%;
+      padding: 12px 16px 12px 44px;
+      border: 2px solid var(--gray-200);
+      border-radius: var(--radius-lg);
+      font-family: "Maitree", serif;
+      font-size: 16px;
+      outline: none;
+      transition: border-color 0.2s ease;
+    }
 
-      .search-icon {
-        position: absolute;
-        left: 14px;
-        top: 50%;
-        transform: translateY(-50%);
-        color: var(--gray-400);
-      }
+    .search-input:focus {
+      border-color: var(--primary);
+    }
 
-      .search-results {
-        display: flex;
-        flex-direction: column;
-        gap: 12px;
-      }
+    .search-icon {
+      position: absolute;
+      left: 14px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--gray-400);
+    }
 
-      .search-result-item {
-        display: flex;
-        align-items: center;
-        gap: 12px;
-        padding: 12px;
-        background: white;
-        border-radius: var(--radius-md);
-        cursor: pointer;
-        transition: all 0.2s ease;
-        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-        text-decoration: none;
-        color: inherit;
-      }
+    .search-results {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
 
-      .search-result-item:hover {
-        background: var(--gray-50);
-        transform: translateY(-2px);
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
-      }
+    .search-result-item {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 12px;
+      background: white;
+      border-radius: var(--radius-md);
+      cursor: pointer;
+      transition: all 0.2s ease;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      text-decoration: none;
+      color: inherit;
+    }
 
-      .result-avatar {
-        width: 48px;
-        height: 48px;
-        border-radius: 50%;
-        background-color: var(--gray-300);
-        background-size: cover;
-        background-position: center;
-        flex-shrink: 0;
-      }
+    .search-result-item:hover {
+      background: var(--gray-50);
+      transform: translateY(-2px);
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+    }
 
-      .result-info {
-        flex: 1;
-      }
+    .result-avatar {
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      background-color: var(--gray-300);
+      background-size: cover;
+      background-position: center;
+      flex-shrink: 0;
+    }
 
-      .result-name {
-        font-weight: 600;
-        color: var(--gray-900);
-        margin-bottom: 2px;
-      }
+    .result-info {
+      flex: 1;
+    }
 
-      .result-username {
-        font-size: 14px;
-        color: var(--gray-500);
-      }
+    .result-name {
+      font-weight: 600;
+      color: var(--gray-900);
+      margin-bottom: 2px;
+    }
 
-      .loading,
-      .no-results,
-      .error {
-        text-align: center;
-        padding: 40px 20px;
-        color: var(--gray-500);
-      }
+    .result-username {
+      font-size: 14px;
+      color: var(--gray-500);
+    }
 
-      .initial-message {
-        text-align: center;
-        padding: 60px 20px;
-        color: var(--gray-400);
-        font-style: italic;
-      }
-    </style>
-  </head>
+    .loading,
+    .no-results,
+    .error {
+      text-align: center;
+      padding: 40px 20px;
+      color: var(--gray-500);
+    }
 
-  <body>
-    <div class="container">
-      <div class="screen home-screen">
-        <header class="header-home">
-          <img src="../assets/MUSA-M.png" alt="MUSA" class="logo-icon" />
-          <h1
-            style="
+    .initial-message {
+      text-align: center;
+      padding: 60px 20px;
+      color: var(--gray-400);
+      font-style: italic;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container">
+    <div class="screen home-screen">
+      <header class="header-home">
+        <img src="../assets/MUSA-M.png" alt="MUSA" class="logo-icon" />
+        <h1 style="
               font-family: &quot;Libre Bodoni&quot;, serif;
               font-size: 36px;
               font-weight: 700;
               color: var(--primary);
-            "
-          >
-            Buscar
-          </h1>
-          <div style="width: 11vw"></div>
-        </header>
+            ">
+          Buscar
+        </h1>
+        <div style="width: 11vw"></div>
+      </header>
 
-        <div class="search-container">
-          <div class="search-input-wrapper">
-            <svg
-              class="search-icon"
-              width="20"
-              height="20"
-              viewBox="0 0 24 24"
-              fill="none"
-            >
-              <circle
-                cx="11"
-                cy="11"
-                r="8"
-                stroke="currentColor"
-                stroke-width="2"
-              />
-              <path
-                d="M21 21L16.65 16.65"
-                stroke="currentColor"
-                stroke-width="2"
-              />
-            </svg>
-            <input
-              type="text"
-              class="search-input"
-              placeholder="Buscar usuários ou organizações..."
-              id="searchInput"
-            />
-          </div>
-
-          <div class="search-results" id="searchResults">
-            <div class="initial-message">Digite para buscar usuários</div>
-          </div>
+      <div class="search-container">
+        <div class="search-input-wrapper">
+          <svg class="search-icon" width="20" height="20" viewBox="0 0 24 24" fill="none">
+            <circle cx="11" cy="11" r="8" stroke="currentColor" stroke-width="2" />
+            <path d="M21 21L16.65 16.65" stroke="currentColor" stroke-width="2" />
+          </svg>
+          <input type="text" class="search-input" placeholder="Buscar usuários ou organizações..." id="searchInput" />
         </div>
 
-        <!-- Navigation Bar -->
-        <nav class="navbar">
-          <button
-            class="nav-btn"
-            aria-label="Home"
-            onclick="window.location.href='home.html'"
-          >
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
-              <path
-                d="M3 9L12 2L21 9V20C21 20.5304 20.7893 21.0391 20.4142 21.4142C20.0391 21.7893 19.5304 22 19 22H5C4.46957 22 3.96086 21.7893 3.58579 21.4142C3.21071 21.0391 3 20.5304 3 20V9Z"
-                stroke="currentColor"
-                stroke-width="2"
-              />
-              <path d="M9 22V12H15V22" stroke="currentColor" stroke-width="2" />
-            </svg>
-          </button>
-          <button class="nav-btn active" aria-label="Explorar">
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
-              <circle
-                cx="11"
-                cy="11"
-                r="8"
-                stroke="currentColor"
-                stroke-width="2"
-              />
-              <path
-                d="M21 21L16.65 16.65"
-                stroke="currentColor"
-                stroke-width="2"
-              />
-            </svg>
-          </button>
-          <button
-            class="nav-btn nav-btn-add"
-            aria-label="Adicionar"
-            onclick="window.location.href='create.html'"
-          >
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
-              <line
-                x1="12"
-                y1="5"
-                x2="12"
-                y2="19"
-                stroke="currentColor"
-                stroke-width="2"
-              />
-              <line
-                x1="5"
-                y1="12"
-                x2="19"
-                y2="12"
-                stroke="currentColor"
-                stroke-width="2"
-              />
-            </svg>
-          </button>
-          <button
-            class="nav-btn"
-            aria-label="Calendário"
-            onclick="window.location.href='my-events.html'"
-          >
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
-              <rect
-                x="3"
-                y="4"
-                width="18"
-                height="18"
-                rx="2"
-                stroke="currentColor"
-                stroke-width="2"
-              />
-              <line
-                x1="16"
-                y1="2"
-                x2="16"
-                y2="6"
-                stroke="currentColor"
-                stroke-width="2"
-              />
-              <line
-                x1="8"
-                y1="2"
-                x2="8"
-                y2="6"
-                stroke="currentColor"
-                stroke-width="2"
-              />
-              <line
-                x1="3"
-                y1="10"
-                x2="21"
-                y2="10"
-                stroke="currentColor"
-                stroke-width="2"
-              />
-            </svg>
-          </button>
-          <button
-            class="nav-btn"
-            aria-label="Perfil"
-            onclick="window.location.href='profile.html'"
-          >
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
-              <path
-                d="M20 21V19C20 17.9391 19.5786 16.9217 18.8284 16.1716C18.0783 15.4214 17.0609 15 16 15H8C6.93913 15 5.92172 15.4214 5.17157 16.1716C4.42143 16.9217 4 17.9391 4 19V21"
-                stroke="currentColor"
-                stroke-width="2"
-              />
-              <circle
-                cx="12"
-                cy="7"
-                r="4"
-                stroke="currentColor"
-                stroke-width="2"
-              />
-            </svg>
-          </button>
-        </nav>
+        <div class="search-results" id="searchResults">
+          <div class="initial-message">Digite para buscar usuários</div>
+        </div>
       </div>
-    </div>
 
-    <script src="../js/config.js"></script>
-    <script src="../js/app.js"></script>
-    <script src="../js/toast.js"></script>
-    <script src="../js/search.js"></script>
-  </body>
+      <!-- Navigation Bar -->
+      <nav class="navbar">
+        <button class="nav-btn" aria-label="Home" onclick="window.location.href='home.html'">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+            <path
+              d="M3 9L12 2L21 9V20C21 20.5304 20.7893 21.0391 20.4142 21.4142C20.0391 21.7893 19.5304 22 19 22H5C4.46957 22 3.96086 21.7893 3.58579 21.4142C3.21071 21.0391 3 20.5304 3 20V9Z"
+              stroke="currentColor" stroke-width="2" />
+            <path d="M9 22V12H15V22" stroke="currentColor" stroke-width="2" />
+          </svg>
+        </button>
+        <button class="nav-btn active" aria-label="Explorar">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+            <circle cx="11" cy="11" r="8" stroke="currentColor" stroke-width="2" />
+            <path d="M21 21L16.65 16.65" stroke="currentColor" stroke-width="2" />
+          </svg>
+        </button>
+        <button class="nav-btn nav-btn-add" aria-label="Adicionar" onclick="window.location.href='publish.html'">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+            <line x1="12" y1="5" x2="12" y2="19" stroke="currentColor" stroke-width="2" />
+            <line x1="5" y1="12" x2="19" y2="12" stroke="currentColor" stroke-width="2" />
+          </svg>
+        </button>
+        <button class="nav-btn" aria-label="Calendário" onclick="window.location.href='my-events.html'">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+            <rect x="3" y="4" width="18" height="18" rx="2" stroke="currentColor" stroke-width="2" />
+            <line x1="16" y1="2" x2="16" y2="6" stroke="currentColor" stroke-width="2" />
+            <line x1="8" y1="2" x2="8" y2="6" stroke="currentColor" stroke-width="2" />
+            <line x1="3" y1="10" x2="21" y2="10" stroke="currentColor" stroke-width="2" />
+          </svg>
+        </button>
+        <button class="nav-btn" aria-label="Perfil" onclick="window.location.href='profile.html'">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+            <path
+              d="M20 21V19C20 17.9391 19.5786 16.9217 18.8284 16.1716C18.0783 15.4214 17.0609 15 16 15H8C6.93913 15 5.92172 15.4214 5.17157 16.1716C4.42143 16.9217 4 17.9391 4 19V21"
+              stroke="currentColor" stroke-width="2" />
+            <circle cx="12" cy="7" r="4" stroke="currentColor" stroke-width="2" />
+          </svg>
+        </button>
+      </nav>
+    </div>
+  </div>
+
+  <script src="../js/config.js"></script>
+  <script src="../js/app.js"></script>
+  <script src="../js/toast.js"></script>
+  <script src="../js/search.js"></script>
+</body>
+
 </html>

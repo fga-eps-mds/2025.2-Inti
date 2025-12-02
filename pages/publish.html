@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Nova Publicação</title>
 </head>
+
 <body>
     <div class="container">
         <header class="header">
@@ -39,7 +40,7 @@
 
 
         <nav class="navbar">
-            <button class="nav-btn active" aria-label="Home">
+            <button class="nav-btn " aria-label="Home">
                 <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
                     <path
                         d="M3 9L12 2L21 9V20C21 20.5304 20.7893 21.0391 20.4142 21.4142C20.0391 21.7893 19.5304 22 19 22H5C4.46957 22 3.96086 21.7893 3.58579 21.4142C3.21071 21.0391 3 20.5304 3 20V9Z"
@@ -84,7 +85,7 @@
                 </svg>
             </button>
         </nav>
-        
+
         <div id="loadingOverlay" class="loading-overlay" style="display: none;">
             <div class="spinner"></div>
             <p>Enviando...</p>
@@ -142,7 +143,7 @@
             -moz-osx-font-smoothing: grayscale;
         }
 
-    
+
         .container {
             position: relative;
             width: 100%;
@@ -154,30 +155,30 @@
         }
 
 
-        .header{
+        .header {
             position: relative;
             width: 100%;
             padding: 30px 20px 20px;
             background-color: #ffffff;
         }
 
-        .title{
+        .title {
             font-size: 32px;
             text-align: center;
             font-family: 'Tilt Warp', regular;
-            color: #592e83;  
+            color: #592e83;
             margin: 0;
         }
 
-        
-        .div-content{
+
+        .div-content {
             position: relative;
             padding: 20px;
             padding-bottom: 80px;
         }
 
-        
-        .img-selection{
+
+        .img-selection {
             position: relative;
             width: 100%;
             height: 150px;
@@ -189,7 +190,7 @@
             margin-top: 30px;
         }
 
-        .img-placeholder{
+        .img-placeholder {
             position: absolute;
             top: 50%;
             left: 50%;
@@ -201,18 +202,18 @@
             pointer-events: none;
         }
 
-        .image-preview{
+        .image-preview {
             width: 100%;
             height: 100%;
             object-fit: cover;
         }
 
-        .description-label{
+        .description-label {
             margin-bottom: 10px;
             margin-top: 20px;
         }
 
-        .description-label p{
+        .description-label p {
             font-family: 'Teachers', serif;
             font-size: 25px;
             color: #592e83;
@@ -221,7 +222,7 @@
             padding: 37px 0px;
         }
 
-        .description-container{
+        .description-container {
             width: 100%;
             height: 100px;
             border: 1px solid #8e8e93;
@@ -230,7 +231,7 @@
             margin-bottom: 30px;
         }
 
-        .description-input{
+        .description-input {
             width: 100%;
             height: 100%;
             padding: 16px;
@@ -243,17 +244,17 @@
             background-color: transparent;
         }
 
-        .description-input::placeholder{
+        .description-input::placeholder {
             color: #8e8e93;
         }
 
-        .publish-button-container{
+        .publish-button-container {
             display: flex;
             justify-content: center;
             margin-top: 20px;
         }
 
-        .publish-button{
+        .publish-button {
             width: 100px;
             height: 30px;
             background-color: #d9d9d9;
@@ -265,7 +266,7 @@
             cursor: pointer;
         }
 
-        
+
 
 
         .navbar {
@@ -279,7 +280,7 @@
             display: flex;
             align-items: center;
             justify-content: space-around;
-            padding: 0 20px;
+            padding: 0 var(--spacing-md);
             border-top: 1px solid var(--gray-200);
             z-index: 1000;
         }
@@ -288,7 +289,7 @@
             background: none;
             border: none;
             cursor: pointer;
-            padding: 8px;
+            padding: var(--spacing-sm);
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -296,7 +297,8 @@
             color: var(--gray-400);
             transition: all 0.2s ease;
             position: relative;
-            flex: 1;
+            min-width: 50px;
+            height: 50px;
         }
 
         .nav-btn:hover {
@@ -307,20 +309,31 @@
             color: var(--primary);
         }
 
+        .nav-btn.active::after {
+            content: "";
+            position: absolute;
+            bottom: -16px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 32px;
+            height: 3px;
+            background: var(--primary);
+            border-radius: var(--radius-full);
+        }
+
         .nav-btn svg {
-            width: 28px;
-            height: 28px;
+            width: 24px;
+            height: 24px;
         }
 
         .nav-btn-add {
-            width: 56px;
-            height: 56px;
+            width: 54px;
+            height: 54px;
             background: var(--primary);
-            border-radius: 50%;
+            border-radius: var(--radius-full);
             color: white;
-            flex: 0 0 56px;
-            position: relative;
-            top: -8px;
+            margin: 0 var(--spacing-xs);
+            box-shadow: var(--shadow-md);
         }
 
         .nav-btn-add:hover {
@@ -330,8 +343,8 @@
         }
 
         .nav-btn-add svg {
-            width: 32px;
-            height: 32px;
+            width: 28px;
+            height: 28px;
         }
 
 
@@ -467,7 +480,7 @@
             }
         }
 
-        
+
         @media (min-width: 1024px) {
             .div-content {
                 padding: 40px 60px 100px;
@@ -482,184 +495,34 @@
             }
         }
 
-        @media(max-width: 360px){
-            .title{
+        @media(max-width: 360px) {
+            .title {
                 font-size: 28px;
             }
-            .img-selection{
+
+            .img-selection {
                 height: 120px;
             }
 
-            .description-label p{
+            .description-label p {
                 font-size: 22px;
             }
 
-            .description-container{
+            .description-container {
                 height: 80px;
             }
 
-            .publish-button{
+            .publish-button {
                 width: 90px;
                 height: 28px;
                 font-size: 11px;
             }
         }
     </style>
-    <script>
-        const imgSelection = document.getElementById('imgSelection');
-        const fileInput = document.getElementById('fileInput');
-        const imgPlaceholder = document.getElementById('imgPlaceholder');
-        const imagePreview = document.getElementById('imagePreview');
-        const descriptionInput = document.getElementById('descriptionInput');
-        const publishButton = document.getElementById('publishButton');
-        const loadingOverlay = document.getElementById('loadingOverlay');
-
-        
-        let selectedImg = null;
-
-        imgSelection.addEventListener('click', () => {
-            fileInput.click();
-        });
-
-        fileInput.addEventListener('change', (event) => {
-            const file = event.target.files[0];
-
-            if (file){
-                if (!file.type.startsWith('image/')){
-                    return;
-                }
-
-                // tamanho max da img
-                const maxSize = 10 * 1024 * 1024; // 10mb
-                if (file.size > maxSize) {
-                    return;
-                }
-
-                selectedImg = file;
-
-        
-                const reader = new FileReader();
-                reader.onload = (e) => {
-                    imagePreview.src = e.target.result;
-                    imagePreview.style.display = 'block';
-                    imgPlaceholder.style.display = 'none';
-                };
-                reader.readAsDataURL(file);
-
-                // Verificar se pode habilitar o botão
-                checkFormValidity();
-            }
-        });
-
-        descriptionInput.addEventListener('input', () => {
-            checkFormValidity();
-        });
-
-        function checkFormValidity() {
-            const hasImage = selectedImg !== null;
-            const hasDescription = descriptionInput.value.trim().length > 0;
-
-            if (hasImage && hasDescription) {
-                publishButton.disabled = false;
-            } else {
-                publishButton.disabled = true;
-            }
-        }
-
-        // Evento de clique no botão de publicar
-        publishButton.addEventListener('click', async () => {
-            if (!selectedImg || !descriptionInput.value.trim()){
-                return;
-            }
-            loadingOverlay.style.display = 'flex';
-
-            try {
-                const formData = new FormData();
-                formData.append('image', selectedImg);
-                formData.append('description', descriptionInput.value.trim());
-
-                // tem que colocar o endpoint aqui do nosso backend
-                const response = await fetch('', {
-                    method: 'POST',
-                    body: formData,
-                });
-
-                if (response.ok) {
-                    const data = await response.json();
-                    showSuccessMessage('Publicação criada com sucesso!');
-                    resetForm();
-                } else {
-                    const errorData = await response.json().catch(() => ({}));
-                    showErrorMessage('Erro ao publicar. Tente novamente.');
-                }
-            } catch (error) {
-                showErrorMessage('Erro ao conectar com o servidor. Verifique sua conexão.');
-            }
-        });
-
-        
-        function resetForm() {
-            selectedImg = null;
-            fileInput.value = '';
-            descriptionInput.value = '';
-            imagePreview.style.display = 'none';
-            imgPlaceholder.style.display = 'block';
-            imagePreview.src = '';
-            publishButton.disabled = true;
-        }
-
-        function showSuccessMessage(message) {
-            const messageDiv = createMessageDiv(message, 'success');
-            document.body.appendChild(messageDiv);
-
-            setTimeout(() => {
-                messageDiv.classList.add('fade-out');
-                setTimeout(() => {
-                    document.body.removeChild(messageDiv);
-                }, 300);
-            }, 3000);
-        }
-
-    
-        function showErrorMessage(message) {
-            const messageDiv = createMessageDiv(message, 'error');
-            document.body.appendChild(messageDiv);
-
-            setTimeout(() => {
-                messageDiv.classList.add('fade-out');
-                setTimeout(() => {
-                    document.body.removeChild(messageDiv);
-                }, 300);
-            }, 3000);
-        }
-
-        // Função para criar elemento de mensagem
-        function createMessageDiv(message, type) {
-            const div = document.createElement('div');
-            div.className = `message-toast ${type}`;
-            div.textContent = message;
-            div.style.position = 'fixed';
-            div.style.top = '20px';
-            div.style.left = '50%';
-            div.style.transform = 'translateX(-50%)';
-            div.style.padding = '15px 30px';
-            div.style.borderRadius = '10px';
-            div.style.color = '#ffffff';
-            div.style.fontFamily = 'Maitree, sans-serif';
-            div.style.fontSize = '14px';
-            div.style.fontWeight = 'bold';
-            div.style.zIndex = '2000';
-            div.style.boxShadow = '0 4px 12px rgba(0, 0, 0, 0.15)';
-
-            if (type === 'success') {
-                div.style.backgroundColor = '#4caf50';
-            } else {
-                div.style.backgroundColor = '#f44336';
-            }
-
-            return div;
-        }
-    </script>
+    <script src="../js/config.js"></script>
+    <script src="../js/toast.js"></script>
+    <script src="../js/nav-handler.js"></script>
+    <script src="../js/publish.js"></script>
 </body>
 
 </html>
