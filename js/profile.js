@@ -156,9 +156,10 @@ function loadUserPosts(posts) {
 
     // Add click event to open post details
     postItem.addEventListener("click", () => {
-      // Redirect to post detail or open modal
-      // For now, let's assume we want to open the modal if available, or just log
-      console.log("Clicked post:", post.id);
+      // Redirect to post detail page
+      if (post.id) {
+        window.location.href = `./post-detail.html?id=${post.id}`;
+      }
     });
 
     postsGrid.appendChild(postItem);
