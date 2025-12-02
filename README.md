@@ -299,6 +299,105 @@ Todos os endpoints exigem JWT.
 
 ---
 
+## 🛍️ Produtos (`/products`)
+
+Alguns endpoints são públicos (consulta) e outros exigem JWT (criação/edição/remoção).
+
+### POST `/products`
+
+- **Requer:** JWT (usuário autenticado).
+- **Content-Type**: `multipart/form-data`.
+- **Campos obrigatórios** (`CreateProductDTO`):
+  - `title` (string)
+  - `description` (string)
+  - `price` (decimal)
+  - `image` (arquivo) — opcional em alguns fluxos, mas aceito aqui.
+- **Resposta 201** (`ProductResponseDTO`): retorna o produto criado.
+
+Exemplo cURL:
+
+```bash
+curl -X POST http://localhost:8080/products \
+  -H "Authorization: Bearer ${TOKEN}" \
+  -F "title=Caneca personalizada" \
+  -F "description=Caneca de cerâmica 350ml" \
+  -F "price=39.90" \
+  -F "image=@/tmp/mug.jpg"
+```
+
+### GET `/products`
+
+- **Requer:** nenhum (público).
+- **Query params**: `page` (default 0), `size` (default 10).
+- **Resposta 200**: página de `ProductResponseDTO`.
+
+Exemplo:
+
+```bash
+curl http://localhost:8080/products?page=0&size=10
+```
+
+### GET `/products/{id}`
+
+- **Requer:** nenhum (público).
+- **Resposta 200** (`ProductResponseDTO`): detalhes do produto.
+
+Exemplo:
+
+```bash
+curl http://localhost:8080/products/<PRODUCT_ID>
+```
+
+### PUT `/products/{id}`
+
+- **Requer:** JWT (somente o dono do produto pode editar).
+- **Content-Type**: `multipart/form-data`.
+- **Campos aceitos** (`EditProductDTO`): `title`, `description`, `price`, `image` (todos opcionais).
+- **Resposta 200** (`ProductResponseDTO`): produto atualizado.
+
+Exemplo cURL (atualizar título e imagem):
+
+```bash
+curl -X PUT http://localhost:8080/products/<PRODUCT_ID> \
+  -H "Authorization: Bearer ${TOKEN}" \
+  -F "title=Novo título" \
+  -F "image=@/tmp/new.jpg"
+```
+
+### DELETE `/products/{id}`
+
+- **Requer:** JWT (somente o dono do produto pode remover).
+- **Resposta 204**: sem conteúdo.
+
+Exemplo:
+
+```bash
+curl -X DELETE http://localhost:8080/products/<PRODUCT_ID> \
+  -H "Authorization: Bearer ${TOKEN}"
+```
+
+Formato de `ProductResponseDTO` (exemplo):
+
+```json
+{
+  "id": "a1b2c3d4-...",
+  "profileId": "394a77ba-9e56-47e7-a3d4-715dba81eaf9",
+  "title": "Caneca personalizada",
+  "description": "Caneca de cerâmica 350ml",
+  "price": 39.90,
+  "imgLink": "/images/abcd-...jpg",
+  "createdAt": "2025-11-25T17:08:15.123Z"
+}
+```
+
+Observações:
+
+- Os DTOs envolvidos são `CreateProductDTO`, `EditProductDTO` e `ProductResponseDTO`.
+- `price` usa formato decimal (BigDecimal no backend).
+- Uploads de imagem seguem os mesmos tipos aceitos pela API (`image/jpeg`, `image/png`, `image/webp`, etc.).
+
+---
+
 ## 📰 Feed (`/feed`)
 
 ### GET `/feed`
