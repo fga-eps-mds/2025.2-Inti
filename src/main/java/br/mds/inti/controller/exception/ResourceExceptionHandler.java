@@ -51,7 +51,8 @@ public class ResourceExceptionHandler {
     }
 
     @ExceptionHandler(EventParticipantAlreadyExistsException.class)
-    public ResponseEntity<StandardError> eventParticipantAlreadyExists(EventParticipantAlreadyExistsException e, HttpServletRequest request) {
+    public ResponseEntity<StandardError> eventParticipantAlreadyExists(EventParticipantAlreadyExistsException e,
+            HttpServletRequest request) {
 
         String error = "profile is already registered";
         HttpStatus status = HttpStatus.CONFLICT;

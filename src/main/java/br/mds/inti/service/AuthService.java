@@ -6,7 +6,10 @@ import br.mds.inti.model.dto.auth.RegisterRequest;
 import br.mds.inti.model.entity.Profile;
 import br.mds.inti.model.enums.ProfileType;
 import br.mds.inti.repositories.ProfileRepository;
+import br.mds.inti.service.exceptions.ProfileAlreadyExistsException;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -25,27 +28,38 @@ public class AuthService {
     private PasswordEncoder passwordEncoder;
 
     public ProfileCreationResponse register(RegisterRequest request) {
-        Profile user = new Profile();
-        user.setEmail(request.email());
-        user.setName(request.name());
-        user.setUsername(request.username());
-        user.setPassword(passwordEncoder.encode(request.password()));
-        user.setType(request.type() != null ? request.type() : ProfileType.user);
-        user.setFollowersCount(0);
-        user.setFollowingCount(0);
-        user.setCreatedAt(Instant.now());
-        Profile savedUser = profileRepository.save(user);
 
-        String jwt = jwtService.generateToken(user);
+        try {
+            Profile user = new Profile();
+            user.setEmail(request.email());
+            user.setName(request.name());
+            user.setUsername(request.username());
+            user.setPassword(passwordEncoder.encode(request.password()));
+            user.setType(request.type() != null ? request.type() : ProfileType.user);
+            user.setFollowersCount(0);
+            user.setFollowingCount(0);
+            user.setCreatedAt(Instant.now());
+            Profile savedUser = profileRepository.save(user);
 
-        return new ProfileCreationResponse(
-                savedUser.getId(),
-                savedUser.getUsername(),
-                savedUser.getName(),
-                savedUser.getEmail(),
-                jwt,
-                savedUser.getType(),
-                savedUser.getCreatedAt());
+            String jwt = jwtService.generateToken(user);
+
+            return new ProfileCreationResponse(
+                    savedUser.getId(),
+                    savedUser.getUsername(),
+                    savedUser.getName(),
+                    savedUser.getEmail(),
+                    jwt,
+                    savedUser.getType(),
+                    savedUser.getCreatedAt());
+
+        } catch (DataIntegrityViolationException e) {
+
+            if (isUniqueConstraintViolation(e)) {
+                throw new ProfileAlreadyExistsException("Username already in use");
+            }
+
+            throw e;
+        }
     }
 
     public String login(LoginRequest request) {
@@ -57,6 +71,20 @@ public class AuthService {
         }
 
         return jwtService.generateToken(user);
+    }
+
+    private boolean isUniqueConstraintViolation(DataIntegrityViolationException e) {
+        Throwable cause = e.getCause();
+
+        while (cause != null) {
+            if (cause instanceof org.hibernate.exception.ConstraintViolationException cve) {
+
+                return cve.getConstraintName() != null &&
+                        cve.getConstraintName().equalsIgnoreCase("profiles_username_key");
+            }
+            cause = cause.getCause();
+        }
+        return false;
     }
 
 }

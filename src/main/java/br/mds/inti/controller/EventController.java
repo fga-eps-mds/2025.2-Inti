@@ -5,6 +5,7 @@ import br.mds.inti.model.dto.EventParticipantResponse;
 import br.mds.inti.model.dto.EventListResponse;
 import br.mds.inti.model.dto.EventRequestDTO;
 import br.mds.inti.model.dto.EventResponseDTO;
+import br.mds.inti.model.dto.MyEvent;
 import br.mds.inti.model.entity.Profile;
 import br.mds.inti.model.entity.pk.EventParticipantPK;
 import br.mds.inti.model.enums.ProfileType;
@@ -47,6 +48,15 @@ public class EventController {
     public ResponseEntity<EventDetailResponse> getEventById(@PathVariable UUID eventid) {
         EventDetailResponse eventDetails = eventService.getEventById(eventid);
         return ResponseEntity.ok(eventDetails);
+    }
+
+    @GetMapping("/my")
+    public ResponseEntity<List<MyEvent>> getMyEvents() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        Profile profile = (Profile) authentication.getPrincipal();
+
+        List<MyEvent> events = eventService.getMyEvents(profile);
+        return ResponseEntity.ok(events);
     }
 
     @PostMapping("/{eventid}/attendees")
