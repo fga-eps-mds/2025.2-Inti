@@ -3,6 +3,7 @@ package br.mds.inti.service;
 import java.io.IOException;
 import java.time.Instant;
 import java.util.Arrays;
+import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -69,6 +70,11 @@ public class ProfileService {
                 .orElseThrow(() -> new ProfileNotFoundException(username));
 
         return publicProfile;
+    }
+
+    public Profile getProfileById(UUID profileId) {
+        return profileRepository.findById(profileId)
+                .orElseThrow(() -> new ProfileNotFoundException(profileId.toString()));
     }
 
     public void incrementFollowingCount(Profile profile) {
