@@ -142,10 +142,10 @@ public class EventService {
 
         return events.stream()
                 .map(event -> new MyEvent(
+                        event.getId(),
                         event.getTitle(),
                         generateImageUrl(event.getBlobName()),
-                        event.getEventTime().atZone(ZoneId.of("America/Sao_Paulo")).toLocalDateTime(),
-                        event.getId()))
+                        event.getEventTime().atZone(ZoneId.of("America/Sao_Paulo")).toLocalDateTime()))
                 .toList();
     }
 }
