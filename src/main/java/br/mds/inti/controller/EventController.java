@@ -46,7 +46,13 @@ public class EventController {
 
     @GetMapping("/{eventid}")
     public ResponseEntity<EventDetailResponse> getEventById(@PathVariable UUID eventid) {
-        EventDetailResponse eventDetails = eventService.getEventById(eventid);
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        Profile profile = null;
+        if (authentication != null && authentication.getPrincipal() instanceof Profile authenticatedProfile) {
+            profile = authenticatedProfile;
+        }
+
+        EventDetailResponse eventDetails = eventService.getEventById(eventid, profile);
         return ResponseEntity.ok(eventDetails);
     }
 

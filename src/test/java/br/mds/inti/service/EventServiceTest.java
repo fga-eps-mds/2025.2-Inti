@@ -1,19 +1,24 @@
 package br.mds.inti.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import br.mds.inti.model.dto.EventDetailResponse;
 import br.mds.inti.model.dto.MyEvent;
 import br.mds.inti.model.entity.Event;
 import br.mds.inti.model.entity.Profile;
 import br.mds.inti.repositories.EventParticipantsRepository;
 import br.mds.inti.repositories.EventRepository;
+import java.math.BigDecimal;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -81,6 +86,51 @@ class EventServiceTest {
         verify(eventParticipantsRepository).findEventsByProfileId(profile.getId());
     }
 
+    @Test
+    void getEventById_whenRegistered_shouldSetFlagTrue() {
+        Profile profile = buildProfile();
+        UUID eventId = UUID.randomUUID();
+        Instant eventTime = Instant.parse("2025-09-01T10:15:30Z");
+        Event event = buildDetailedEvent(eventId, "detail.png", eventTime);
+
+        when(eventRepository.findById(eventId)).thenReturn(Optional.of(event));
+        when(eventParticipantsRepository.existsByEventIdAndProfileId(eventId, profile.getId())).thenReturn(true);
+
+        EventDetailResponse response = eventService.getEventById(eventId, profile);
+
+        assertThat(response.registered()).isTrue();
+        assertThat(response.imageUrl()).isEqualTo("/images/detail.png");
+        assertThat(response.id()).isEqualTo(eventId);
+    }
+
+    @Test
+    void getEventById_whenNotRegistered_shouldSetFlagFalse() {
+        Profile profile = buildProfile();
+        UUID eventId = UUID.randomUUID();
+        Event event = buildDetailedEvent(eventId, null, Instant.parse("2025-10-05T08:00:00Z"));
+
+        when(eventRepository.findById(eventId)).thenReturn(Optional.of(event));
+        when(eventParticipantsRepository.existsByEventIdAndProfileId(eventId, profile.getId())).thenReturn(false);
+
+        EventDetailResponse response = eventService.getEventById(eventId, profile);
+
+        assertThat(response.registered()).isFalse();
+        assertThat(response.imageUrl()).isNull();
+    }
+
+    @Test
+    void getEventById_whenProfileIsNull_shouldNotQueryParticipants() {
+        UUID eventId = UUID.randomUUID();
+        Event event = buildDetailedEvent(eventId, null, Instant.parse("2025-11-20T18:00:00Z"));
+
+        when(eventRepository.findById(eventId)).thenReturn(Optional.of(event));
+
+        EventDetailResponse response = eventService.getEventById(eventId, null);
+
+        assertThat(response.registered()).isFalse();
+        verify(eventParticipantsRepository, never()).existsByEventIdAndProfileId(any(), any());
+    }
+
     private Profile buildProfile() {
         Profile profile = new Profile();
         profile.setId(UUID.randomUUID());
@@ -93,6 +143,24 @@ class EventServiceTest {
         event.setTitle(title);
         event.setBlobName(blobName);
         event.setEventTime(eventTime);
+        return event;
+    }
+
+    private Event buildDetailedEvent(UUID id, String blobName, Instant eventTime) {
+        Event event = new Event();
+        event.setId(id);
+        event.setTitle("Detalhe");
+        event.setBlobName(blobName);
+        event.setEventTime(eventTime);
+        event.setDescription("Descricao");
+        event.setStreetAddress("Rua 1");
+        event.setAdministrativeRegion("Centro");
+        event.setCity("Brasilia");
+        event.setState("DF");
+        event.setReferencePoint("Praca");
+        event.setLatitude(BigDecimal.ONE);
+        event.setLongitude(BigDecimal.TEN);
+        event.setFinishedAt(eventTime.plusSeconds(3600));
         return event;
     }
 }
