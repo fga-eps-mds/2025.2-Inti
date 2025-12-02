@@ -8,8 +8,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
+import br.mds.inti.service.exceptions.EventParticipantAlreadyExistsException;
 import br.mds.inti.service.exceptions.ImageNotFoundException;
-import br.mds.inti.service.exceptions.ProfileAlreadyExistsException;
 import br.mds.inti.service.exceptions.ProfileNotFoundException;
 import jakarta.servlet.http.HttpServletRequest;
 
@@ -50,11 +50,11 @@ public class ResourceExceptionHandler {
         return ResponseEntity.status(status).body(err);
     }
 
-    @ExceptionHandler(ProfileAlreadyExistsException.class)
-    public ResponseEntity<StandardError> profileAlreadyExist(ProfileAlreadyExistsException e,
+    @ExceptionHandler(EventParticipantAlreadyExistsException.class)
+    public ResponseEntity<StandardError> eventParticipantAlreadyExists(EventParticipantAlreadyExistsException e,
             HttpServletRequest request) {
 
-        String error = "error trying to create new user";
+        String error = "profile is already registered";
         HttpStatus status = HttpStatus.CONFLICT;
         StandardError err = new StandardError(Instant.now(), status.value(), error, e.getMessage(),
                 request.getRequestURI());
