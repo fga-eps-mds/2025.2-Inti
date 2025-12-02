@@ -9,139 +9,138 @@
   <title>Document</title>
   <style>
     :root {
-    /* Cores principais */
-    --primary: #592e83;
-    --primary-light: #7a4fa3;
-    --primary-lighter: #f2ebfb;
-    --accent: #a38bba;
+      /* Cores principais */
+      --primary: #592e83;
+      --primary-light: #7a4fa3;
+      --primary-lighter: #f2ebfb;
+      --accent: #a38bba;
 
-    /* Tons neutros */
-    --gray-50: #fafafa;
-    --gray-100: #f5f5f5;
-    --gray-200: #e5e5e5;
-    --gray-300: #d4d4d4;
-    --gray-400: #a3a3a3;
-    --gray-500: #737373;
-    --gray-600: #525252;
-    --gray-900: #171717;
+      /* Tons neutros */
+      --gray-50: #fafafa;
+      --gray-100: #f5f5f5;
+      --gray-200: #e5e5e5;
+      --gray-300: #d4d4d4;
+      --gray-400: #a3a3a3;
+      --gray-500: #737373;
+      --gray-600: #525252;
+      --gray-900: #171717;
 
-    /* Espaçamentos */
-    --spacing-xs: 4px;
-    --spacing-sm: 8px;
-    --spacing-md: 16px;
-    --spacing-lg: 24px;
-    --spacing-xl: 32px;
+      /* Espaçamentos */
+      --spacing-xs: 4px;
+      --spacing-sm: 8px;
+      --spacing-md: 16px;
+      --spacing-lg: 24px;
+      --spacing-xl: 32px;
 
-    /* Bordas */
-    --radius-sm: 8px;
-    --radius-md: 12px;
-    --radius-lg: 16px;
-    --radius-full: 9999px;
+      /* Bordas */
+      --radius-sm: 8px;
+      --radius-md: 12px;
+      --radius-lg: 16px;
+      --radius-full: 9999px;
 
-    /* Sombras */
-    --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
-    --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
-    --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
-}
-
-
-.cabecalho {
-    display: flex;
-    flex-direction: row;
-    width: 100%;
-    justify-content: center;
-    align-items: center;
-    padding-top: 2vh;
-}
-
-.titulo {
-    width: auto;
-    justify-content: center;
-    color: #592e83;
-    font-family: "Libre Bodoni", serif;
-    font-weight: bold;
-    font-size: 36px;
-}
-
-header button {
-    position: absolute;
-    left: 7vw;
-    background: none;
-    outline: none;
-    border: none;
-}
-
-main {
-    padding: 0 20px;
-}
-
-.post-detail {
-    margin-top: 30px;
-}
-
-.info-user {
-    width: 100%;
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-}
-
-.info-user img {
-    width: 48px;
-    height: 48px;
-    border-radius: 100%;
-}
-
-.text-info {
-    display: flex;
-    flex-direction: column;
-    margin-left: 5px;
-    line-height: 1.3;
-}
+      /* Sombras */
+      --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+      --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+      --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+    }
 
 
-.post-img {
-    width: 100%;
-    height: 300px;
-    border-radius: 16px;
-    object-fit: cover;
-    object-position: center;
-    margin-top: 5px;
-}
+    .cabecalho {
+      display: flex;
+      flex-direction: row;
+      width: 100%;
+      justify-content: center;
+      align-items: center;
+      padding-top: 2vh;
+    }
 
-.info-post {
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    justify-content: space-between;
-}
+    .titulo {
+      width: auto;
+      justify-content: center;
+      color: #592e83;
+      font-family: "Libre Bodoni", serif;
+      font-weight: bold;
+      font-size: 36px;
+    }
 
-.description{
-    max-width: 270px;
-    font-size: 16px;
-    font-family: "Maitree", serif;
-    font-weight: normal;
-    color: #171717;
-}
+    header button {
+      position: absolute;
+      left: 7vw;
+      background: none;
+      outline: none;
+      border: none;
+    }
 
-.like button {
-    border: none;
-    outline: none;
-    background: none;
-    width: 25px;
-    height: 25px;
-}
+    main {
+      padding: 0 20px;
+    }
 
-.like img {
-    width: 100%;
-    height: 100%;
-}
+    .post-detail {
+      margin-top: 30px;
+    }
 
-.like p{
-    font-size: 20px;
-    padding-top: 0px;
-}
+    .info-user {
+      width: 100%;
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+    }
 
+    .info-user img {
+      width: 48px;
+      height: 48px;
+      border-radius: 100%;
+    }
+
+    .text-info {
+      display: flex;
+      flex-direction: column;
+      margin-left: 5px;
+      line-height: 1.3;
+    }
+
+
+    .post-img {
+      width: 100%;
+      height: 300px;
+      border-radius: 16px;
+      object-fit: cover;
+      object-position: center;
+      margin-top: 5px;
+    }
+
+    .info-post {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .description {
+      max-width: 270px;
+      font-size: 16px;
+      font-family: "Maitree", serif;
+      font-weight: normal;
+      color: #171717;
+    }
+
+    .like button {
+      border: none;
+      outline: none;
+      background: none;
+      width: 25px;
+      height: 25px;
+    }
+
+    .like img {
+      width: 100%;
+      height: 100%;
+    }
+
+    .like p {
+      font-size: 20px;
+      padding-top: 0px;
+    }
   </style>
 </head>
 

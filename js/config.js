@@ -217,6 +217,10 @@ class ApiService {
     return this.request("/event/my");
   }
 
+  async getMyProducts(page = 0, size = 10) {
+    return this.request(`/products?page=${page}&size=${size}`);
+  }
+
   async getEventDetail(eventId) {
     return this.request(`/event/${eventId}`);
   }

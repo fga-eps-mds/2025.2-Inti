@@ -120,13 +120,14 @@ function renderPost(post) {
   const likeCount = document.querySelector(".like-count");
   const likeBtn = document.querySelector(".like button img");
 
-  // Usar imagem padrão se não houver profilePictureUrl
-  if (post.author && post.author.profilePictureUrl) {
-    const backendUrl = "https://20252-inti-production.up.railway.app";
-    const fullProfileImageUrl = post.author.profilePictureUrl.startsWith("http")
-      ? post.author.profilePictureUrl
-      : backendUrl + post.author.profilePictureUrl;
-    setBackgroundImageWithBearer(authorImg, fullProfileImageUrl, apiService.token);
+    // Usar imagem padrão se não houver profilePictureUrl
+    if (post.author && post.author.profilePictureUrl) {
+      const fullProfileImageUrl = buildMediaUrl(post.author.profilePictureUrl);
+      if (fullProfileImageUrl) {
+        setBackgroundImageWithBearer(authorImg, fullProfileImageUrl, apiService.token);
+      } else {
+        authorImg.src = "../assets/profilePic.svg";
+      }
   } else {
     authorImg.src = "../assets/profilePic.svg"; // Imagem padrão
     authorImg.style.display = "block";
@@ -138,13 +139,14 @@ function renderPost(post) {
     authorUsername.textContent = `@${(post.author && post.author.username) || "usuario"}`;
 
   // Atualizar conteudo do Post
-  if (post.imageUrl) {
-    const backendUrl = "https://20252-inti-production.up.railway.app";
-    const fullImageUrl = post.imageUrl.startsWith("http")
-      ? post.imageUrl
-      : backendUrl + post.imageUrl;
-    postImage.src = fullImageUrl;
-    postImage.style.display = "block";
+    if (post.imageUrl) {
+      const fullImageUrl = buildMediaUrl(post.imageUrl);
+      if (fullImageUrl) {
+        postImage.src = fullImageUrl;
+        postImage.style.display = "block";
+      } else {
+        postImage.style.display = "none";
+      }
   } else {
     postImage.style.display = "none";
   }
@@ -155,7 +157,7 @@ function renderPost(post) {
   // Update like button state
   if (post.liked) {
     document.querySelector(".like button").classList.add("liked");
-    if (likeBtn) likeBtn.src = "../assets/img_Like1_filled.svg";
+    if (likeBtn) likeBtn.src = "../assets/img_Like1.svg";
   } else {
     document.querySelector(".like button").classList.remove("liked");
     if (likeBtn) likeBtn.src = "../assets/img_Like1.svg";
@@ -187,6 +189,25 @@ async function setBackgroundImageWithBearer(element, imageUrl, token) {
   }
 }
 
+function buildMediaUrl(path) {
+  if (!path || typeof path !== "string") {
+    return "";
+  }
+
+  const trimmedPath = path.trim();
+  if (!trimmedPath) {
+    return "";
+  }
+
+  if (trimmedPath.startsWith("http")) {
+    return trimmedPath;
+  }
+
+  const baseUrl = apiService?.baseURL || "https://20252-inti-production.up.railway.app";
+  const normalizedPath = trimmedPath.startsWith("/") ? trimmedPath : `/${trimmedPath}`;
+  return `${baseUrl}${normalizedPath}`;
+}
+
 async function handleLikeClick(event) {
   event.preventDefault();
   event.stopPropagation();
@@ -205,7 +226,7 @@ async function handleLikeClick(event) {
     } else {
       await apiService.likePost(postId);
       likeBtn.classList.add("liked");
-      likeBtn.querySelector("img").src = "../assets/img_Like1_filled.svg";
+      likeBtn.querySelector("img").src = "../assets/img_Like1.svg";
     }
 
     // Recarregar contagem de likes
