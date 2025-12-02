@@ -6,7 +6,7 @@ import br.mds.inti.model.dto.UserSummaryResponse;
 import br.mds.inti.model.entity.Post;
 import br.mds.inti.model.entity.Profile;
 import br.mds.inti.repositories.PostRepository;
-import jakarta.transaction.Transactional;
+import org.springframework.transaction.annotation.Transactional;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -67,6 +67,7 @@ public class PostService {
         postRepository.softDeletePost(postId);
     }
 
+    
     public Page<PostResponse> getPostByIdProfile(UUID profileId, Pageable peageble) {
 
         Page<Post> postByprofile = postRepository.findAllByProfileIdAndNotDeleted(profileId, peageble);
@@ -86,6 +87,7 @@ public class PostService {
         return "/images/" + blobName;
     }
 
+    @Transactional(readOnly = true)
     public PostDetailResponse getPostById(UUID postId) {
         Post post = postRepository.findById(postId)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Post not found"));
