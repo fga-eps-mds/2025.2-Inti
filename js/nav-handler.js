@@ -46,7 +46,7 @@ document.addEventListener("DOMContentLoaded", function () {
     const calendarBtn = document.querySelector(".navbar .nav-btn:nth-child(4)");
     if (calendarBtn) {
       calendarBtn.addEventListener("click", function () {
-        const route = getAdjustedRoute("pages/eventos.html");
+        const route = getAdjustedRoute("pages/my-events.html");
         window.location.href = route;
       });
     }
@@ -94,7 +94,7 @@ document.addEventListener("DOMContentLoaded", function () {
     const calendarImg = document.querySelector(".nav-calendar");
     if (calendarImg) {
       calendarImg.addEventListener("click", function () {
-        const route = getAdjustedRoute("pages/eventos.html");
+        const route = getAdjustedRoute("pages/my-events.html");
         window.location.href = route;
       });
     }
