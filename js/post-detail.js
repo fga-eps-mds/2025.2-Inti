@@ -152,7 +152,7 @@ function renderPost(post) {
   }
 
   if (postDesc) postDesc.textContent = post.description || "";
-  if (likeCount) likeCount.textContent = `${post.likesCount || 0} curtidas`;
+  if (likeCount) likeCount.textContent = `${post.likesCount || 0} `;
 
   // Update like button state
   if (post.liked) {
