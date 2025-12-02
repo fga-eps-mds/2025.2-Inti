@@ -71,11 +71,14 @@ public class EventService {
         return new EventResponseDTO(event.getId(), EVENTO_CRIADO);
     }
 
-    public EventDetailResponse getEventById(UUID eventId) {
+    public EventDetailResponse getEventById(UUID eventId, Profile profile) {
         Event event = eventRepository.findById(eventId)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, EVENTO_NAO_ENCONTRADO));
 
-        return convertToDetailResponse(event);
+        boolean registered = profile != null && eventParticipantsRepository
+                .existsByEventIdAndProfileId(event.getId(), profile.getId());
+
+        return convertToDetailResponse(event, registered);
     }
 
     public String generateImageUrl(String blobName) {
@@ -85,18 +88,19 @@ public class EventService {
         return "/images/" + blobName;
     }
 
-    private EventDetailResponse convertToDetailResponse(Event event) {
+    private EventDetailResponse convertToDetailResponse(Event event, boolean registered) {
         return new EventDetailResponse(
                 event.getId(),
                 event.getTitle(),
-                "/images/" + event.getBlobName(),
+                generateImageUrl(event.getBlobName()),
                 event.getEventTime(),
                 event.getDescription(),
                 new LocalAddress(event.getStreetAddress(), event.getAdministrativeRegion(), event.getCity(),
                         event.getState(), event.getReferencePoint()),
                 event.getLatitude(),
                 event.getLongitude(),
-                event.getFinishedAt());
+                event.getFinishedAt(),
+                registered);
     }
 
     public EventParticipantResponse eventInscription(UUID eventid, Profile profile) {
