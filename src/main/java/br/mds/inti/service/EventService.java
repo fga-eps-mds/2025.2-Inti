@@ -6,6 +6,7 @@ import br.mds.inti.model.dto.EventListResponse;
 import br.mds.inti.model.dto.EventRequestDTO;
 import br.mds.inti.model.dto.EventResponseDTO;
 import br.mds.inti.model.dto.LocalAddress;
+import br.mds.inti.model.dto.MyEvent;
 import br.mds.inti.model.entity.Event;
 import br.mds.inti.model.entity.EventParticipant;
 import br.mds.inti.model.entity.Profile;
@@ -22,9 +23,9 @@ import org.springframework.web.server.ResponseStatusException;
 
 import java.io.IOException;
 import java.time.Instant;
-import java.util.UUID;
 import java.time.ZoneId;
 import java.util.List;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Service
@@ -134,5 +135,17 @@ public class EventService {
                         event.getEventTime().atZone(ZoneId.of("America/Sao_Paulo")).toLocalDateTime(), event.getId()))
                 .collect(Collectors.toList());
         return response;
+    }
+
+    public List<MyEvent> getMyEvents(Profile profile) {
+        List<Event> events = eventParticipantsRepository.findEventsByProfileId(profile.getId());
+
+        return events.stream()
+                .map(event -> new MyEvent(
+                        event.getTitle(),
+                        generateImageUrl(event.getBlobName()),
+                        event.getEventTime().atZone(ZoneId.of("America/Sao_Paulo")).toLocalDateTime(),
+                        event.getId()))
+                .toList();
     }
 }
