@@ -18,36 +18,60 @@ function checkAuth() {
 // Global variable to store profile data
 let currentProfileData = null;
 
+const POSTS_PAGE_SIZE = 12;
+const MAX_POST_PAGES = 12; // safety guard to avoid infinite loops
+
 // Load profile data
 async function loadProfile() {
   if (!checkAuth()) return;
 
   try {
-    // Get profile data from API
-    // Note: The API endpoint is /profile/me
-    const profileData = await apiService.getMyProfile();
-    currentProfileData = profileData;
+    const initialProfile = await apiService.getMyProfile(0, POSTS_PAGE_SIZE);
+    currentProfileData = initialProfile;
+    updateProfileUI(initialProfile);
 
-    // Update UI with profile data
-    updateProfileUI(profileData);
-
-    // Load posts
-    loadUserPosts(profileData.posts || []);
+    const posts = await fetchAllProfilePosts(initialProfile.posts || []);
+    loadUserPosts(posts);
   } catch (error) {
-    console.error("Error loading profile:", error);
-    if (
-      error.message &&
-      (error.message.includes("401") || error.message.includes("403"))
-    ) {
-      localStorage.removeItem("isAuthenticated");
-      localStorage.removeItem("authToken");
-      localStorage.removeItem("userData");
-      window.location.href = "../index.html";
-    } else {
-      if (typeof toast !== "undefined") {
-        toast.error("Erro ao carregar perfil.");
+    handleProfileError(error);
+  }
+}
+
+async function fetchAllProfilePosts(initialPosts = []) {
+  const aggregated = [...initialPosts];
+  let page = 1;
+
+  while (page < MAX_POST_PAGES) {
+    try {
+      const response = await apiService.getMyProfile(page, POSTS_PAGE_SIZE);
+      const batch = response?.posts || [];
+
+      if (!batch.length) break;
+
+      aggregated.push(...batch);
+
+      if (batch.length < POSTS_PAGE_SIZE) {
+        break;
       }
+      page += 1;
+    } catch (error) {
+      console.warn("Erro ao buscar página de posts:", error);
+      break;
     }
+  }
+
+  return aggregated;
+}
+
+function handleProfileError(error) {
+  console.error("Error loading profile:", error);
+  if (error?.message && (error.message.includes("401") || error.message.includes("403"))) {
+    localStorage.removeItem("isAuthenticated");
+    localStorage.removeItem("authToken");
+    localStorage.removeItem("userData");
+    window.location.href = "../index.html";
+  } else if (typeof toast !== "undefined") {
+    toast.error("Erro ao carregar perfil.");
   }
 }
 
