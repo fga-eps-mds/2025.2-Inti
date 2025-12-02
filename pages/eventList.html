@@ -1,276 +1,197 @@
 <!doctype html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="stylesheet" href="../css/style.css" />
 
-    <style>
-      :root {
-        /* Cores principais */
-        --primary: #592e83;
-        --primary-light: #7a4fa3;
-        --primary-lighter: #f2ebfb;
-        --accent: #a38bba;
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" href="../css/style.css" />
 
-        /* Tons neutros */
-        --gray-50: #fafafa;
-        --gray-100: #f5f5f5;
-        --gray-200: #e5e5e5;
-        --gray-300: #d4d4d4;
-        --gray-400: #a3a3a3;
-        --gray-500: #737373;
-        --gray-600: #525252;
-        --gray-900: #171717;
+  <style>
+    :root {
+      /* Cores principais */
+      --primary: #592e83;
+      --primary-light: #7a4fa3;
+      --primary-lighter: #f2ebfb;
+      --accent: #a38bba;
 
-        /* Espaçamentos */
-        --spacing-xs: 4px;
-        --spacing-sm: 8px;
-        --spacing-md: 16px;
-        --spacing-lg: 24px;
-        --spacing-xl: 32px;
+      /* Tons neutros */
+      --gray-50: #fafafa;
+      --gray-100: #f5f5f5;
+      --gray-200: #e5e5e5;
+      --gray-300: #d4d4d4;
+      --gray-400: #a3a3a3;
+      --gray-500: #737373;
+      --gray-600: #525252;
+      --gray-900: #171717;
 
-        /* Bordas */
-        --radius-sm: 8px;
-        --radius-md: 12px;
-        --radius-lg: 16px;
-        --radius-full: 9999px;
+      /* Espaçamentos */
+      --spacing-xs: 4px;
+      --spacing-sm: 8px;
+      --spacing-md: 16px;
+      --spacing-lg: 24px;
+      --spacing-xl: 32px;
 
-        /* Sombras */
-        --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
-        --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
-        --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
-      }
+      /* Bordas */
+      --radius-sm: 8px;
+      --radius-md: 12px;
+      --radius-lg: 16px;
+      --radius-full: 9999px;
 
-      .cabecalho {
-        display: flex;
-        flex-direction: row;
-        width: 100%;
-        justify-content: center;
-        align-items: center;
-        padding-top: 2vh;
-      }
+      /* Sombras */
+      --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+      --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+      --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+    }
 
-      .titulo {
-        width: auto;
-        justify-content: center;
-        color: #592e83;
-        font-family: "Libre Bodoni", serif;
-        font-weight: bold;
-        font-size: 36px;
-      }
+    .cabecalho {
+      display: flex;
+      flex-direction: row;
+      width: 100%;
+      justify-content: center;
+      align-items: center;
+      padding-top: 2vh;
+    }
 
-      header button {
-        position: absolute;
-        left: 7vw;
-        background: none;
-        outline: none;
-        border: none;
-      }
+    .titulo {
+      width: auto;
+      justify-content: center;
+      color: #592e83;
+      font-family: "Libre Bodoni", serif;
+      font-weight: bold;
+      font-size: 36px;
+    }
 
-      .event-list {
-        display: flex;
-        align-items: center;
-        margin-top: 3vh;
-        flex-direction: column;
-        gap: 5vh;
-        padding-bottom: 12vh;
-      }
+    header button {
+      position: absolute;
+      left: 7vw;
+      background: none;
+      outline: none;
+      border: none;
+    }
 
-      .event {
-        width: 85vw;
-        border-radius: 18px;
-        overflow: hidden;
-        background: #fff;
-        box-shadow: 0 4px 14px rgba(0, 0, 0, 0.15);
-      }
+    .event-list {
+      display: flex;
+      align-items: center;
+      margin-top: 3vh;
+      flex-direction: column;
+      gap: 5vh;
+      padding-bottom: 12vh;
+    }
 
-      .event-text {
-        height: 100%;
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        padding: 1vh 5vw 0.8vh;
-        background: rgba(255, 255, 255, 0.95);
-        backdrop-filter: blur(6px);
-        border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+    .event {
+      width: 85vw;
+      border-radius: 18px;
+      overflow: hidden;
+      background: #fff;
+      box-shadow: 0 4px 14px rgba(0, 0, 0, 0.15);
+    }
 
-        color: var(--primary);
-        font-family: "Maitree", serif;
-        font-weight: normal;
-        font-size: 10px;
-      }
+    .event-text {
+      height: 100%;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1vh 5vw 0.8vh;
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(6px);
+      border-bottom: 1px solid rgba(0, 0, 0, 0.08);
 
-      .event img {
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-        object-position: center;
-        display: block;
-      }
-    </style>
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Maitree:wght@200;300;400;500;600;700&family=Quicksand:wght@300..700&display=swap"
-      rel="stylesheet"
-    />
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Libre+Bodoni:ital,wght@0,400..700;1,400..700&family=Maitree:wght@200;300;400;500;600;700&family=Quicksand:wght@300..700&display=swap"
-      rel="stylesheet"
-    />
-    <title>Document</title>
-  </head>
+      color: var(--primary);
+      font-family: "Maitree", serif;
+      font-weight: normal;
+      font-size: 10px;
+    }
 
-  <body>
-    <div class="container">
-      <header class="cabecalho">
-        <button onclick="window.location.href='../pages/home.html'">
-          <img src="../assets/Seta Select.svg" alt="voltar" />
-        </button>
-        <h1 class="titulo">Eventos</h1>
-      </header>
-      <main>
-        <div class="event-list">
-          <div class="event">
-            <div class="event-text">
-              <h2>Balaco Baco</h2>
-              <h2>22/10</h2>
-            </div>
-            <img src="../assets/8cb22d8ead9b13c226cbff599b35331c.jpg" alt="" />
+    .event img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: center;
+      display: block;
+    }
+  </style>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Maitree:wght@200;300;400;500;600;700&family=Quicksand:wght@300..700&display=swap"
+    rel="stylesheet" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Libre+Bodoni:ital,wght@0,400..700;1,400..700&family=Maitree:wght@200;300;400;500;600;700&family=Quicksand:wght@300..700&display=swap"
+    rel="stylesheet" />
+  <title>Document</title>
+</head>
+
+<body>
+  <div class="container">
+    <header class="cabecalho">
+      <button onclick="window.location.href='../pages/home.html'">
+        <img src="../assets/Seta Select.svg" alt="voltar" />
+      </button>
+      <h1 class="titulo">Eventos</h1>
+    </header>
+    <main>
+      <div class="event-list">
+        <div class="event">
+          <div class="event-text">
+            <h2>Balaco Baco</h2>
+            <h2>22/10</h2>
           </div>
+          <img src="../assets/8cb22d8ead9b13c226cbff599b35331c.jpg" alt="" />
         </div>
+      </div>
 
-        <nav class="navbar">
-          <button class="nav-btn active" aria-label="Home">
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
-              <path
-                d="M3 9L12 2L21 9V20C21 20.5304 20.7893 21.0391 20.4142 21.4142C20.0391 21.7893 19.5304 22 19 22H5C4.46957 22 3.96086 21.7893 3.58579 21.4142C3.21071 21.0391 3 20.5304 3 20V9Z"
-                stroke="currentColor"
-                stroke-width="2"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-              />
-              <path
-                d="M9 22V12H15V22"
-                stroke="currentColor"
-                stroke-width="2"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-              />
-            </svg>
-          </button>
-          <button class="nav-btn" aria-label="Explorar">
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
-              <circle
-                cx="11"
-                cy="11"
-                r="8"
-                stroke="currentColor"
-                stroke-width="2"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-              />
-              <path
-                d="M21 21L16.65 16.65"
-                stroke="currentColor"
-                stroke-width="2"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-              />
-            </svg>
-          </button>
-          <button class="nav-btn nav-btn-add" aria-label="Adicionar">
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
-              <line
-                x1="12"
-                y1="5"
-                x2="12"
-                y2="19"
-                stroke="currentColor"
-                stroke-width="2"
-                stroke-linecap="round"
-              />
-              <line
-                x1="5"
-                y1="12"
-                x2="19"
-                y2="12"
-                stroke="currentColor"
-                stroke-width="2"
-                stroke-linecap="round"
-              />
-            </svg>
-          </button>
-          <button class="nav-btn" aria-label="Calendário">
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
-              <rect
-                x="3"
-                y="4"
-                width="18"
-                height="18"
-                rx="2"
-                stroke="currentColor"
-                stroke-width="2"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-              />
-              <line
-                x1="16"
-                y1="2"
-                x2="16"
-                y2="6"
-                stroke="currentColor"
-                stroke-width="2"
-                stroke-linecap="round"
-              />
-              <line
-                x1="8"
-                y1="2"
-                x2="8"
-                y2="6"
-                stroke="currentColor"
-                stroke-width="2"
-                stroke-linecap="round"
-              />
-              <line
-                x1="3"
-                y1="10"
-                x2="21"
-                y2="10"
-                stroke="currentColor"
-                stroke-width="2"
-                stroke-linecap="round"
-              />
-            </svg>
-          </button>
-          <button class="nav-btn" aria-label="Perfil">
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
-              <path
-                d="M20 21V19C20 17.9391 19.5786 16.9217 18.8284 16.1716C18.0783 15.4214 17.0609 15 16 15H8C6.93913 15 5.92172 15.4214 5.17157 16.1716C4.42143 16.9217 4 17.9391 4 19V21"
-                stroke="currentColor"
-                stroke-width="2"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-              />
-              <circle
-                cx="12"
-                cy="7"
-                r="4"
-                stroke="currentColor"
-                stroke-width="2"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-              />
-            </svg>
-          </button>
-        </nav>
-      </main>
-    </div>
-    <script src="../js/router.js"></script>
-    <script src="../js/nav-handler.js"></script>
-    <script src="../js/event-list.js"></script>
-  </body>
+      <nav class="navbar">
+        <button class="nav-btn active" aria-label="Home">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+            <path
+              d="M3 9L12 2L21 9V20C21 20.5304 20.7893 21.0391 20.4142 21.4142C20.0391 21.7893 19.5304 22 19 22H5C4.46957 22 3.96086 21.7893 3.58579 21.4142C3.21071 21.0391 3 20.5304 3 20V9Z"
+              stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+            <path d="M9 22V12H15V22" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+              stroke-linejoin="round" />
+          </svg>
+        </button>
+        <button class="nav-btn" aria-label="Explorar">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+            <circle cx="11" cy="11" r="8" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+              stroke-linejoin="round" />
+            <path d="M21 21L16.65 16.65" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+              stroke-linejoin="round" />
+          </svg>
+        </button>
+        <button class="nav-btn nav-btn-add" aria-label="Adicionar">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+            <line x1="12" y1="5" x2="12" y2="19" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+            <line x1="5" y1="12" x2="19" y2="12" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+          </svg>
+        </button>
+        <button class="nav-btn" aria-label="Calendário">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+            <rect x="3" y="4" width="18" height="18" rx="2" stroke="currentColor" stroke-width="2"
+              stroke-linecap="round" stroke-linejoin="round" />
+            <line x1="16" y1="2" x2="16" y2="6" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+            <line x1="8" y1="2" x2="8" y2="6" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+            <line x1="3" y1="10" x2="21" y2="10" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+          </svg>
+        </button>
+        <button class="nav-btn" aria-label="Perfil">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+            <path
+              d="M20 21V19C20 17.9391 19.5786 16.9217 18.8284 16.1716C18.0783 15.4214 17.0609 15 16 15H8C6.93913 15 5.92172 15.4214 5.17157 16.1716C4.42143 16.9217 4 17.9391 4 19V21"
+              stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+            <circle cx="12" cy="7" r="4" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+              stroke-linejoin="round" />
+          </svg>
+        </button>
+      </nav>
+    </main>
+  </div>
+  <script src="../js/config.js"></script>
+  <script src="../js/router.js"></script>
+  <script src="../js/nav-handler.js"></script>
+  <script src="../js/event-navigation.js"></script>
+  <script src="../js/event-list.js"></script>
+</body>
+
 </html>

@@ -211,8 +211,24 @@ class ApiService {
     return this.request("/event/lists");
   }
 
+  async getMyEvents() {
+    return this.request("/event/my");
+  }
+
   async getEventDetail(eventId) {
     return this.request(`/event/${eventId}`);
+  }
+
+  async attendEvent(eventId) {
+    return this.request(`/event/${eventId}/attendees`, {
+      method: "POST",
+    });
+  }
+
+  async cancelEventAttendance(eventId) {
+    return this.request(`/event/${eventId}/attendees`, {
+      method: "DELETE",
+    });
   }
 }
 
