@@ -59,30 +59,32 @@ class ApiService {
         throw new Error(errorData.message || `HTTP Error: ${response.status}`);
       }
 
-      // Handle 204 No Content
-      if (response.status === 204) {
-        return null;
-      }
+      const clonedResponse = response.clone();
+      const rawText = await clonedResponse.text().catch(() => "");
 
-      // Handle 200 responses with no body (specifically for like endpoints)
-      if (response.status === 200 && /\/post\/[^\/]+\/like$/.test(endpoint)) {
-        const contentType = response.headers.get("content-type");
-        if (!contentType || !contentType.includes("application/json")) {
-          const clonedResponse = response.clone();
-          const text = await clonedResponse.text().catch(() => "");
-          if (!text || text.trim() === "") {
-            return null;
-          }
-        }
+      // Handle 204 No Content or any empty body
+      if (response.status === 204 || !rawText || rawText.trim() === "") {
+        return null;
       }
 
       // Handle text responses (e.g., for login endpoint returning JWT token)
       if (isTextResponse) {
-        return await response.text();
+        return rawText;
       }
 
-      // Default: parse as JSON
-      return await response.json();
+      const contentType = response.headers.get("content-type");
+
+      // Default: parse as JSON when possible, fallback to raw text
+      if (contentType && contentType.includes("application/json")) {
+        try {
+          return JSON.parse(rawText);
+        } catch (parseError) {
+          console.warn("Failed to parse JSON response:", parseError);
+          return null;
+        }
+      }
+
+      return rawText;
     } catch (error) {
       console.error(`API Error (${endpoint}):`, error);
       throw error;
@@ -213,6 +215,10 @@ class ApiService {
 
   async getMyEvents() {
     return this.request("/event/my");
+  }
+
+  async getMyProducts(page = 0, size = 10) {
+    return this.request(`/products?page=${page}&size=${size}`);
   }
 
   async getEventDetail(eventId) {

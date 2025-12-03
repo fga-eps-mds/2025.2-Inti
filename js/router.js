@@ -10,7 +10,7 @@ function navigateTo(page) {
     dashboard: "pages/dashboard.html",
     create: "pages/create.html",
     "create-event": "pages/create-event.html",
-    events: "pages/eventos.html",
+    events: "pages/my-events.html",
   };
 
   if (routes[page]) {

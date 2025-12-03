@@ -20,6 +20,16 @@ let currentProfileData = null;
 
 const POSTS_PAGE_SIZE = 12;
 const MAX_POST_PAGES = 12; // safety guard to avoid infinite loops
+const PRODUCTS_PAGE_SIZE = 6;
+
+const productsState = {
+  container: null,
+  page: 0,
+  loading: false,
+  finished: false,
+  initialized: false,
+  active: false,
+};
 
 // Load profile data
 async function loadProfile() {
@@ -156,9 +166,10 @@ function loadUserPosts(posts) {
 
     // Add click event to open post details
     postItem.addEventListener("click", () => {
-      // Redirect to post detail or open modal
-      // For now, let's assume we want to open the modal if available, or just log
-      console.log("Clicked post:", post.id);
+      // Redirect to post detail page
+      if (post.id) {
+        window.location.href = `./post-detail.html?id=${post.id}`;
+      }
     });
 
     postsGrid.appendChild(postItem);
@@ -217,10 +228,11 @@ document.addEventListener("DOMContentLoaded", () => {
   if (!productsGrid && postsGrid) {
     productsGrid = document.createElement("div");
     productsGrid.className = "user-products-grid";
-    productsGrid.style.display = "none";
-    productsGrid.innerHTML =
-      '<p style="text-align: center; padding: 20px;">Nenhum produto/serviço cadastrado.</p>';
     postsGrid.parentNode.insertBefore(productsGrid, postsGrid.nextSibling);
+  }
+
+  if (productsGrid) {
+    initializeProductsGrid(productsGrid);
   }
 
   if (publicacoesTab && produtosTab) {
@@ -228,17 +240,315 @@ document.addEventListener("DOMContentLoaded", () => {
       publicacoesTab.classList.add("active");
       produtosTab.classList.remove("active");
       if (postsGrid) postsGrid.style.display = "grid";
-      if (productsGrid) productsGrid.style.display = "none";
+      hideProductsGrid();
     });
 
     produtosTab.addEventListener("click", () => {
       produtosTab.classList.add("active");
       publicacoesTab.classList.remove("active");
       if (postsGrid) postsGrid.style.display = "none";
-      if (productsGrid) productsGrid.style.display = "block"; // Or grid
+      activateProductsTab();
     });
   }
+
+  window.addEventListener("scroll", handleProductsScroll);
 });
+
+function initializeProductsGrid(grid) {
+  productsState.container = grid;
+  grid.style.display = "none";
+  grid.style.gridTemplateColumns = "repeat(2, minmax(0, 1fr))";
+  grid.style.gap = "10px";
+  grid.style.marginTop = "16px";
+}
+
+function activateProductsTab() {
+  productsState.active = true;
+  if (!productsState.container) return;
+  productsState.container.style.display = "grid";
+
+  const hasRenderedProducts = Boolean(
+    productsState.container.querySelector(".user-product-card")
+  );
+
+  if (
+    !productsState.initialized ||
+    (!hasRenderedProducts && !productsState.loading)
+  ) {
+    productsState.initialized = true;
+    productsState.page = 0;
+    productsState.finished = false;
+    productsState.container.innerHTML = "";
+    loadNextProductsPage();
+  }
+}
+
+function hideProductsGrid() {
+  productsState.active = false;
+  if (productsState.container) {
+    productsState.container.style.display = "none";
+  }
+}
+
+async function loadNextProductsPage() {
+  if (productsState.loading || productsState.finished) return;
+  if (!productsState.container) return;
+
+  productsState.loading = true;
+  setProductsLoadingIndicator(true);
+
+  try {
+    const response = await apiService.getMyProducts(
+      productsState.page,
+      PRODUCTS_PAGE_SIZE
+    );
+
+    const products = extractProductsFromResponse(response);
+
+    if (productsState.page === 0 && products.length === 0) {
+      showProductsEmptyState("Nenhum produto cadastrado.");
+      productsState.finished = true;
+      return;
+    }
+
+    if (products.length > 0) {
+      appendProducts(products);
+      productsState.page += 1;
+
+      if (products.length < PRODUCTS_PAGE_SIZE) {
+        productsState.finished = true;
+      }
+    } else {
+      productsState.finished = true;
+    }
+  } catch (error) {
+    console.error("Erro ao carregar produtos:", error);
+    if (typeof toast !== "undefined") {
+      toast.error("Erro ao carregar produtos.");
+    }
+    if (productsState.page === 0) {
+      showProductsEmptyState("Erro ao carregar produtos.");
+    }
+  } finally {
+    productsState.loading = false;
+    setProductsLoadingIndicator(false);
+  }
+}
+
+function appendProducts(products = []) {
+  if (!productsState.container) return;
+
+  removeProductsEmptyState();
+
+  products.forEach((product) => {
+    const card = createProductCard(product);
+    productsState.container.appendChild(card);
+  });
+}
+
+function createProductCard(product = {}) {
+  const card = document.createElement("div");
+  card.className = "user-product-card";
+  card.style.background = "#f2ebfb";
+  card.style.borderRadius = "12px";
+  card.style.padding = "10px";
+  card.style.display = "flex";
+  card.style.flexDirection = "column";
+  card.style.gap = "8px";
+
+  const imageWrapper = document.createElement("div");
+  imageWrapper.className = "product-card-image";
+  imageWrapper.style.width = "100%";
+  imageWrapper.style.height = "120px";
+  imageWrapper.style.borderRadius = "10px";
+  imageWrapper.style.backgroundColor = "#d9d9d9";
+  imageWrapper.style.backgroundSize = "cover";
+  imageWrapper.style.backgroundPosition = "center";
+
+  const imageUrl = getProductImageUrl(product);
+  if (imageUrl) {
+    setBackgroundImageWithBearer(imageWrapper, imageUrl, apiService.token);
+  } else {
+    imageWrapper.style.display = "flex";
+    imageWrapper.style.alignItems = "center";
+    imageWrapper.style.justifyContent = "center";
+    imageWrapper.style.color = "#592e83";
+    imageWrapper.style.fontWeight = "600";
+    const fallbackLetter = getProductTitle(product).charAt(0).toUpperCase();
+    imageWrapper.textContent = fallbackLetter || "P";
+  }
+
+  const infoContainer = document.createElement("div");
+  infoContainer.className = "product-card-body";
+  infoContainer.style.display = "flex";
+  infoContainer.style.flexDirection = "column";
+  infoContainer.style.gap = "4px";
+
+  const titleElement = document.createElement("p");
+  titleElement.className = "product-card-title";
+  titleElement.textContent = getProductTitle(product);
+  titleElement.style.fontWeight = "600";
+  titleElement.style.color = "#592e83";
+
+  const description = getProductDescription(product);
+  if (description) {
+    const descriptionElement = document.createElement("p");
+    descriptionElement.className = "product-card-description";
+    descriptionElement.textContent = description;
+    descriptionElement.style.fontSize = "12px";
+    descriptionElement.style.color = "#525252";
+    infoContainer.appendChild(descriptionElement);
+  }
+
+  const price = formatProductPrice(product);
+  if (price) {
+    const priceElement = document.createElement("p");
+    priceElement.className = "product-card-price";
+    priceElement.textContent = price;
+    priceElement.style.fontWeight = "700";
+    priceElement.style.color = "#171717";
+    infoContainer.appendChild(priceElement);
+  }
+
+  infoContainer.insertBefore(titleElement, infoContainer.firstChild);
+
+  card.appendChild(imageWrapper);
+  card.appendChild(infoContainer);
+
+  return card;
+}
+
+function getProductTitle(product = {}) {
+  return (
+    product.title ||
+    product.name ||
+    product.productName ||
+    product.displayName ||
+    "Produto"
+  );
+}
+
+function getProductDescription(product = {}) {
+  return (
+    product.description ||
+    product.details ||
+    product.summary ||
+    product.about ||
+    ""
+  );
+}
+
+function formatProductPrice(product = {}) {
+  const rawPrice =
+    product.price ?? product.value ?? product.cost ?? product.amount ?? null;
+
+  if (rawPrice === null || rawPrice === undefined || rawPrice === "") {
+    return "";
+  }
+
+  const numericPrice = Number(rawPrice);
+  if (!Number.isNaN(numericPrice)) {
+    return numericPrice.toLocaleString("pt-BR", {
+      style: "currency",
+      currency: "BRL",
+    });
+  }
+
+  return rawPrice;
+}
+
+function getProductImageUrl(product = {}) {
+  const imagePath =
+    product.imageUrl ||
+    product.imgLink ||
+    product.image ||
+    product.coverImage ||
+    product.thumbnail;
+
+  if (!imagePath) return "";
+
+  const trimmed = String(imagePath).trim();
+  if (!trimmed) return "";
+
+  if (trimmed.startsWith("http")) {
+    return trimmed;
+  }
+
+  const baseUrl =
+    (typeof apiService !== "undefined" && apiService.baseURL) ||
+    "https://20252-inti-production.up.railway.app";
+  const normalizedPath = trimmed.startsWith("/") ? trimmed : `/${trimmed}`;
+  return `${baseUrl}${normalizedPath}`;
+}
+
+function extractProductsFromResponse(response) {
+  if (!response) return [];
+  if (Array.isArray(response)) return response;
+  if (Array.isArray(response.content)) return response.content;
+  if (Array.isArray(response.items)) return response.items;
+  if (Array.isArray(response.data)) return response.data;
+  return [];
+}
+
+function showProductsEmptyState(message) {
+  if (!productsState.container) return;
+  productsState.container.innerHTML = "";
+
+  const emptyState = document.createElement("p");
+  emptyState.className = "products-empty-state";
+  emptyState.textContent = message;
+  emptyState.style.gridColumn = "1 / -1";
+  emptyState.style.textAlign = "center";
+  emptyState.style.padding = "20px";
+  emptyState.style.color = "#737373";
+
+  productsState.container.appendChild(emptyState);
+}
+
+function removeProductsEmptyState() {
+  if (!productsState.container) return;
+  const emptyState = productsState.container.querySelector(
+    ".products-empty-state"
+  );
+  if (emptyState) {
+    emptyState.remove();
+  }
+}
+
+function setProductsLoadingIndicator(isLoading) {
+  if (!productsState.container) return;
+  let indicator = productsState.container.querySelector(".products-loading");
+
+  if (isLoading) {
+    if (!indicator) {
+      indicator = document.createElement("div");
+      indicator.className = "products-loading";
+      indicator.style.gridColumn = "1 / -1";
+      indicator.style.textAlign = "center";
+      indicator.style.padding = "16px";
+      indicator.style.color = "#592e83";
+      productsState.container.appendChild(indicator);
+    }
+    indicator.textContent = "Carregando...";
+  } else if (indicator) {
+    indicator.remove();
+  }
+}
+
+function handleProductsScroll() {
+  if (!productsState.active) return;
+  if (productsState.loading || productsState.finished) return;
+
+  const threshold = 200;
+  const doc = document.documentElement;
+  const totalHeight = Math.max(doc.offsetHeight, document.body.offsetHeight);
+  const scrolledToBottom =
+    window.innerHeight + window.scrollY >= totalHeight - threshold;
+
+  if (scrolledToBottom) {
+    loadNextProductsPage();
+  }
+}
 
 // Expose logout globally
 window.logout = logout;
