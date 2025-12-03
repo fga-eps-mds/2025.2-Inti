@@ -14,6 +14,8 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Tilt+Warp&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+        integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
 
 </head>
 
@@ -29,7 +31,7 @@
             </header>
 
             <main class="new-product-content">
-                <form class="form form-new-product">
+                <form class="form form-new-product" enctype="multipart/form-data">
                     <!-- Campo: Título -->
                     <div class="form-group">
                         <div class="input-wrapper">
@@ -56,8 +58,9 @@
                             <div class="form-group">
                                 <div class="input-wrapper">
                                     <label for="date" class="input-label">Data</label>
-                                    <input type="date" id="date" name="date" class="input-field"
-                                        placeholder="Digite a data" required />
+                                    <input type="text" id="date" name="date" class="input-field"
+                                        placeholder="DD/MM/AAAA" inputmode="numeric" maxlength="10" autocomplete="off"
+                                        required />
                                     <img src="../assets/img_calendar.svg" alt="Ícone de calendário"
                                         class="input-field-icon" />
                                 </div>
@@ -70,8 +73,9 @@
                             <div class="form-group">
                                 <div class="input-wrapper">
                                     <label for="time" class="input-label">Horário</label>
-                                    <input type="time" id="time" name="time" class="input-field"
-                                        placeholder="Digite o horário" required style="width: 138px;" />
+                                    <input type="text" id="time" name="time" class="input-field" placeholder="HH:MM"
+                                        inputmode="numeric" maxlength="5" autocomplete="off" required
+                                        style="width: 138px;" />
                                     <img src="../assets/img_watch.svg" alt="Ícone de relógio"
                                         class="input-field-icon" />
 
@@ -82,23 +86,55 @@
                     <!-- Campo: Localização -->
                     <div class="form-group">
                         <div class="input-wrapper">
-                            <label for="localizacao_autocomplete" class="input-label">Localização</label>
-                            <input type="text" id="localizacao_autocomplete" name="location" class="input-field"
-                                placeholder="Digite a localização" required />
-                            <img src="../assets/img_location.svg" alt="Ícone de localização" class="input-field-icon" />
+                            <div class="map-picker" style="display: flex; flex-direction: column; gap: 12px;">
+                                <div id="mapPreview"
+                                    style="height: 220px; border-radius: 16px; overflow: hidden; border: 1px solid #dcdcdc;">
+                                </div>
+                                <p class="map-helper-text" style="font-size: 14px; color: #6b6b6b;">
+                                    Clique no mapa para selecionar o local exato do evento.
+                                </p>
+                            </div>
+                            <input type="hidden" id="localizacao_autocomplete" name="location">
                             <input type="hidden" id="street_address" name="street_address">
-                            <input type="hidden" id="city" name="city">
-                            <input type="hidden" id="state" name="state">
                             <input type="hidden" id="latitude" name="latitude">
                             <input type="hidden" id="longitude" name="longitude">
                         </div>
                     </div>
 
-                    <div id="mapModal"
-                        style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.5); z-index: 1000;">
-                        <div style="background: white; margin: 10% auto; padding: 20px; width: 80%; height: 70%;">
-                            <div id="map" style="width: 100%; height: 90%;"></div>
-                            <button id="confirmLocation">Confirmar Localização</button>
+                    <div class="form-group">
+                        <div class="input-wrapper">
+                            <label for="administrativeRegion" class="input-label">Região Administrativa</label>
+                            <input type="text" id="administrativeRegion" name="administrativeRegion" class="input-field"
+                                placeholder="Digite a região administrativa" required />
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <div class="input-wrapper">
+                            <label for="referencePoint" class="input-label">Ponto de referência</label>
+                            <input type="text" id="referencePoint" name="referencePoint" class="input-field"
+                                placeholder="Informe um ponto de referência" required />
+                        </div>
+                    </div>
+
+                    <div class="row-group">
+                        <div class="input-group-half">
+                            <div class="form-group">
+                                <div class="input-wrapper">
+                                    <label for="city" class="input-label">Cidade</label>
+                                    <input type="text" id="city" name="city" class="input-field"
+                                        placeholder="Digite a cidade" required />
+                                </div>
+                            </div>
+                        </div>
+                        <div class="input-group-half">
+                            <div class="form-group">
+                                <div class="input-wrapper">
+                                    <label for="state" class="input-label">Estado</label>
+                                    <input type="text" id="state" name="state" class="input-field"
+                                        placeholder="Digite o estado" required />
+                                </div>
+                            </div>
                         </div>
                     </div>
 
@@ -106,12 +142,7 @@
 
                     <!-- Campo: Valor do ingresso -->
                     <div class="form-group">
-                        <div class="input-wrapper" style="margin-top: -8px;">
-                            <label for="price" class="input-label">Valor do ingresso</label>
-                            <input type="text" id="price" name="price" class="input-field price-field" placeholder="R$"
-                                required />
-                            <img src="../assets/img_ticket.svg" alt="Ícone de ingresso" class="input-field-icon" />
-                        </div>
+
                     </div>
 
                     <div class="form-group image-upload-group">
@@ -119,14 +150,17 @@
                             <input type="file" id="image" name="image" accept="image/*" class="image-input" />
                             <div class="image-upload-content">
                                 <img src="../assets/UploadImage.svg" alt="Selecionar imagem"
-                                    class="image-placeholder-icon" />
-                                <p class="global-font">Adicionar imagem de capa</p>
+                                    class="image-placeholder-icon" id="imagePlaceholderIcon" />
+                                <p class="global-font" id="imagePlaceholderText">Adicionar imagem de capa</p>
+                                <img id="imagePreview" alt="Prévia da imagem selecionada"
+                                    style="display: none; width: 100%; max-height: 260px; object-fit: cover; border-radius: 12px;" />
                             </div>
                         </label>
                     </div>
 
-                    <button class="input-field" id="alerta" style="font-size: 20px ;margin-bottom: 40px;">PUBLICAR</button>
-            
+                    <button class="input-field" id="alerta"
+                        style="font-size: 20px ;margin-bottom: 40px;">PUBLICAR</button>
+
                 </form>
             </main>
         </div>
@@ -177,83 +211,52 @@
         </button>
     </nav>
 
+    <script src="../js/config.js"></script>
+    <script src="../js/toast.js"></script>
     <script src="../js/app.js"></script>
     <script src="../js/router.js"></script>
-    <script src="../js/maps.js"></script>
-<!-- Code injected by live-server -->
-<script>
-	// <![CDATA[  <-- For SVG support
-	if ('WebSocket' in window) {
-		(function () {
-			function refreshCSS() {
-				var sheets = [].slice.call(document.getElementsByTagName("link"));
-				var head = document.getElementsByTagName("head")[0];
-				for (var i = 0; i < sheets.length; ++i) {
-					var elem = sheets[i];
-					var parent = elem.parentElement || head;
-					parent.removeChild(elem);
-					var rel = elem.rel;
-					if (elem.href && typeof rel != "string" || rel.length == 0 || rel.toLowerCase() == "stylesheet") {
-						var url = elem.href.replace(/(&|\?)_cacheOverride=\d+/, '');
-						elem.href = url + (url.indexOf('?') >= 0 ? '&' : '?') + '_cacheOverride=' + (new Date().valueOf());
-					}
-					parent.appendChild(elem);
-				}
-			}
-			var protocol = window.location.protocol === 'http:' ? 'ws://' : 'wss://';
-			var address = protocol + window.location.host + window.location.pathname + '/ws';
-			var socket = new WebSocket(address);
-			socket.onmessage = function (msg) {
-				if (msg.data == 'reload') window.location.reload();
-				else if (msg.data == 'refreshcss') refreshCSS();
-			};
-			if (sessionStorage && !sessionStorage.getItem('IsThisFirstTime_Log_From_LiveServer')) {
-				console.log('Live reload enabled.');
-				sessionStorage.setItem('IsThisFirstTime_Log_From_LiveServer', true);
-			}
-		})();
-	}
-	else {
-		console.error('Upgrade your browser. This Browser is NOT supported WebSocket for Live-Reloading.');
-	}
-	// ]]>
-</script>
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+        integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+    <script src="../js/nav-handler.js"></script>
+    <script src="../js/create-event.js"></script>
+    <!-- Code injected by live-server -->
+    <script>
+        // <![CDATA[  <-- For SVG support
+        if ('WebSocket' in window) {
+            (function () {
+                function refreshCSS() {
+                    var sheets = [].slice.call(document.getElementsByTagName("link"));
+                    var head = document.getElementsByTagName("head")[0];
+                    for (var i = 0; i < sheets.length; ++i) {
+                        var elem = sheets[i];
+                        var parent = elem.parentElement || head;
+                        parent.removeChild(elem);
+                        var rel = elem.rel;
+                        if (elem.href && typeof rel != "string" || rel.length == 0 || rel.toLowerCase() == "stylesheet") {
+                            var url = elem.href.replace(/(&|\?)_cacheOverride=\d+/, '');
+                            elem.href = url + (url.indexOf('?') >= 0 ? '&' : '?') + '_cacheOverride=' + (new Date().valueOf());
+                        }
+                        parent.appendChild(elem);
+                    }
+                }
+                var protocol = window.location.protocol === 'http:' ? 'ws://' : 'wss://';
+                var address = protocol + window.location.host + window.location.pathname + '/ws';
+                var socket = new WebSocket(address);
+                socket.onmessage = function (msg) {
+                    if (msg.data == 'reload') window.location.reload();
+                    else if (msg.data == 'refreshcss') refreshCSS();
+                };
+                if (sessionStorage && !sessionStorage.getItem('IsThisFirstTime_Log_From_LiveServer')) {
+                    console.log('Live reload enabled.');
+                    sessionStorage.setItem('IsThisFirstTime_Log_From_LiveServer', true);
+                }
+            })();
+        }
+        else {
+            console.error('Upgrade your browser. This Browser is NOT supported WebSocket for Live-Reloading.');
+        }
+        // ]]>
+    </script>
 </body>
 
 </html>
-    <script src="../js/config.js"></script>
-    <script src="../js/app.js"></script>
-    <script type="module">
-        import { createProduct } from '../js/product.js';
-
-        document.querySelector('.form-new-product').addEventListener('submit', async function(event) {
-            event.preventDefault();
-
-            const title = document.getElementById('title').value;
-            const description = document.getElementById('description').value;
-            const date = document.getElementById('date').value;
-            const time = document.getElementById('time').value;
-            const location = document.getElementById('localizacao_autocomplete').value;
-            
-            // Eventos são tratados como produtos para a Feature 09, mas com informações de evento no corpo
-            const productData = {
-                title: title,
-                description: `[EVENTO] Data: ${date}, Horário: ${time}, Local: ${location}. ${description}`,
-                price: null, // Preço não está no formulário, assumindo null
-                imgLink: "https://via.placeholder.com/150/event", // Link mockado
-                contactInfo: location, // Usando localização como contato
-                tags: ["evento"], 
-                visibility: 'PUBLIC'
-            };
-
-            try {
-                const newProduct = await createProduct(productData);
-                alert('Anúncio de Evento criado com sucesso! ID: ' + newProduct.id);
-                // Redirecionar para a lista de produtos ou home
-                window.location.href = 'home.html'; 
-            } catch (error) {
-                alert('Erro ao criar evento: ' + error.message);
-                console.error(error);
-            }
-        });
-    </script>

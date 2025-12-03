@@ -304,7 +304,8 @@ function formatTime(isoDate) {
         const date = new Date(isoDate);
         return date.toLocaleTimeString('pt-BR', {
             hour: '2-digit',
-            minute: '2-digit'
+            minute: '2-digit',
+            hour12: false
         });
     } catch (error) {
         console.error('Erro ao formatar hora:', error);
