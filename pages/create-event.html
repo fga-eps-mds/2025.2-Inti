@@ -14,6 +14,8 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Tilt+Warp&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+        integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
 
 </head>
 
@@ -29,7 +31,7 @@
             </header>
 
             <main class="new-product-content">
-                <form class="form form-new-product">
+                <form class="form form-new-product" enctype="multipart/form-data">
                     <!-- Campo: Título -->
                     <div class="form-group">
                         <div class="input-wrapper">
@@ -56,8 +58,9 @@
                             <div class="form-group">
                                 <div class="input-wrapper">
                                     <label for="date" class="input-label">Data</label>
-                                    <input type="date" id="date" name="date" class="input-field"
-                                        placeholder="Digite a data" required />
+                                    <input type="text" id="date" name="date" class="input-field"
+                                        placeholder="DD/MM/AAAA" inputmode="numeric" maxlength="10" autocomplete="off"
+                                        required />
                                     <img src="../assets/img_calendar.svg" alt="Ícone de calendário"
                                         class="input-field-icon" />
                                 </div>
@@ -70,8 +73,9 @@
                             <div class="form-group">
                                 <div class="input-wrapper">
                                     <label for="time" class="input-label">Horário</label>
-                                    <input type="time" id="time" name="time" class="input-field"
-                                        placeholder="Digite o horário" required style="width: 138px;" />
+                                    <input type="text" id="time" name="time" class="input-field" placeholder="HH:MM"
+                                        inputmode="numeric" maxlength="5" autocomplete="off" required
+                                        style="width: 138px;" />
                                     <img src="../assets/img_watch.svg" alt="Ícone de relógio"
                                         class="input-field-icon" />
 
@@ -82,23 +86,55 @@
                     <!-- Campo: Localização -->
                     <div class="form-group">
                         <div class="input-wrapper">
-                            <label for="localizacao_autocomplete" class="input-label">Localização</label>
-                            <input type="text" id="localizacao_autocomplete" name="location" class="input-field"
-                                placeholder="Digite a localização" required />
-                            <img src="../assets/img_location.svg" alt="Ícone de localização" class="input-field-icon" />
+                            <div class="map-picker" style="display: flex; flex-direction: column; gap: 12px;">
+                                <div id="mapPreview"
+                                    style="height: 220px; border-radius: 16px; overflow: hidden; border: 1px solid #dcdcdc;">
+                                </div>
+                                <p class="map-helper-text" style="font-size: 14px; color: #6b6b6b;">
+                                    Clique no mapa para selecionar o local exato do evento.
+                                </p>
+                            </div>
+                            <input type="hidden" id="localizacao_autocomplete" name="location">
                             <input type="hidden" id="street_address" name="street_address">
-                            <input type="hidden" id="city" name="city">
-                            <input type="hidden" id="state" name="state">
                             <input type="hidden" id="latitude" name="latitude">
                             <input type="hidden" id="longitude" name="longitude">
                         </div>
                     </div>
 
-                    <div id="mapModal"
-                        style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.5); z-index: 1000;">
-                        <div style="background: white; margin: 10% auto; padding: 20px; width: 80%; height: 70%;">
-                            <div id="map" style="width: 100%; height: 90%;"></div>
-                            <button id="confirmLocation">Confirmar Localização</button>
+                    <div class="form-group">
+                        <div class="input-wrapper">
+                            <label for="administrativeRegion" class="input-label">Região Administrativa</label>
+                            <input type="text" id="administrativeRegion" name="administrativeRegion" class="input-field"
+                                placeholder="Digite a região administrativa" required />
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <div class="input-wrapper">
+                            <label for="referencePoint" class="input-label">Ponto de referência</label>
+                            <input type="text" id="referencePoint" name="referencePoint" class="input-field"
+                                placeholder="Informe um ponto de referência" required />
+                        </div>
+                    </div>
+
+                    <div class="row-group">
+                        <div class="input-group-half">
+                            <div class="form-group">
+                                <div class="input-wrapper">
+                                    <label for="city" class="input-label">Cidade</label>
+                                    <input type="text" id="city" name="city" class="input-field"
+                                        placeholder="Digite a cidade" required />
+                                </div>
+                            </div>
+                        </div>
+                        <div class="input-group-half">
+                            <div class="form-group">
+                                <div class="input-wrapper">
+                                    <label for="state" class="input-label">Estado</label>
+                                    <input type="text" id="state" name="state" class="input-field"
+                                        placeholder="Digite o estado" required />
+                                </div>
+                            </div>
                         </div>
                     </div>
 
@@ -106,12 +142,7 @@
 
                     <!-- Campo: Valor do ingresso -->
                     <div class="form-group">
-                        <div class="input-wrapper" style="margin-top: -8px;">
-                            <label for="price" class="input-label">Valor do ingresso</label>
-                            <input type="text" id="price" name="price" class="input-field price-field" placeholder="R$"
-                                required />
-                            <img src="../assets/img_ticket.svg" alt="Ícone de ingresso" class="input-field-icon" />
-                        </div>
+
                     </div>
 
                     <div class="form-group image-upload-group">
@@ -119,8 +150,10 @@
                             <input type="file" id="image" name="image" accept="image/*" class="image-input" />
                             <div class="image-upload-content">
                                 <img src="../assets/UploadImage.svg" alt="Selecionar imagem"
-                                    class="image-placeholder-icon" />
-                                <p class="global-font">Adicionar imagem de capa</p>
+                                    class="image-placeholder-icon" id="imagePlaceholderIcon" />
+                                <p class="global-font" id="imagePlaceholderText">Adicionar imagem de capa</p>
+                                <img id="imagePreview" alt="Prévia da imagem selecionada"
+                                    style="display: none; width: 100%; max-height: 260px; object-fit: cover; border-radius: 12px;" />
                             </div>
                         </label>
                     </div>

@@ -106,6 +106,7 @@ function renderEventDetails(event) {
       timeElement.textContent = date.toLocaleTimeString("pt-BR", {
         hour: "2-digit",
         minute: "2-digit",
+        hour12: false,
       });
     }
   } else {
