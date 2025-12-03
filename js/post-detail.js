@@ -242,7 +242,7 @@ async function handleLikeClick(event) {
       }
     );
     const post = await response.json();
-    likeCount.textContent = `${post.likesCount || 0} likes`;
+    likeCount.textContent = `${post.likesCount || 0}`;
   } catch (error) {
     console.error("Error toggling like:", error);
     if (typeof toast !== "undefined") {

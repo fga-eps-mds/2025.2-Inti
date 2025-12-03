@@ -2,6 +2,7 @@
 
 const toggle = document.getElementById("dropdownToggle");
 const menu = document.getElementById("dropdownMenu");
+const eventosBtn = document.getElementById("eventosBtn");
 
 // Pagination variables
 let currentPage = 0;
@@ -50,6 +51,13 @@ document.addEventListener("click", (e) => {
     menu.style.display = "none";
   }
 });
+
+if (eventosBtn) {
+  eventosBtn.addEventListener("click", () => {
+    menu.style.display = "none";
+    window.location.href = "eventList.html";
+  });
+}
 
 // Modified to fetch posts more chronologically and prevent duplicates
 async function carregarFeed(page = 0, append = false) {
