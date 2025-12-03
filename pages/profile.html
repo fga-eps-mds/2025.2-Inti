@@ -22,7 +22,8 @@
         <div class="img-perfil-bg"></div>
         <div class="img-user-icon">
           <div class="edit-icon">
-            <img src="../assets/edit-icon.png" alt="edit-icon" class="edit" />
+            <img src="../assets/edit-icon.svg" alt="edit-icon" class="edit"
+              onclick="window.location.href='EditProfileScreen.html'" />
           </div>
         </div>
         <!-- Hidden file input for profile picture upload -->
@@ -64,18 +65,7 @@
           <!-- Contact info will be populated dynamically -->
         </p>
       </div>
-      <button id="edit-biography-btn" style="
-            margin: 10px auto;
-            padding: 8px 16px;
-            background-color: #592e83;
-            color: white;
-            border: none;
-            border-radius: 8px;
-            cursor: pointer;
-            display: block;
-          ">
-        Editar Biografia
-      </button>
+
 
       <div class="line-navbar"></div>
 
@@ -458,10 +448,8 @@
     }
 
     .edit {
-      width: 18px;
-      height: 18px;
-      margin-top: 6px;
-      margin-left: 5px;
+      width: 29px;
+      height: 29px;
     }
 
     .edit-icon {
@@ -472,7 +460,6 @@
       margin-top: 50px;
       margin-left: 60px;
       align-items: center;
-      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     }
 
     .follow-icon {

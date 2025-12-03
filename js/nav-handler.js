@@ -37,7 +37,7 @@ document.addEventListener("DOMContentLoaded", function () {
     const addBtn = document.querySelector(".navbar .nav-btn-add");
     if (addBtn) {
       addBtn.addEventListener("click", function () {
-        const route = getAdjustedRoute("pages/create.html");
+        const route = getAdjustedRoute("pages/publish.html");
         window.location.href = route;
       });
     }
@@ -46,7 +46,7 @@ document.addEventListener("DOMContentLoaded", function () {
     const calendarBtn = document.querySelector(".navbar .nav-btn:nth-child(4)");
     if (calendarBtn) {
       calendarBtn.addEventListener("click", function () {
-        const route = getAdjustedRoute("pages/eventos.html");
+        const route = getAdjustedRoute("pages/my-events.html");
         window.location.href = route;
       });
     }
@@ -85,7 +85,7 @@ document.addEventListener("DOMContentLoaded", function () {
     const createImg = document.querySelector(".nav-create");
     if (createImg) {
       createImg.addEventListener("click", function () {
-        const route = getAdjustedRoute("pages/create.html");
+        const route = getAdjustedRoute("pages/publish.html");
         window.location.href = route;
       });
     }
@@ -94,7 +94,7 @@ document.addEventListener("DOMContentLoaded", function () {
     const calendarImg = document.querySelector(".nav-calendar");
     if (calendarImg) {
       calendarImg.addEventListener("click", function () {
-        const route = getAdjustedRoute("pages/eventos.html");
+        const route = getAdjustedRoute("pages/my-events.html");
         window.location.href = route;
       });
     }

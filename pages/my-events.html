@@ -1,538 +1,290 @@
 <!doctype html>
 <html lang="pt-BR">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>MUSA - Meus Eventos</title>
-    <link rel="stylesheet" href="../css/style.css" />
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Libre+Bodoni:wght@700&family=Maitree:wght@400&display=swap"
-      rel="stylesheet"
-    />
-    <style>
-      .events-container {
-        padding: 20px;
-        padding-top: 80px;
-        padding-bottom: 100px;
-      }
 
-      .event-card {
-        background: white;
-        border-radius: var(--radius-md);
-        overflow: hidden;
-        margin-bottom: 16px;
-        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-        transition:
-          transform 0.2s ease,
-          box-shadow 0.2s ease;
-        cursor: pointer;
-      }
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>MUSA - Meus Eventos</title>
+  <link rel="stylesheet" href="../css/style.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Libre+Bodoni:wght@700&family=Maitree:wght@400&display=swap"
+    rel="stylesheet" />
+  <style>
+    .header-myEvents {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      position: sticky;
+      top: -1px;
+      z-index: 100;
+      background: white;
+      border-bottom: 1px solid var(--gray-200);
+      padding: 2vh 0 0;
+      display: flex;
+    }
 
-      .event-card:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-      }
+    .events-container {
+      padding: 20px;
+      padding-top: 4vh;
+      padding-bottom: 100px;
+    }
 
-      .event-image {
-        width: 100%;
-        height: 200px;
-        background-size: cover;
-        background-position: center;
-        background-color: var(--gray-300);
-      }
+    .event-card {
+      background: white;
+      border-radius: var(--radius-md);
+      overflow: hidden;
+      margin-bottom: 16px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+      transition:
+        transform 0.2s ease,
+        box-shadow 0.2s ease;
+      cursor: pointer;
+    }
 
-      .event-info {
-        padding: 16px;
-      }
+    .event-card:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    }
 
-      .event-title {
-        font-family: "Libre Bodoni", serif;
-        font-size: 20px;
-        font-weight: 700;
-        color: var(--primary);
-        margin-bottom: 8px;
-      }
+    .event-image {
+      width: 100%;
+      height: 160px;
+      background-size: cover;
+      background-position: center;
+      background-color: var(--gray-300);
+    }
 
-      .event-date {
-        color: var(--gray-600);
-        font-size: 14px;
-        margin-bottom: 4px;
-      }
+    .event-info {
+      padding: 16px;
+    }
 
-      .event-location {
-        color: var(--gray-500);
-        font-size: 14px;
-      }
+    .event-title {
+      font-family: "Libre Bodoni", serif;
+      font-size: 20px;
+      font-weight: 700;
+      color: var(--primary);
+      margin-bottom: 8px;
+    }
 
-      .empty-state {
-        text-align: center;
-        padding: 60px 20px;
-        color: var(--gray-400);
-      }
+    .event-date {
+      color: var(--gray-600);
+      font-size: 14px;
+      margin-bottom: 4px;
+    }
 
-      .empty-state-icon {
-        font-size: 48px;
-        margin-bottom: 16px;
-      }
-    </style>
-  </head>
+    .event-location {
+      color: var(--gray-500);
+      font-size: 14px;
+    }
 
-  <body>
-    <div class="container">
-      <div class="screen home-screen">
-        <header class="header-home">
-          <img src="../assets/MUSA-M.png" alt="MUSA" class="logo-icon" />
-          <h1
-            style="
+    .empty-state {
+      text-align: center;
+      padding: 60px 20px;
+      color: var(--gray-400);
+    }
+
+    .empty-state-icon {
+      font-size: 48px;
+      margin-bottom: 16px;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container">
+    <div class="screen home-screen">
+      <header class="header-myEvents">
+        <h1 style="
               font-family: &quot;Libre Bodoni&quot;, serif;
               font-size: 36px;
               font-weight: 700;
               color: var(--primary);
-            "
-          >
-            Meus Eventos
-          </h1>
-          <div style="width: 11vw"></div>
-        </header>
+            ">
+          Meus Eventos
+        </h1>
+      </header>
 
-        <div class="events-container" id="eventsContainer">
-          <div class="empty-state">
-            <div class="empty-state-icon">📅</div>
-            <p>Carregando eventos...</p>
-          </div>
+      <div class="events-container" id="eventsContainer">
+        <div class="empty-state">
+          <div class="empty-state-icon">📅</div>
+          <p>Carregando eventos...</p>
         </div>
+      </div>
 
-        <!-- Navigation Bar -->
-        <nav class="navbar">
-          <button
-            class="nav-btn"
-            aria-label="Home"
-            onclick="window.location.href='home.html'"
-          >
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
-              <path
-                d="M3 9L12 2L21 9V20C21 20.5304 20.7893 21.0391 20.4142 21.4142C20.0391 21.7893 19.5304 22 19 22H5C4.46957 22 3.96086 21.7893 3.58579 21.4142C3.21071 21.0391 3 20.5304 3 20V9Z"
-                stroke="currentColor"
-                stroke-width="2"
-              />
-              <path d="M9 22V12H15V22" stroke="currentColor" stroke-width="2" />
-            </svg>
-          </button>
-          <button
-            class="nav-btn"
-            aria-label="Explorar"
-            onclick="window.location.href='search.html'"
-          >
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
-              <circle
-                cx="11"
-                cy="11"
-                r="8"
-                stroke="currentColor"
-                stroke-width="2"
-              />
-              <path
-                d="M21 21L16.65 16.65"
-                stroke="currentColor"
-                stroke-width="2"
-              />
-            </svg>
-          </button>
-          <button
-            class="nav-btn nav-btn-add"
-            aria-label="Adicionar"
-            onclick="window.location.href='create.html'"
-          >
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
-              <line
-                x1="12"
-                y1="5"
-                x2="12"
-                y2="19"
-                stroke="currentColor"
-                stroke-width="2"
-              />
-              <line
-                x1="5"
-                y1="12"
-                x2="19"
-                y2="12"
-                stroke="currentColor"
-                stroke-width="2"
-              />
-            </svg>
-          </button>
-          <button class="nav-btn active" aria-label="Calendário">
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
-              <rect
-                x="3"
-                y="4"
-                width="18"
-                height="18"
-                rx="2"
-                stroke="currentColor"
-                stroke-width="2"
-              />
-              <line
-                x1="16"
-                y1="2"
-                x2="16"
-                y2="6"
-                stroke="currentColor"
-                stroke-width="2"
-              />
-              <line
-                x1="8"
-                y1="2"
-                x2="8"
-                y2="6"
-                stroke="currentColor"
-                stroke-width="2"
-              />
-              <line
-                x1="3"
-                y1="10"
-                x2="21"
-                y2="10"
-                stroke="currentColor"
-                stroke-width="2"
-              />
-            </svg>
-          </button>
-          <button
-            class="nav-btn"
-            aria-label="Perfil"
-            onclick="window.location.href='profile.html'"
-          >
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
-              <path
-                d="M20 21V19C20 17.9391 19.5786 16.9217 18.8284 16.1716C18.0783 15.4214 17.0609 15 16 15H8C6.93913 15 5.92172 15.4214 5.17157 16.1716C4.42143 16.9217 4 17.9391 4 19V21"
-                stroke="currentColor"
-                stroke-width="2"
-              />
-              <circle
-                cx="12"
-                cy="7"
-                r="4"
-                stroke="currentColor"
-                stroke-width="2"
-              />
-            </svg>
-          </button>
-        </nav>
-        <!doctype html>
-        <html lang="pt-BR">
-          <head>
-            <meta charset="UTF-8" />
-            <meta
-              name="viewport"
-              content="width=device-width, initial-scale=1.0"
-            />
-            <title>MUSA - Meus Eventos</title>
-            <link rel="stylesheet" href="../css/style.css" />
-            <link rel="preconnect" href="https://fonts.googleapis.com" />
-            <link
-              rel="preconnect"
-              href="https://fonts.gstatic.com"
-              crossorigin
-            />
-            <link
-              href="https://fonts.googleapis.com/css2?family=Libre+Bodoni:wght@700&family=Maitree:wght@400&display=swap"
-              rel="stylesheet"
-            />
-            <style>
-              .events-container {
-                padding: 20px;
-                padding-top: 80px;
-                padding-bottom: 100px;
-              }
+      <!-- Navigation Bar -->
+      <nav class="navbar">
+        <button class="nav-btn" aria-label="Home" onclick="window.location.href='home.html'">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+            <path
+              d="M3 9L12 2L21 9V20C21 20.5304 20.7893 21.0391 20.4142 21.4142C20.0391 21.7893 19.5304 22 19 22H5C4.46957 22 3.96086 21.7893 3.58579 21.4142C3.21071 21.0391 3 20.5304 3 20V9Z"
+              stroke="currentColor" stroke-width="2" />
+            <path d="M9 22V12H15V22" stroke="currentColor" stroke-width="2" />
+          </svg>
+        </button>
+        <button class="nav-btn" aria-label="Explorar" onclick="window.location.href='search.html'">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+            <circle cx="11" cy="11" r="8" stroke="currentColor" stroke-width="2" />
+            <path d="M21 21L16.65 16.65" stroke="currentColor" stroke-width="2" />
+          </svg>
+        </button>
+        <button class="nav-btn nav-btn-add" aria-label="Adicionar" onclick="window.location.href='publish.html'">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+            <line x1="12" y1="5" x2="12" y2="19" stroke="currentColor" stroke-width="2" />
+            <line x1="5" y1="12" x2="19" y2="12" stroke="currentColor" stroke-width="2" />
+          </svg>
+        </button>
+        <button class="nav-btn active" aria-label="Calendário">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+            <rect x="3" y="4" width="18" height="18" rx="2" stroke="currentColor" stroke-width="2" />
+            <line x1="16" y1="2" x2="16" y2="6" stroke="currentColor" stroke-width="2" />
+            <line x1="8" y1="2" x2="8" y2="6" stroke="currentColor" stroke-width="2" />
+            <line x1="3" y1="10" x2="21" y2="10" stroke="currentColor" stroke-width="2" />
+          </svg>
+        </button>
+        <button class="nav-btn" aria-label="Perfil" onclick="window.location.href='profile.html'">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+            <path
+              d="M20 21V19C20 17.9391 19.5786 16.9217 18.8284 16.1716C18.0783 15.4214 17.0609 15 16 15H8C6.93913 15 5.92172 15.4214 5.17157 16.1716C4.42143 16.9217 4 17.9391 4 19V21"
+              stroke="currentColor" stroke-width="2" />
+            <circle cx="12" cy="7" r="4" stroke="currentColor" stroke-width="2" />
+          </svg>
+        </button>
+      </nav>
+    </div>
+  </div>
 
-              .event-card {
-                background: white;
-                border-radius: var(--radius-md);
-                overflow: hidden;
-                margin-bottom: 16px;
-                box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-                transition:
-                  transform 0.2s ease,
-                  box-shadow 0.2s ease;
-                cursor: pointer;
-              }
+  <script src="../js/config.js"></script>
+  <script src="../js/event-navigation.js"></script>
+  <script src="../js/app.js"></script>
+  <script src="../js/toast.js"></script>
+  <script>
+    const eventsContainer = document.getElementById("eventsContainer");
 
-              .event-card:hover {
-                transform: translateY(-2px);
-                box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-              }
+    function buildImageUrl(path) {
+      if (!path || typeof path !== "string") {
+        return "";
+      }
+      const trimmedPath = path.trim();
+      if (!trimmedPath) {
+        return "";
+      }
+      if (trimmedPath.startsWith("http")) {
+        return trimmedPath;
+      }
+      const baseURL = apiService?.baseURL || API_CONFIG?.baseURL || "";
+      return `${baseURL}${trimmedPath}`;
+    }
 
-              .event-image {
-                width: 100%;
-                height: 200px;
-                background-size: cover;
-                background-position: center;
-                background-color: var(--gray-300);
-              }
+    function formatEventDate(dateValue) {
+      if (!dateValue) {
+        return "Data não informada";
+      }
+      const parsed = new Date(dateValue);
+      if (isNaN(parsed.getTime())) {
+        return dateValue;
+      }
+      return parsed.toLocaleDateString("pt-BR", {
+        day: "2-digit",
+        month: "long",
+        year: "numeric",
+        hour: "2-digit",
+        minute: "2-digit",
+      });
+    }
 
-              .event-info {
-                padding: 16px;
-              }
-
-              .event-title {
-                font-family: "Libre Bodoni", serif;
-                font-size: 20px;
-                font-weight: 700;
-                color: var(--primary);
-                margin-bottom: 8px;
-              }
-
-              .event-date {
-                color: var(--gray-600);
-                font-size: 14px;
-                margin-bottom: 4px;
-              }
-
-              .event-location {
-                color: var(--gray-500);
-                font-size: 14px;
-              }
-
-              .empty-state {
-                text-align: center;
-                padding: 60px 20px;
-                color: var(--gray-400);
-              }
-
-              .empty-state-icon {
-                font-size: 48px;
-                margin-bottom: 16px;
-              }
-            </style>
-          </head>
-
-          <body>
-            <div class="container">
-              <div class="screen home-screen">
-                <header class="header-home">
-                  <img
-                    src="../assets/MUSA-M.png"
-                    alt="MUSA"
-                    class="logo-icon"
-                  />
-                  <h1
-                    style="
-                      font-family: &quot;Libre Bodoni&quot;, serif;
-                      font-size: 36px;
-                      font-weight: 700;
-                      color: var(--primary);
-                    "
-                  >
-                    Meus Eventos
-                  </h1>
-                  <div style="width: 11vw"></div>
-                </header>
-
-                <div class="events-container" id="eventsContainer">
-                  <div class="empty-state">
-                    <div class="empty-state-icon">📅</div>
-                    <p>Carregando eventos...</p>
-                  </div>
-                </div>
-
-                <!-- Navigation Bar -->
-                <nav class="navbar">
-                  <button
-                    class="nav-btn"
-                    aria-label="Home"
-                    onclick="window.location.href='home.html'"
-                  >
-                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
-                      <path
-                        d="M3 9L12 2L21 9V20C21 20.5304 20.7893 21.0391 20.4142 21.4142C20.0391 21.7893 19.5304 22 19 22H5C4.46957 22 3.96086 21.7893 3.58579 21.4142C3.21071 21.0391 3 20.5304 3 20V9Z"
-                        stroke="currentColor"
-                        stroke-width="2"
-                      />
-                      <path
-                        d="M9 22V12H15V22"
-                        stroke="currentColor"
-                        stroke-width="2"
-                      />
-                    </svg>
-                  </button>
-                  <button
-                    class="nav-btn"
-                    aria-label="Explorar"
-                    onclick="window.location.href='search.html'"
-                  >
-                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
-                      <circle
-                        cx="11"
-                        cy="11"
-                        r="8"
-                        stroke="currentColor"
-                        stroke-width="2"
-                      />
-                      <path
-                        d="M21 21L16.65 16.65"
-                        stroke="currentColor"
-                        stroke-width="2"
-                      />
-                    </svg>
-                  </button>
-                  <button
-                    class="nav-btn nav-btn-add"
-                    aria-label="Adicionar"
-                    onclick="window.location.href='create.html'"
-                  >
-                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
-                      <line
-                        x1="12"
-                        y1="5"
-                        x2="12"
-                        y2="19"
-                        stroke="currentColor"
-                        stroke-width="2"
-                      />
-                      <line
-                        x1="5"
-                        y1="12"
-                        x2="19"
-                        y2="12"
-                        stroke="currentColor"
-                        stroke-width="2"
-                      />
-                    </svg>
-                  </button>
-                  <button class="nav-btn active" aria-label="Calendário">
-                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
-                      <rect
-                        x="3"
-                        y="4"
-                        width="18"
-                        height="18"
-                        rx="2"
-                        stroke="currentColor"
-                        stroke-width="2"
-                      />
-                      <line
-                        x1="16"
-                        y1="2"
-                        x2="16"
-                        y2="6"
-                        stroke="currentColor"
-                        stroke-width="2"
-                      />
-                      <line
-                        x1="8"
-                        y1="2"
-                        x2="8"
-                        y2="6"
-                        stroke="currentColor"
-                        stroke-width="2"
-                      />
-                      <line
-                        x1="3"
-                        y1="10"
-                        x2="21"
-                        y2="10"
-                        stroke="currentColor"
-                        stroke-width="2"
-                      />
-                    </svg>
-                  </button>
-                  <button
-                    class="nav-btn"
-                    aria-label="Perfil"
-                    onclick="window.location.href='profile.html'"
-                  >
-                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
-                      <path
-                        d="M20 21V19C20 17.9391 19.5786 16.9217 18.8284 16.1716C18.0783 15.4214 17.0609 15 16 15H8C6.93913 15 5.92172 15.4214 5.17157 16.1716C4.42143 16.9217 4 17.9391 4 19V21"
-                        stroke="currentColor"
-                        stroke-width="2"
-                      />
-                      <circle
-                        cx="12"
-                        cy="7"
-                        r="4"
-                        stroke="currentColor"
-                        stroke-width="2"
-                      />
-                    </svg>
-                  </button>
-                </nav>
-              </div>
-            </div>
-
-            <script src="../js/config.js"></script>
-            <script src="../js/app.js"></script>
-            <script src="../js/toast.js"></script>
-            <script>
-              // Load user's confirmed events
-              const container = document.getElementById("eventsContainer");
-
-              async function loadMyEvents() {
-                try {
-                  // For now, show all events since we don't have a "my events" endpoint
-                  // In production, you would have an endpoint like /event/my-events
-                  const events = await apiService.getEvents();
-
-                  if (events.length === 0) {
-                    container.innerHTML = `
+    function renderEvents(events) {
+      if (!events || events.length === 0) {
+        eventsContainer.innerHTML = `
             <div class="empty-state">
               <div class="empty-state-icon">📅</div>
               <p>Você ainda não confirmou presença em nenhum evento</p>
             </div>
           `;
-                    return;
-                  }
+        return;
+      }
 
-                  container.innerHTML = events
-                    .map((event) => {
-                      const backendUrl = apiService.baseURL;
-                      let imageUrl = "";
-                      if (event.imageUrl) {
-                        imageUrl = event.imageUrl.startsWith("http")
-                          ? event.imageUrl
-                          : backendUrl + event.imageUrl;
-                      }
+      eventsContainer.innerHTML = "";
 
-                      return `
-          <div class="event-card" onclick="window.location.href='event-detail.html?id=${event.id}'">
-            <div class="event-image" style="background-image: url('${imageUrl}')"></div>
-            <div class="event-info">
-              <div class="event-title">${event.title}</div>
-              <div class="event-date">${new Date(event.data).toLocaleDateString(
-                "pt-BR",
-                {
-                  day: "2-digit",
-                  month: "long",
-                  year: "numeric",
-                  hour: "2-digit",
-                  minute: "2-digit",
-                }
-              )}</div>
+      events.forEach((event) => {
+        const card = document.createElement("div");
+        card.className = "event-card";
+
+        const detailUrl =
+          EventNavigation?.buildEventDetailUrl(
+            event.id || event.eventId || event.uuid
+          ) || null;
+
+        if (detailUrl) {
+          card.style.cursor = "pointer";
+          card.addEventListener("click", () => {
+            window.location.href = detailUrl;
+          });
+        }
+
+        const image = document.createElement("div");
+        image.className = "event-image";
+        const imageUrl = buildImageUrl(event.imageUrl);
+        if (imageUrl) {
+          image.style.backgroundImage = `url('${imageUrl}')`;
+        }
+
+        const info = document.createElement("div");
+        info.className = "event-info";
+
+        const title = document.createElement("div");
+        title.className = "event-title";
+        title.textContent = event.title || "Evento";
+
+        const date = document.createElement("div");
+        date.className = "event-date";
+        date.textContent = formatEventDate(
+          event.eventTime || event.data || event.date
+        );
+
+        const location = document.createElement("div");
+        location.className = "event-location";
+
+        info.appendChild(title);
+        info.appendChild(date);
+        info.appendChild(location);
+
+        card.appendChild(image);
+        card.appendChild(info);
+
+        eventsContainer.appendChild(card);
+      });
+    }
+
+    function formatAddress(address) {
+      if (!address || typeof address !== "object") {
+        return null;
+      }
+      const parts = [
+        address.streetAddress || address.street,
+        address.number,
+        address.city,
+        address.state,
+      ].filter(Boolean);
+      return parts.length ? parts.join(", ") : null;
+    }
+
+    async function loadEventsPage() {
+      try {
+        const events = await apiService.getMyEvents();
+        renderEvents(events);
+      } catch (error) {
+        console.error("Error loading my events:", error);
+        eventsContainer.innerHTML = `
+            <div class="empty-state">
+              <p>Erro ao carregar seus eventos</p>
             </div>
-          </div>
-        `;
-                    })
-                    .join("");
-                } catch (error) {
-                  console.error("Error loading events:", error);
-                  container.innerHTML = `
-          <div class="empty-state">
-            <p>Erro ao carregar eventos</p>
-          </div>
-        `;
-                }
-              }
+          `;
+      }
+    }
 
-              // Load events on page load
-              document.addEventListener("DOMContentLoaded", loadMyEvents);
-            </script>
-          </body>
-        </html>
-      </div>
-    </div>
-  </body>
+    document.addEventListener("DOMContentLoaded", loadEventsPage);
+  </script>
+</body>
+
 </html>

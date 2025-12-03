@@ -14,7 +14,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
   if (!eventId) {
     notifyError("Evento não encontrado");
-    setTimeout(() => (window.location.href = "eventos.html"), 1500);
+    setTimeout(() => (window.location.href = "my-events.html"), 1500);
     return;
   }
 
