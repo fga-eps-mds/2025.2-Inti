@@ -1,101 +1,128 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="pt-BR">
 
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>MUSA - Novo Evento</title>
-  <link rel="stylesheet" href="../css/style.css" />
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Tilt+Warp&family=Teachers&display=swap" rel="stylesheet" />
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>MUSA - Novo evento</title>
+    <link rel="stylesheet" href="../css/style.css" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+        href="https://fonts.googleapis.com/css2?family=Maitree:wght@300;400;500;600&family=Libre+Bodoni:wght@400;700&display=swap"
+        rel="stylesheet" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Tilt+Warp&display=swap" rel="stylesheet">
+
 </head>
 
 <body>
-  <div class="screen-container">
-    <div class="screen-create-event">
-      <button class="seta-voltar" onclick="window.history.back()">
-        <svg viewBox="0 0 23 16" fill="none">
-          <line x1="2.12132" y1="2.12132" x2="13.435" y2="13.435" stroke="#A38BBA" stroke-width="6" />
-          <line x1="9.17867" y1="13.435" x2="20.4924" y2="2.12132" stroke="#A38BBA" stroke-width="6" />
-        </svg>
-      </button>
+    <div class="screen-container">
+        <div class="screen-services">
 
-      <h1 class="create-title">Novo Evento</h1>
+            <header class="header-new-product">
+                <a href="home.html">
+                    <img src="../assets/Seta Select.svg" alt="Voltar" class="btn-voltar-header" />
+                </a>
+                <h1 class="page-title">Novo evento</h1>
+            </header>
 
-      <form id="createEventForm" class="create-event-form">
-        <div class="form-group">
-          <label for="eventTitle" class="input-label">Título do Evento</label>
-          <input type="text" id="eventTitle" class="input-field" placeholder="Nome do evento" required />
-        </div>
+            <main class="new-product-content">
+                <form class="form form-new-product">
+                    <!-- Campo: Título -->
+                    <div class="form-group">
+                        <div class="input-wrapper">
+                            <label for="title" class="input-label">Título</label>
+                            <input type="text" id="title" name="title" class="input-field" placeholder="Digite o título"
+                                required />
 
-        <div class="form-group">
-          <label for="eventDate" class="input-label">Data e Hora</label>
-          <input type="datetime-local" id="eventDate" class="input-field" required />
-        </div>
+                        </div>
+                    </div>
 
-        <div class="form-group">
-          <label for="eventImage" class="file-upload-label">
-            <div class="create-image-area">
-              <span id="uploadText">Clique para selecionar uma imagem</span>
-              <img id="previewImage" src="" style="display: none; max-width: 100%; max-height: 300px;" />
-            </div>
-          </label>
-          <input type="file" id="eventImage" accept="image/*" style="display: none;" required />
-        </div>
+                    <!-- Campo: Descrição -->
+                    <div class="form-group">
+                        <div class="input-wrapper">
+                            <label for="description" class="input-label">Descrição</label>
+                            <textarea id="description" name="description" class="input-field textarea-field"
+                                placeholder="Descreva seu evento" required></textarea>
+                        </div>
+                    </div>
 
-        <div class="form-group">
-          <label for="eventDescription" class="input-label">Descrição</label>
-          <textarea id="eventDescription" class="create-description" placeholder="Descrição do evento..." rows="4"
-            required></textarea>
-        </div>
+                    <div class="row-group">
+                        <div class="input-group-half">
+                            <!-- Campo: Data -->
 
-        <div class="form-group">
-          <label for="eventLocation" class="input-label">Localização</label>
-          <input type="text" id="eventLocation" class="input-field" placeholder="Endereço do evento" required />
-        </div>
-        <!doctype html>
-        <html lang="pt-BR">
+                            <div class="form-group">
+                                <div class="input-wrapper">
+                                    <label for="date" class="input-label">Data</label>
+                                    <input type="date" id="date" name="date" class="input-field"
+                                        placeholder="Digite a data" required />
+                                    <img src="../assets/img_calendar.svg" alt="Ícone de calendário"
+                                        class="input-field-icon" />
+                                </div>
+                            </div>
+                        </div>
 
-        <head>
-          <meta charset="UTF-8" />
-          <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-          <title>MUSA - Novo Evento</title>
-          <link rel="stylesheet" href="../css/style.css" />
-          <link rel="preconnect" href="https://fonts.googleapis.com" />
-          <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-          <link href="https://fonts.googleapis.com/css2?family=Tilt+Warp&family=Teachers&display=swap"
-            rel="stylesheet" />
-        </head>
+                        <div class="input-group-half">
 
-        <body>
-          <div class="screen-container">
-            <div class="screen-create-event">
-              <button class="seta-voltar" onclick="window.history.back()">
-                <svg viewBox="0 0 23 16" fill="none">
-                  <line x1="2.12132" y1="2.12132" x2="13.435" y2="13.435" stroke="#A38BBA" stroke-width="6" />
-                  <line x1="9.17867" y1="13.435" x2="20.4924" y2="2.12132" stroke="#A38BBA" stroke-width="6" />
-                </svg>
-              </button>
+                            <!-- Campo: Horário -->
+                            <div class="form-group">
+                                <div class="input-wrapper">
+                                    <label for="time" class="input-label">Horário</label>
+                                    <input type="time" id="time" name="time" class="input-field"
+                                        placeholder="Digite o horário" required style="width: 138px;" />
+                                    <img src="../assets/img_watch.svg" alt="Ícone de relógio"
+                                        class="input-field-icon" />
 
-              <h1 class="create-title">Novo Evento</h1>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Campo: Localização -->
+                    <div class="form-group">
+                        <div class="input-wrapper">
+                            <label for="localizacao_autocomplete" class="input-label">Localização</label>
+                            <input type="text" id="localizacao_autocomplete" name="location" class="input-field"
+                                placeholder="Digite a localização" required />
+                            <img src="../assets/img_location.svg" alt="Ícone de localização" class="input-field-icon" />
+                            <input type="hidden" id="street_address" name="street_address">
+                            <input type="hidden" id="city" name="city">
+                            <input type="hidden" id="state" name="state">
+                            <input type="hidden" id="latitude" name="latitude">
+                            <input type="hidden" id="longitude" name="longitude">
+                        </div>
+                    </div>
 
-              <form id="createEventForm" class="create-event-form">
-                <div class="form-group">
-                  <label for="eventTitle" class="input-label">Título do Evento</label>
-                  <input type="text" id="eventTitle" class="input-field" placeholder="Nome do evento" required />
-                </div>
+                    <div id="mapModal"
+                        style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.5); z-index: 1000;">
+                        <div style="background: white; margin: 10% auto; padding: 20px; width: 80%; height: 70%;">
+                            <div id="map" style="width: 100%; height: 90%;"></div>
+                            <button id="confirmLocation">Confirmar Localização</button>
+                        </div>
+                    </div>
 
-                <div class="form-group">
-                  <label for="eventDate" class="input-label">Data e Hora</label>
-                  <input type="datetime-local" id="eventDate" class="input-field" required />
-                </div>
 
-                <div class="form-group">
-                  <label for="eventImage" class="file-upload-label">
-                    <div class="create-image-area">
-                      <span id="uploadText">Clique para selecionar uma imagem</span>
-                      <img id="previewImage" src="" style="display: none; max-width: 100%; max-height: 300px;" />
+
+                    <!-- Campo: Valor do ingresso -->
+                    <div class="form-group">
+                        <div class="input-wrapper" style="margin-top: -8px;">
+                            <label for="price" class="input-label">Valor do ingresso</label>
+                            <input type="text" id="price" name="price" class="input-field price-field" placeholder="R$"
+                                required />
+                            <img src="../assets/img_ticket.svg" alt="Ícone de ingresso" class="input-field-icon" />
+                        </div>
+                    </div>
+
+                    <div class="form-group image-upload-group">
+                        <label for="image" class="image-upload-area">
+                            <input type="file" id="image" name="image" accept="image/*" class="image-input" />
+                            <div class="image-upload-content">
+                                <img src="../assets/UploadImage.svg" alt="Selecionar imagem"
+                                    class="image-placeholder-icon" />
+                                <p class="global-font">Adicionar imagem de capa</p>
+                            </div>
+                        </label>
                     </div>
                   </label>
                   <input type="file" id="eventImage" accept="image/*" style="display: none;" required />
