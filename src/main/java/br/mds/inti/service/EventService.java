@@ -1,18 +1,14 @@
 package br.mds.inti.service;
 
-import br.mds.inti.model.dto.EventDetailResponse;
-import br.mds.inti.model.dto.EventParticipantResponse;
-import br.mds.inti.model.dto.EventListResponse;
-import br.mds.inti.model.dto.EventRequestDTO;
+import br.mds.inti.model.dto.*;
 import br.mds.inti.model.dto.EventResponseDTO;
-import br.mds.inti.model.dto.LocalAddress;
-import br.mds.inti.model.dto.MyEvent;
 import br.mds.inti.model.entity.Event;
 import br.mds.inti.model.entity.EventParticipant;
 import br.mds.inti.model.entity.Profile;
 import br.mds.inti.model.entity.pk.EventParticipantPK;
 import br.mds.inti.repositories.EventParticipantsRepository;
 import br.mds.inti.repositories.EventRepository;
+import br.mds.inti.repositories.ProfileRepository;
 import br.mds.inti.service.exceptions.EntityNotFoundException;
 import br.mds.inti.service.exceptions.EventParticipantAlreadyExistsException;
 import jakarta.validation.constraints.NotNull;
@@ -25,6 +21,7 @@ import java.io.IOException;
 import java.time.Instant;
 import java.time.ZoneId;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
@@ -36,6 +33,9 @@ public class EventService {
 
     @Autowired
     EventRepository eventRepository;
+
+    @Autowired
+    ProfileRepository profileRepository;
 
     @Autowired
     EventParticipantsRepository eventParticipantsRepository;
@@ -151,5 +151,19 @@ public class EventService {
                         generateImageUrl(event.getBlobName()),
                         event.getEventTime().atZone(ZoneId.of("America/Sao_Paulo")).toLocalDateTime()))
                 .toList();
+    }
+
+    public List<EventFollowingDTO> getEventsFromFollowing(Profile profile, UUID eventId) {
+        Optional<List<Profile>> followedByProfile = profileRepository.findEventParticipantsFollowedByProfile(eventId, profile.getId());
+        if (followedByProfile.isEmpty() || followedByProfile.get().isEmpty()) {
+            return List.of();
+        }
+
+        return followedByProfile.get().stream()
+                .map(iterationProfile -> new EventFollowingDTO(
+                        iterationProfile.getId(),
+                        iterationProfile.getUsername(),
+                        iterationProfile.getProfilePictureUrl()
+                )).toList();
     }
 }

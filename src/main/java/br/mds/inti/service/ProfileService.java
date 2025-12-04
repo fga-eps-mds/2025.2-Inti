@@ -99,10 +99,8 @@ public class ProfileService {
 
     public void updateUser(UpdateUserRequest updateUserRequest) throws IOException {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        if (auth == null || !(auth.getPrincipal() instanceof Profile))
+        if (auth == null || !(auth.getPrincipal() instanceof Profile profile))
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "No authentication provided");
-
-        Profile profile = (Profile) auth.getPrincipal();
 
         if (updateUserRequest.name() != null && !updateUserRequest.name().isBlank()) {
             profile.setName(updateUserRequest.name());
@@ -127,15 +125,17 @@ public class ProfileService {
             }
         }
 
+        String blobName = null;
         if (profile.getProfilePictureUrl() == null || profile.getProfilePictureUrl().isEmpty()) {
-            throw new ImageNotFoundException("Profile picture does not exist");
+            blobName = blobService.uploadImage(profile.getId(), updateUserRequest.profilePicture());
+            profile.setProfilePictureUrl(blobName);
         } else {
             if (updateUserRequest.profilePicture() != null && !updateUserRequest.profilePicture().isEmpty()) {
                 byte[] existingProfilePicture = blobService.downloadImage(profile.getProfilePictureUrl());
                 byte[] newProfilePicture = updateUserRequest.profilePicture().getBytes();
 
                 if (!Arrays.equals(existingProfilePicture, newProfilePicture)) {
-                    String blobName = blobService.uploadImage(profile.getId(), updateUserRequest.profilePicture());
+                    blobName = blobService.uploadImage(profile.getId(), updateUserRequest.profilePicture());
                     profile.setProfilePictureUrl(blobName);
                 }
             }

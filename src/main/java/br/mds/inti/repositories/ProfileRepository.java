@@ -22,4 +22,14 @@ public interface ProfileRepository extends JpaRepository<Profile, UUID> {
 
     @Query("select p.id from Profile p where p.type = :type order by random()")
     List<UUID> findByOrganization(@Param("type") ProfileType type, Pageable pageable);
+
+    @Query("""
+       SELECT ep.profile
+       FROM EventParticipant ep
+       JOIN ep.profile p
+       JOIN Follow f ON f.followingProfile = p
+       WHERE ep.event.id = :eventId
+         AND f.followerProfile.id = :followerProfileId
+    """)
+    Optional<List<Profile>> findEventParticipantsFollowedByProfile(UUID eventId, UUID followerProfileId);
 }
