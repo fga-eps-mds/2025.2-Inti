@@ -1,6 +1,7 @@
 package br.mds.inti.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
@@ -25,6 +26,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.web.server.ResponseStatusException;
 
 @ExtendWith(MockitoExtension.class)
 class EventServiceTest {
@@ -87,6 +89,22 @@ class EventServiceTest {
     }
 
     @Test
+    void getMyEvents_shouldExcludeFinishedEvents() {
+        Profile profile = buildProfile();
+        Event active = buildEvent("Ativo", null, Instant.parse("2025-08-01T10:00:00Z"));
+        Event finished = buildEvent("Finalizado", null, Instant.parse("2025-07-01T10:00:00Z"));
+        finished.setFinishedAt(Instant.now());
+
+        when(eventParticipantsRepository.findEventsByProfileId(profile.getId()))
+                .thenReturn(List.of(active, finished));
+
+        List<MyEvent> myEvents = eventService.getMyEvents(profile);
+
+        assertThat(myEvents).hasSize(1);
+        assertThat(myEvents.get(0).title()).isEqualTo("Ativo");
+    }
+
+    @Test
     void getEventById_whenRegistered_shouldSetFlagTrue() {
         Profile profile = buildProfile();
         UUID eventId = UUID.randomUUID();
@@ -131,6 +149,21 @@ class EventServiceTest {
         verify(eventParticipantsRepository, never()).existsByEventIdAndProfileId(any(), any());
     }
 
+    @Test
+    void getEventById_whenEventFinished_shouldThrowNotFound() {
+        Profile profile = buildProfile();
+        UUID eventId = UUID.randomUUID();
+        Event event = buildDetailedEvent(eventId, null, Instant.parse("2025-12-01T12:00:00Z"), true);
+
+        when(eventRepository.findById(eventId)).thenReturn(Optional.of(event));
+
+        ResponseStatusException exception = assertThrows(ResponseStatusException.class,
+                () -> eventService.getEventById(eventId, profile));
+
+        assertThat(exception.getStatusCode().value()).isEqualTo(404);
+        verify(eventParticipantsRepository, never()).existsByEventIdAndProfileId(any(), any());
+    }
+
     private Profile buildProfile() {
         Profile profile = new Profile();
         profile.setId(UUID.randomUUID());
@@ -147,6 +180,10 @@ class EventServiceTest {
     }
 
     private Event buildDetailedEvent(UUID id, String blobName, Instant eventTime) {
+        return buildDetailedEvent(id, blobName, eventTime, false);
+    }
+
+    private Event buildDetailedEvent(UUID id, String blobName, Instant eventTime, boolean finished) {
         Event event = new Event();
         event.setId(id);
         event.setTitle("Detalhe");
@@ -160,7 +197,9 @@ class EventServiceTest {
         event.setReferencePoint("Praca");
         event.setLatitude(BigDecimal.ONE);
         event.setLongitude(BigDecimal.TEN);
-        event.setFinishedAt(eventTime.plusSeconds(3600));
+        if (finished) {
+            event.setFinishedAt(eventTime.plusSeconds(3600));
+        }
         return event;
     }
 }

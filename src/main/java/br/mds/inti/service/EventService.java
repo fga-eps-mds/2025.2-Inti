@@ -75,6 +75,10 @@ public class EventService {
         Event event = eventRepository.findById(eventId)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, EVENTO_NAO_ENCONTRADO));
 
+        if (event.getFinishedAt() != null) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, EVENTO_NAO_ENCONTRADO);
+        }
+
         boolean registered = profile != null && eventParticipantsRepository
                 .existsByEventIdAndProfileId(event.getId(), profile.getId());
 
@@ -133,10 +137,10 @@ public class EventService {
     }
 
     public List<EventListResponse> getListEvent() {
-        List<Event> events = eventRepository.findAll();
-        List<EventListResponse> response = events.stream()
-                .map(event -> new EventListResponse(event.getTitle(), "/images/" + event.getBlobName(),
-                        event.getEventTime().atZone(ZoneId.of("America/Sao_Paulo")).toLocalDateTime(), event.getId()))
+        List<EventListResponse> response = eventRepository.findAll().stream()
+            .filter(event -> event.getFinishedAt() == null)
+            .map(event -> new EventListResponse(event.getTitle(), generateImageUrl(event.getBlobName()),
+                event.getEventTime().atZone(ZoneId.of("America/Sao_Paulo")).toLocalDateTime(), event.getId()))
                 .collect(Collectors.toList());
         return response;
     }
@@ -145,6 +149,7 @@ public class EventService {
         List<Event> events = eventParticipantsRepository.findEventsByProfileId(profile.getId());
 
         return events.stream()
+            .filter(event -> event.getFinishedAt() == null)
                 .map(event -> new MyEvent(
                         event.getId(),
                         event.getTitle(),
