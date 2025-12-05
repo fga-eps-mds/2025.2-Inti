@@ -17,6 +17,7 @@ import java.math.BigDecimal;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
+import java.time.temporal.ChronoUnit;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
@@ -46,8 +47,8 @@ class EventServiceTest {
     @Test
     void getMyEvents_shouldReturnMappedEventsWithImageAndDate() {
         Profile profile = buildProfile();
-        Instant instantWithImage = Instant.parse("2025-06-10T12:00:00Z");
-        Instant instantWithoutImage = Instant.parse("2025-07-15T15:30:00Z");
+        Instant instantWithImage = Instant.now().plus(1, ChronoUnit.DAYS);
+        Instant instantWithoutImage = Instant.now().plus(2, ChronoUnit.DAYS);
 
         Event withImage = buildEvent("Evento 1", "banner.png", instantWithImage);
         Event withoutImage = buildEvent("Evento 2", null, instantWithoutImage);
@@ -91,9 +92,9 @@ class EventServiceTest {
     @Test
     void getMyEvents_shouldExcludeFinishedEvents() {
         Profile profile = buildProfile();
-        Event active = buildEvent("Ativo", null, Instant.parse("2025-08-01T10:00:00Z"));
-        Event finished = buildEvent("Finalizado", null, Instant.parse("2025-07-01T10:00:00Z"));
-        finished.setFinishedAt(Instant.now());
+        Event active = buildEvent("Ativo", null, Instant.now().plus(1, ChronoUnit.DAYS));
+        Event finished = buildEvent("Finalizado", null, Instant.now().plus(2, ChronoUnit.DAYS));
+        finished.setFinishedAt(Instant.now().minus(1, ChronoUnit.HOURS));
 
         when(eventParticipantsRepository.findEventsByProfileId(profile.getId()))
                 .thenReturn(List.of(active, finished));
@@ -108,7 +109,7 @@ class EventServiceTest {
     void getEventById_whenRegistered_shouldSetFlagTrue() {
         Profile profile = buildProfile();
         UUID eventId = UUID.randomUUID();
-        Instant eventTime = Instant.parse("2025-09-01T10:15:30Z");
+        Instant eventTime = Instant.now().plus(1, ChronoUnit.DAYS);
         Event event = buildDetailedEvent(eventId, "detail.png", eventTime);
 
         when(eventRepository.findById(eventId)).thenReturn(Optional.of(event));
@@ -125,7 +126,7 @@ class EventServiceTest {
     void getEventById_whenNotRegistered_shouldSetFlagFalse() {
         Profile profile = buildProfile();
         UUID eventId = UUID.randomUUID();
-        Event event = buildDetailedEvent(eventId, null, Instant.parse("2025-10-05T08:00:00Z"));
+        Event event = buildDetailedEvent(eventId, null, Instant.now().plus(2, ChronoUnit.DAYS));
 
         when(eventRepository.findById(eventId)).thenReturn(Optional.of(event));
         when(eventParticipantsRepository.existsByEventIdAndProfileId(eventId, profile.getId())).thenReturn(false);
@@ -139,7 +140,7 @@ class EventServiceTest {
     @Test
     void getEventById_whenProfileIsNull_shouldNotQueryParticipants() {
         UUID eventId = UUID.randomUUID();
-        Event event = buildDetailedEvent(eventId, null, Instant.parse("2025-11-20T18:00:00Z"));
+        Event event = buildDetailedEvent(eventId, null, Instant.now().plus(3, ChronoUnit.DAYS));
 
         when(eventRepository.findById(eventId)).thenReturn(Optional.of(event));
 
@@ -153,7 +154,7 @@ class EventServiceTest {
     void getEventById_whenEventFinished_shouldThrowNotFound() {
         Profile profile = buildProfile();
         UUID eventId = UUID.randomUUID();
-        Event event = buildDetailedEvent(eventId, null, Instant.parse("2025-12-01T12:00:00Z"), true);
+        Event event = buildDetailedEvent(eventId, null, Instant.now().plus(1, ChronoUnit.DAYS), true);
 
         when(eventRepository.findById(eventId)).thenReturn(Optional.of(event));
 
@@ -176,6 +177,7 @@ class EventServiceTest {
         event.setTitle(title);
         event.setBlobName(blobName);
         event.setEventTime(eventTime);
+        event.setFinishedAt(eventTime.plus(15, ChronoUnit.MINUTES));
         return event;
     }
 
@@ -197,9 +199,9 @@ class EventServiceTest {
         event.setReferencePoint("Praca");
         event.setLatitude(BigDecimal.ONE);
         event.setLongitude(BigDecimal.TEN);
-        if (finished) {
-            event.setFinishedAt(eventTime.plusSeconds(3600));
-        }
+        Instant finishedAt = finished ? Instant.now().minus(1, ChronoUnit.HOURS)
+                : eventTime.plus(15, ChronoUnit.MINUTES);
+        event.setFinishedAt(finishedAt);
         return event;
     }
 }

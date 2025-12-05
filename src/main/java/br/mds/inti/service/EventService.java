@@ -24,6 +24,7 @@ import org.springframework.web.server.ResponseStatusException;
 import java.io.IOException;
 import java.time.Instant;
 import java.time.ZoneId;
+import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -65,6 +66,9 @@ public class EventService {
         event.setLatitude(eventRequestDTO.latitude());
         event.setLongitude(eventRequestDTO.longitude());
         event.setCreatedAt(Instant.now());
+        if (event.getEventTime() != null) {
+            event.setFinishedAt(event.getEventTime().plus(15, ChronoUnit.MINUTES));
+        }
 
         eventRepository.save(event);
 
@@ -75,7 +79,7 @@ public class EventService {
         Event event = eventRepository.findById(eventId)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, EVENTO_NAO_ENCONTRADO));
 
-        if (event.getFinishedAt() != null) {
+        if (!isEventActive(event)) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, EVENTO_NAO_ENCONTRADO);
         }
 
@@ -138,9 +142,9 @@ public class EventService {
 
     public List<EventListResponse> getListEvent() {
         List<EventListResponse> response = eventRepository.findAll().stream()
-            .filter(event -> event.getFinishedAt() == null)
-            .map(event -> new EventListResponse(event.getTitle(), generateImageUrl(event.getBlobName()),
-                event.getEventTime().atZone(ZoneId.of("America/Sao_Paulo")).toLocalDateTime(), event.getId()))
+                .filter(this::isEventActive)
+                .map(event -> new EventListResponse(event.getTitle(), generateImageUrl(event.getBlobName()),
+                        event.getEventTime().atZone(ZoneId.of("America/Sao_Paulo")).toLocalDateTime(), event.getId()))
                 .collect(Collectors.toList());
         return response;
     }
@@ -149,12 +153,17 @@ public class EventService {
         List<Event> events = eventParticipantsRepository.findEventsByProfileId(profile.getId());
 
         return events.stream()
-            .filter(event -> event.getFinishedAt() == null)
+                .filter(this::isEventActive)
                 .map(event -> new MyEvent(
                         event.getId(),
                         event.getTitle(),
                         generateImageUrl(event.getBlobName()),
                         event.getEventTime().atZone(ZoneId.of("America/Sao_Paulo")).toLocalDateTime()))
                 .toList();
+    }
+
+    private boolean isEventActive(Event event) {
+        Instant finishedAt = event.getFinishedAt();
+        return finishedAt == null || finishedAt.isAfter(Instant.now());
     }
 }
