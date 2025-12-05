@@ -51,7 +51,13 @@ public class PostController {
 
     @GetMapping("/{postId}")
     public ResponseEntity<PostDetailResponse> getPostById(@PathVariable UUID postId) {
-        PostDetailResponse post = postService.getPostById(postId);
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        Profile profile = null;
+        if (authentication != null && authentication.getPrincipal() instanceof Profile authenticatedProfile) {
+            profile = authenticatedProfile;
+        }
+
+        PostDetailResponse post = postService.getPostById(postId, profile);
         return ResponseEntity.ok(post);
     }
 
