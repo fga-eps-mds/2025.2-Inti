@@ -180,9 +180,8 @@ async function setBackgroundImageWithBearer(element, imageUrl, token) {
     const blob = await response.blob();
     const objectUrl = URL.createObjectURL(blob);
 
-    element.style.backgroundImage = `url("${objectUrl}")`;
-    element.style.backgroundSize = "cover";
-    element.style.backgroundPosition = "center";
+    element.src = objectUrl;
+    element.style.backgroundImage = "none";
   } catch (error) {
     console.error("Erro ao carregar imagem:", error);
     element.src = "../assets/profilePic.svg";
@@ -205,7 +204,10 @@ function buildMediaUrl(path) {
 
   const baseUrl = apiService?.baseURL || "https://20252-inti-production.up.railway.app";
   const normalizedPath = trimmedPath.startsWith("/") ? trimmedPath : `/${trimmedPath}`;
-  return `${baseUrl}${normalizedPath}`;
+  const segments = normalizedPath.split("/").filter(Boolean);
+  const isBareFilename = segments.length === 1;
+  const finalPath = isBareFilename ? `/images/${segments[0]}` : normalizedPath;
+  return `${baseUrl}${finalPath}`;
 }
 
 async function handleLikeClick(event) {

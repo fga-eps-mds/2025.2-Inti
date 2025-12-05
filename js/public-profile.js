@@ -1,14 +1,7 @@
 const AUTH_TOKEN = localStorage.getItem("authToken");
 
 const urlParams = new URLSearchParams(window.location.search);
-// Get username from URL path if possible, otherwise from query param, otherwise default
-// The current logic seems to expect it from somewhere.
-// The user said "public-profile.html" so it might be /pages/public-profile.html?username=...
-// But the code uses `window.location.search` but doesn't extract `username` from it in the provided snippet?
-// Ah, line 5: `const username = document.addEventListener...` assigns the return of addEventListener to username? That's wrong.
-// I need to fix how username is retrieved.
 
-// Let's fix the whole file structure.
 
 document.addEventListener("DOMContentLoaded", () => {
   if (!AUTH_TOKEN) {
@@ -122,8 +115,7 @@ function populateProfileData(data) {
       if (view === "posts") {
         populateUserPosts(data.posts || []);
       } else if (view === "products") {
-        // Assuming products might be in data.products or filtered from posts
-        // For now, let's assume data.products exists or pass empty
+        
         populateUserProducts(data.products || []);
       }
     });

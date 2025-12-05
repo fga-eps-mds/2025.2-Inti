@@ -230,18 +230,23 @@ function addPostClickEventListeners() {
 }
 
 // Handle post click events
-async function handlePostClick(event) {
-  // Check if the clicked element is a post image or its parent is a post image
-  const postImage = event.target.closest(".image-post-placeholder");
-  if (postImage) {
-    // CRITICAL FIX: Prevent default behavior (page reload)
-    event.preventDefault();
-    event.stopPropagation();
+function handlePostClick(event) {
+  if (event.target.closest(".like-button")) {
+    return;
+  }
 
-    const postId = postImage.dataset.postId;
-    if (postId) {
-      await openPostModal(postId);
-    }
+  const postElement = event.target.closest(".post");
+  if (!postElement) {
+    return;
+  }
+
+  const imageElement = postElement.querySelector(".image-post-placeholder");
+  const postId =
+    postElement.dataset.postId ||
+    (imageElement ? imageElement.dataset.postId : null);
+
+  if (postId) {
+    window.location.href = `post-detail.html?id=${postId}`;
   }
 }
 
