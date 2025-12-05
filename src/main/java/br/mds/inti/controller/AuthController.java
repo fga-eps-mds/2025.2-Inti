@@ -3,6 +3,7 @@ package br.mds.inti.controller;
 import br.mds.inti.model.dto.auth.LoginRequest;
 import br.mds.inti.model.dto.auth.ProfileCreationResponse;
 import br.mds.inti.model.dto.auth.RegisterRequest;
+import br.mds.inti.model.dto.auth.LoginResponse;
 import br.mds.inti.model.entity.Profile;
 import br.mds.inti.service.AuthService;
 import org.springframework.http.ResponseEntity;
@@ -36,7 +37,7 @@ public class AuthController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<String> login(@RequestBody LoginRequest request) {
+    public ResponseEntity<LoginResponse> login(@RequestBody LoginRequest request) {
         return ResponseEntity.ok(authService.login(request));
     }
 
