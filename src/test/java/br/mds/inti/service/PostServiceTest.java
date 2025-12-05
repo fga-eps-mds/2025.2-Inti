@@ -1,8 +1,10 @@
 package br.mds.inti.service;
 
 import br.mds.inti.model.dto.PostDetailResponse;
+import br.mds.inti.model.entity.Like;
 import br.mds.inti.model.entity.Post;
 import br.mds.inti.model.entity.Profile;
+import br.mds.inti.repositories.LikeRepository;
 import br.mds.inti.repositories.PostRepository;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -32,6 +34,9 @@ class PostServiceTest {
 
     @Mock
     private BlobService blobService;
+
+    @Mock
+    private LikeRepository likeRepository;
 
     @InjectMocks
     private PostService postService;
@@ -158,7 +163,10 @@ class PostServiceTest {
 
         when(postRepository.findById(postId)).thenReturn(Optional.of(post));
 
-        PostDetailResponse response = postService.getPostById(postId);
+        Profile viewer = buildProfile();
+        when(likeRepository.findByProfileAndPostId(viewer, postId)).thenReturn(Optional.empty());
+
+        PostDetailResponse response = postService.getPostById(postId, viewer);
 
         assertThat(response.id()).isEqualTo(postId);
         assertThat(response.description()).isEqualTo("Desc");
@@ -172,7 +180,7 @@ class PostServiceTest {
         when(postRepository.findById(postId)).thenReturn(Optional.empty());
 
         ResponseStatusException ex = assertThrows(ResponseStatusException.class,
-                () -> postService.getPostById(postId));
+                () -> postService.getPostById(postId, buildProfile()));
 
         assertThat(ex.getStatusCode().value()).isEqualTo(404);
     }
@@ -187,8 +195,60 @@ class PostServiceTest {
         when(postRepository.findById(postId)).thenReturn(Optional.of(post));
 
         ResponseStatusException ex = assertThrows(ResponseStatusException.class,
-                () -> postService.getPostById(postId));
+                () -> postService.getPostById(postId, buildProfile()));
 
         assertThat(ex.getStatusCode().value()).isEqualTo(404);
+    }
+
+    @Test
+    void getPostById_whenLikedByCurrentProfile_shouldReturnLikedTrue() {
+        UUID postId = UUID.randomUUID();
+        Profile author = new Profile();
+        author.setId(UUID.randomUUID());
+
+        Post post = new Post();
+        post.setId(postId);
+        post.setProfile(author);
+        post.setDescription("Desc");
+        post.setLikesCount(5);
+        post.setCreatedAt(Instant.now());
+        post.setBlobName("blob.png");
+
+        Profile viewer = buildProfile();
+
+        when(postRepository.findById(postId)).thenReturn(Optional.of(post));
+        when(likeRepository.findByProfileAndPostId(viewer, postId)).thenReturn(Optional.of(new Like()));
+
+        PostDetailResponse response = postService.getPostById(postId, viewer);
+
+        assertThat(response.liked()).isTrue();
+    }
+
+    @Test
+    void getPostById_whenProfileIsNull_shouldSkipLikeLookup() {
+        UUID postId = UUID.randomUUID();
+        Profile author = new Profile();
+        author.setId(UUID.randomUUID());
+
+        Post post = new Post();
+        post.setId(postId);
+        post.setProfile(author);
+        post.setDescription("Desc");
+        post.setLikesCount(5);
+        post.setCreatedAt(Instant.now());
+
+        when(postRepository.findById(postId)).thenReturn(Optional.of(post));
+
+        PostDetailResponse response = postService.getPostById(postId, null);
+
+        assertThat(response.liked()).isFalse();
+        verify(likeRepository, never()).findByProfileAndPostId(any(Profile.class), any(UUID.class));
+    }
+
+    private Profile buildProfile() {
+        Profile profile = new Profile();
+        profile.setId(UUID.randomUUID());
+        profile.setUsername("viewer");
+        return profile;
     }
 }
