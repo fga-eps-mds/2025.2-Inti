@@ -184,24 +184,19 @@ document.addEventListener("DOMContentLoaded", () => {
   };
 
   const reverseGeocode = async (lat, lng) => {
+    if (!window.apiService) {
+      console.warn("apiService indisponível para geocodificação reversa");
+      return null;
+    }
+
     const params = new URLSearchParams({
-      format: "jsonv2",
       lat: lat.toString(),
-      lon: lng.toString(),
-      addressdetails: "1",
-      "accept-language": "pt-BR",
+      lng: lng.toString(),
     });
 
     try {
-      const response = await fetch(`https://nominatim.openstreetmap.org/reverse?${params.toString()}`, {
-        headers: {
-          Accept: "application/json",
-        },
-      });
-
-      if (!response.ok) return null;
-
-      const data = await response.json();
+      const data = await apiService.request(`/geo/reverse?${params.toString()}`);
+      if (!data) return null;
       const address = data.address || {};
       const displayAddress = data.display_name;
 
