@@ -28,8 +28,7 @@ public class FollowService {
 
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 
-        if (auth != null && auth.getPrincipal() instanceof Profile) {
-            Profile me = (Profile) auth.getPrincipal();
+        if (auth != null && auth.getPrincipal() instanceof Profile me) {
 
             Profile profileToFollow = profileService.getProfile(username);
 
@@ -72,8 +71,7 @@ public class FollowService {
     public FollowResponse unfollowProfile(String username) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 
-        if (auth != null && auth.getPrincipal() instanceof Profile) {
-            Profile me = (Profile) auth.getPrincipal();
+        if (auth != null && auth.getPrincipal() instanceof Profile me) {
             Profile profileToUnfollow = profileService.getProfile(username);
 
             Follow followToRemove = followRepository

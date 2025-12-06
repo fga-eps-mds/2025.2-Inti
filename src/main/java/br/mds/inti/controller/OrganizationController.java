@@ -1,28 +1,29 @@
 package br.mds.inti.controller;
 
-import java.io.IOException;
-
+import br.mds.inti.model.dto.FollowResponse;
+import br.mds.inti.model.dto.ProfileResponse;
+import br.mds.inti.model.dto.UpdateUserRequest;
+import br.mds.inti.model.entity.Profile;
+import br.mds.inti.service.FollowService;
+import br.mds.inti.service.OrganizationService;
+import jakarta.validation.constraints.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
 
-import br.mds.inti.model.dto.FollowResponse;
-import br.mds.inti.model.dto.ProfileResponse;
-import br.mds.inti.model.dto.UpdateUserRequest;
-import br.mds.inti.service.FollowService;
-import br.mds.inti.service.ProfileService;
-import jakarta.validation.constraints.NotNull;
+import java.io.IOException;
 
 @RestController
-@RequestMapping("/profile")
-public class ProfileController {
+@RequestMapping("/org")
+public class OrganizationController {
 
     @Autowired
-    private ProfileService profileService;
+    private OrganizationService organizationService;
 
     @Autowired
     private FollowService followService;
@@ -30,19 +31,26 @@ public class ProfileController {
     @GetMapping("/me")
     public ResponseEntity<ProfileResponse> getMe(@RequestParam("size") Integer size,
             @RequestParam("page") Integer page) {
-        return ResponseEntity.ok().body(profileService.getProfile(page, size));
+
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        if(auth == null ||  !(auth.getPrincipal() instanceof Profile profile)) throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Unauthorized");
+
+        return ResponseEntity.ok().body(organizationService.getProfile(page, size, profile));
     }
 
     @GetMapping("/{username}")
     public ResponseEntity<ProfileResponse> getPublicProfile(@PathVariable String username,
             @RequestParam("size") Integer size, @RequestParam("page") Integer page) {
-        return ResponseEntity.ok().body(profileService.getProfileByUsername(username, page, size));
+        return ResponseEntity.ok().body(organizationService.getProfileByUsername(username, page, size));
     }
 
     @PostMapping("/upload-me")
-    public ResponseEntity<Void> setMyProfilePhoto(MultipartFile myImage) {
+    public ResponseEntity<Void> setMyOrgnizationPhoto(MultipartFile myImage) {
         try {
-            profileService.setPhoto(myImage);
+            Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+            if(auth == null ||  !(auth.getPrincipal() instanceof Profile profile)) throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Unauthorized");
+
+            organizationService.setPhoto(myImage, profile);
             return ResponseEntity.status(HttpStatus.CREATED).build();
 
         } catch (IOException e) {
@@ -54,7 +62,10 @@ public class ProfileController {
     @PatchMapping("/update")
     public ResponseEntity<Void> user(@NotNull @ModelAttribute UpdateUserRequest updateUserRequest) {
         try {
-            profileService.updateUser(updateUserRequest);
+            Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+            if(auth == null ||  !(auth.getPrincipal() instanceof Profile profile)) throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Unauthorized");
+
+            organizationService.updateOrganization(updateUserRequest, profile);
             return ResponseEntity.status(HttpStatus.CREATED).build();
         } catch (IOException e) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Error trying to update profile");
@@ -69,10 +80,9 @@ public class ProfileController {
     }
 
     @DeleteMapping("/{username}/unfollow")
-    public ResponseEntity<FollowResponse> unfollowProfile(@PathVariable String username) {
+    public ResponseEntity<FollowResponse> unfollowOrganization(@PathVariable String username) {
         FollowResponse response = followService.unfollowProfile(username);
 
         return ResponseEntity.ok().body(response);
     }
-
 }
