@@ -3,6 +3,7 @@ package br.mds.inti.service;
 import br.mds.inti.model.dto.auth.LoginRequest;
 import br.mds.inti.model.dto.auth.ProfileCreationResponse;
 import br.mds.inti.model.dto.auth.RegisterRequest;
+import br.mds.inti.model.dto.auth.LoginResponse;
 import br.mds.inti.model.entity.Profile;
 import br.mds.inti.model.enums.ProfileType;
 import br.mds.inti.repositories.ProfileRepository;
@@ -62,7 +63,7 @@ public class AuthService {
         }
     }
 
-    public String login(LoginRequest request) {
+    public LoginResponse login(LoginRequest request) {
         Profile user = profileRepository.findByEmail(request.email())
                 .orElseThrow(() -> new RuntimeException("Usuário não encontrado"));
 
@@ -70,7 +71,14 @@ public class AuthService {
             throw new RuntimeException("Usuario ou senha invalidos");
         }
 
-        return jwtService.generateToken(user);
+        String jwt = jwtService.generateToken(user);
+
+        return new LoginResponse(
+                jwt,
+                user.getUsername(),
+                user.getName(),
+                user.getEmail(),
+                user.getType());
     }
 
     private boolean isUniqueConstraintViolation(DataIntegrityViolationException e) {
