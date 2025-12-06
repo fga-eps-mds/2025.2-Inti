@@ -1,5 +1,6 @@
 // Configuração da API
 const API_BASE_URL = 'http://localhost:8080'; // Ajuste conforme necessário
+//const API_BASE_URL = 'https://20252-inti-production.up.railway.app'
 const BEARER_TOKEN = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJub3ZvdCIsImV4cCI6MTc2NjkyNjE0MX0.gkJ5SOqVAkaCzirZvz-itqvM5YlI8eLR51aSswjCjHY';
 
 // Estado da página

@@ -1,5 +1,6 @@
 // API Configuration
 const API_CONFIG = {
+  //baseURL: "http://localhost:8080",
   baseURL: "https://20252-inti-production.up.railway.app",
   token: null,
 };
@@ -119,6 +120,10 @@ class ApiService {
   // Profile endpoints
   async getMyProfile(page = 0, size = 10) {
     return this.request(`/profile/me?page=${page}&size=${size}`);
+  }
+
+  async getMyOrganization(page = 0, size = 10) {
+    return this.request(`/organization/me?page=${page}&size=${size}`);
   }
 
   async getPublicProfile(username) {
