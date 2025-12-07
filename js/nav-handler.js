@@ -1,110 +1,180 @@
-// Navigation Handler for Navbar Buttons
-document.addEventListener("DOMContentLoaded", function () {
-  // Check if we're in the pages directory (relative path handling)
-  const isInPagesDir = window.location.pathname.includes("/pages/");
+const ACTION_MODAL_ROUTES = {
+  post: "pages/publish.html",
+  product: "pages/publish.html",
+  event: "pages/create-event.html",
+};
 
-  // Adjust paths based on current location
-  function getAdjustedRoute(route) {
-    // If we're in pages directory and route doesn't start with ../, prepend ../
-    if (isInPagesDir && !route.startsWith("../")) {
-      return "../" + route;
-    }
-    return route;
+let actionModalElement = null;
+let actionModalEscapeListenerAttached = false;
+
+function getAdjustedRoute(route) {
+  const isInPagesDir = window.location.pathname.includes("/pages/");
+  if (isInPagesDir && !route.startsWith("../")) {
+    return "../" + route;
+  }
+  return route;
+}
+
+function ensureActionModal() {
+  if (actionModalElement && document.body.contains(actionModalElement)) {
+    return actionModalElement;
   }
 
-  // Handle button-based navbars (pages with .nav-btn elements)
+  let modal = document.getElementById("actionModal");
+  if (!modal) {
+    modal = document.createElement("div");
+    modal.id = "actionModal";
+    modal.className = "action-modal";
+    modal.setAttribute("aria-hidden", "true");
+    modal.innerHTML = `
+      <div class="modal-content" role="dialog" aria-modal="true" aria-labelledby="actionModalTitle">
+        <button class="close-modal" type="button" aria-label="Fechar modal">&times;</button>
+        <h3 class="modal-title" id="actionModalTitle">Criar</h3>
+        <button class="modal-item" type="button" data-action="post">📸 Criar post</button>
+        <button class="modal-item" type="button" data-action="product">🛒 Criar produto</button>
+        <button class="modal-item" type="button" data-action="event">📅 Criar evento</button>
+      </div>
+    `;
+    document.body.appendChild(modal);
+  }
+
+  actionModalElement = modal;
+  attachActionModalEvents(modal);
+  return modal;
+}
+
+function attachActionModalEvents(modal) {
+  if (!modal || modal.dataset.modalInitialized === "true") return;
+
+  const closeBtn = modal.querySelector(".close-modal");
+  if (closeBtn) {
+    closeBtn.addEventListener("click", function (event) {
+      event.preventDefault();
+      closeActionModal();
+    });
+  }
+
+  modal.addEventListener("click", function (event) {
+    if (event.target === modal) {
+      closeActionModal();
+    }
+  });
+
+  const actionButtons = modal.querySelectorAll(".modal-item[data-action]");
+  actionButtons.forEach((button) => {
+    button.addEventListener("click", function () {
+      const actionType = button.getAttribute("data-action");
+      const route = getAdjustedRoute(
+        ACTION_MODAL_ROUTES[actionType] || ACTION_MODAL_ROUTES.post
+      );
+      closeActionModal();
+      window.location.href = route;
+    });
+  });
+
+  if (!actionModalEscapeListenerAttached) {
+    document.addEventListener("keydown", handleActionModalKeydown);
+    actionModalEscapeListenerAttached = true;
+  }
+
+  modal.dataset.modalInitialized = "true";
+}
+
+function openActionModal(event) {
+  if (event) {
+    event.preventDefault();
+    event.stopImmediatePropagation();
+  }
+
+  const modal = ensureActionModal();
+  if (!modal) return;
+  modal.setAttribute("aria-hidden", "false");
+  document.body.classList.add("modal-open");
+}
+
+function closeActionModal() {
+  if (!actionModalElement) return;
+  actionModalElement.setAttribute("aria-hidden", "true");
+  document.body.classList.remove("modal-open");
+}
+
+function handleActionModalKeydown(event) {
+  if (event.key === "Escape" && actionModalElement) {
+    const isOpen = actionModalElement.getAttribute("aria-hidden") === "false";
+    if (isOpen) {
+      closeActionModal();
+    }
+  }
+}
+
+// Navigation Handler for Navbar Buttons
+document.addEventListener("DOMContentLoaded", function () {
   if (document.querySelector(".navbar .nav-btn")) {
-    // Home button - first button in navbar
     const homeBtn = document.querySelector(".navbar .nav-btn:nth-child(1)");
     if (homeBtn) {
       homeBtn.addEventListener("click", function () {
-        const route = getAdjustedRoute("pages/home.html");
-        window.location.href = route;
+        window.location.href = getAdjustedRoute("pages/home.html");
       });
     }
 
-    // Explore/Search button - second button in navbar
     const exploreBtn = document.querySelector(".navbar .nav-btn:nth-child(2)");
     if (exploreBtn) {
       exploreBtn.addEventListener("click", function () {
-        // Navigate to search page
-        const route = getAdjustedRoute("pages/search.html");
-        window.location.href = route;
+        window.location.href = getAdjustedRoute("pages/search.html");
       });
     }
 
-    // Add/Create button - third button in navbar (with nav-btn-add class)
     const addBtn = document.querySelector(".navbar .nav-btn-add");
     if (addBtn) {
-      addBtn.addEventListener("click", function () {
-        const route = getAdjustedRoute("pages/publish.html");
-        window.location.href = route;
-      });
+      addBtn.addEventListener("click", openActionModal);
     }
 
-    // Calendar/Events button - fourth button in navbar
     const calendarBtn = document.querySelector(".navbar .nav-btn:nth-child(4)");
     if (calendarBtn) {
       calendarBtn.addEventListener("click", function () {
-        const route = getAdjustedRoute("pages/my-events.html");
-        window.location.href = route;
+        window.location.href = getAdjustedRoute("pages/my-events.html");
       });
     }
 
-    // Profile button - fifth button in navbar
     const profileBtn = document.querySelector(".navbar .nav-btn:nth-child(5)");
     if (profileBtn) {
       profileBtn.addEventListener("click", function () {
-        const route = getAdjustedRoute("pages/profile.html");
-        window.location.href = route;
+        window.location.href = getAdjustedRoute("pages/profile.html");
       });
     }
   }
 
-  // Handle image-based navbars (event-detail.html and post-detail.html)
   if (document.querySelector(".navbar img")) {
-    // Home button
     const homeImg = document.querySelector(".nav-home");
     if (homeImg) {
       homeImg.addEventListener("click", function () {
-        const route = getAdjustedRoute("pages/home.html");
-        window.location.href = route;
+        window.location.href = getAdjustedRoute("pages/home.html");
       });
     }
 
-    // Search button
     const searchImg = document.querySelector(".nav-search");
     if (searchImg) {
       searchImg.addEventListener("click", function () {
-        const route = getAdjustedRoute("pages/search.html");
-        window.location.href = route;
+        window.location.href = getAdjustedRoute("pages/search.html");
       });
     }
 
-    // Create button
     const createImg = document.querySelector(".nav-create");
     if (createImg) {
-      createImg.addEventListener("click", function () {
-        const route = getAdjustedRoute("pages/publish.html");
-        window.location.href = route;
-      });
+      createImg.addEventListener("click", openActionModal);
     }
 
-    // Calendar button
     const calendarImg = document.querySelector(".nav-calendar");
     if (calendarImg) {
       calendarImg.addEventListener("click", function () {
-        const route = getAdjustedRoute("pages/my-events.html");
-        window.location.href = route;
+        window.location.href = getAdjustedRoute("pages/my-events.html");
       });
     }
 
-    // Profile button
     const profileImg = document.querySelector(".nav-user");
     if (profileImg) {
       profileImg.addEventListener("click", function () {
-        const route = getAdjustedRoute("pages/profile.html");
-        window.location.href = route;
+        window.location.href = getAdjustedRoute("pages/profile.html");
       });
     }
   }
