@@ -6,17 +6,21 @@
 // Função para fazer login
 async function login(email, password) {
   try {
-    const token = await apiService.login({ email, password });
+    const response = await apiService.login({ email, password });
+    const token = response.jwt;
 
     const userData = {
-      email: email,
+      name: response.name || null,
+      username: response.username || null,
+      email: response.email || email,
+      type: response.type || "user",
       loginTime: new Date().toISOString(),
     };
 
     localStorage.setItem("isAuthenticated", "true");
     localStorage.setItem("userData", JSON.stringify(userData));
 
-    return { success: true, token };
+    return { success: true, token, user: userData };
   } catch (error) {
     console.error("Login error:", error);
     return { success: false, error: error.message };

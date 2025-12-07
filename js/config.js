@@ -100,19 +100,17 @@ class ApiService {
   }
 
   async login(credentials) {
-    const response = await this.request(
-      "/auth/login",
-      {
-        method: "POST",
-        body: JSON.stringify(credentials),
-      },
-      true
-    ); // true indicates text response
+    const response = await this.request("/auth/login", {
+      method: "POST",
+      body: JSON.stringify(credentials),
+    });
 
-    console.log("Login response (token):", response);
+    if (!response || !response.jwt) {
+      console.error("Invalid login response:", response);
+      throw new Error("Token não encontrado na resposta de login.");
+    }
 
-    // Login returns just the token as a string
-    this.setAuthToken(response);
+    this.setAuthToken(response.jwt);
     return response;
   }
 
