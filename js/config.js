@@ -230,6 +230,14 @@ class ApiService {
     return this.request(`/products?page=${page}&size=${size}`);
   }
 
+  async getProductsByProfile(profileId) {
+    if (!profileId) {
+      throw new Error("ID do perfil é obrigatório para carregar produtos.");
+    }
+
+    return this.request(`/products/profile/${profileId}`);
+  }
+
   async getEventDetail(eventId) {
     return this.request(`/event/${eventId}`);
   }

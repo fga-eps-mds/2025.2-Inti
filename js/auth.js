@@ -10,6 +10,7 @@ async function login(email, password) {
     const token = response.jwt;
 
     const userData = {
+      id: response.id || null,
       name: response.name || null,
       username: response.username || null,
       email: response.email || email,

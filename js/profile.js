@@ -24,11 +24,11 @@ const PRODUCTS_PAGE_SIZE = 6;
 
 const productsState = {
   container: null,
-  page: 0,
   loading: false,
   finished: false,
   initialized: false,
   active: false,
+  hasLoadedProfileProducts: false,
 };
 
 // Load profile data
@@ -285,8 +285,8 @@ function activateProductsTab() {
     (!hasRenderedProducts && !productsState.loading)
   ) {
     productsState.initialized = true;
-    productsState.page = 0;
     productsState.finished = false;
+    productsState.hasLoadedProfileProducts = false;
     productsState.container.innerHTML = "";
     loadNextProductsPage();
   }
@@ -307,35 +307,35 @@ async function loadNextProductsPage() {
   setProductsLoadingIndicator(true);
 
   try {
-    const response = await apiService.getMyProducts(
-      productsState.page,
-      PRODUCTS_PAGE_SIZE
-    );
-
-    const products = extractProductsFromResponse(response);
-
-    if (productsState.page === 0 && products.length === 0) {
-      showProductsEmptyState("Nenhum produto cadastrado.");
+    if (productsState.hasLoadedProfileProducts) {
       productsState.finished = true;
       return;
     }
 
-    if (products.length > 0) {
-      appendProducts(products);
-      productsState.page += 1;
-
-      if (products.length < PRODUCTS_PAGE_SIZE) {
-        productsState.finished = true;
-      }
-    } else {
-      productsState.finished = true;
+    const profileId = getCurrentProfileId();
+    if (!profileId) {
+      throw new Error("ID do usuário não encontrado para carregar produtos.");
     }
+
+    const response = await apiService.getProductsByProfile(profileId);
+    const products = extractProductsFromResponse(response);
+
+    if (!products.length) {
+      showProductsEmptyState("Nenhum produto cadastrado.");
+      productsState.finished = true;
+      productsState.hasLoadedProfileProducts = true;
+      return;
+    }
+
+    appendProducts(products);
+    productsState.finished = true;
+    productsState.hasLoadedProfileProducts = true;
   } catch (error) {
     console.error("Erro ao carregar produtos:", error);
     if (typeof toast !== "undefined") {
       toast.error("Erro ao carregar produtos.");
     }
-    if (productsState.page === 0) {
+    if (!productsState.hasLoadedProfileProducts) {
       showProductsEmptyState("Erro ao carregar produtos.");
     }
   } finally {
@@ -512,6 +512,29 @@ function getProductImageUrl(product = {}) {
     "https://20252-inti-production.up.railway.app";
   const normalizedPath = trimmed.startsWith("/") ? trimmed : `/${trimmed}`;
   return `${baseUrl}${normalizedPath}`;
+}
+
+function getCurrentProfileId() {
+  if (currentProfileData?.profileId) {
+    return currentProfileData.profileId;
+  }
+
+  if (currentProfileData?.id) {
+    return currentProfileData.id;
+  }
+
+  const stored = localStorage.getItem("userData");
+  if (!stored) {
+    return null;
+  }
+
+  try {
+    const parsed = JSON.parse(stored);
+    return parsed?.id || parsed?.profileId || null;
+  } catch (error) {
+    console.warn("Falha ao recuperar ID do usuário do localStorage", error);
+    return null;
+  }
 }
 
 function extractProductsFromResponse(response) {
