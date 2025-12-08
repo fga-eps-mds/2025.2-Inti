@@ -44,7 +44,7 @@ public class ProfileService {
 
             Page<PostResponse> post = postService.getPostByIdProfile(profile.getId(), PageRequest.of(page, size));
 
-            return new ProfileResponse(profile.getName(), profile.getUsername(), profile.getPublicEmail(),
+                return new ProfileResponse(profile.getId(), profile.getName(), profile.getUsername(), profile.getPublicEmail(),
                     profile.getPhone(),
                     postService.generateImageUrl(profile.getProfilePictureUrl()),
                     profile.getBio(), profile.getFollowersCount(), profile.getFollowingCount(), post.getContent());
@@ -58,7 +58,7 @@ public class ProfileService {
 
         Page<PostResponse> post = postService.getPostByIdProfile(publicProfile.getId(), PageRequest.of(page, size));
 
-        return new ProfileResponse(publicProfile.getName(), publicProfile.getUsername(), publicProfile.getPublicEmail(),
+        return new ProfileResponse(publicProfile.getId(), publicProfile.getName(), publicProfile.getUsername(), publicProfile.getPublicEmail(),
                 publicProfile.getPhone(),
                 postService.generateImageUrl(publicProfile.getProfilePictureUrl()), publicProfile.getBio(),
                 publicProfile.getFollowersCount(),
