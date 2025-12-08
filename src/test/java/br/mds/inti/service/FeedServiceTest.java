@@ -71,9 +71,7 @@ class FeedServiceTest {
                 when(followRepository.findFollowerIds(currentProfileId)).thenReturn(Collections.emptyList());
                 when(profileRepository.findByOrganization(eq(ProfileType.organization), any(PageRequest.class)))
                                 .thenReturn(Collections.emptyList());
-                when(postRepository.findPostByOrganizationAndNotDeleted(any(), any(PageRequest.class)))
-                                .thenReturn(Collections.emptyList());
-                when(postRepository.findRecentPostsExcludingUsers(any(), any(PageRequest.class)))
+                when(postRepository.findRandomPostsExcludingUsers(any(), any(PageRequest.class)))
                                 .thenReturn(createRandomPosts(5));
 
                 // Act
@@ -99,9 +97,7 @@ class FeedServiceTest {
                                 .thenReturn(List.of(followedPost));
                 when(profileRepository.findByOrganization(eq(ProfileType.organization), any(PageRequest.class)))
                                 .thenReturn(Collections.emptyList());
-                when(postRepository.findPostByOrganizationAndNotDeleted(any(), any(PageRequest.class)))
-                                .thenReturn(Collections.emptyList());
-                when(postRepository.findRecentPostsExcludingUsers(any(), any(PageRequest.class)))
+                when(postRepository.findRandomPostsExcludingUsers(any(), any(PageRequest.class)))
                                 .thenReturn(Collections.emptyList());
 
                 // Act
@@ -134,7 +130,7 @@ class FeedServiceTest {
                                 .thenReturn(List.of(orgId));
                 when(postRepository.findPostByOrganizationAndNotDeleted(eq(List.of(orgId)), any(PageRequest.class)))
                                 .thenReturn(List.of(orgPost));
-                when(postRepository.findRecentPostsExcludingUsers(any(), any(PageRequest.class)))
+                when(postRepository.findRandomPostsExcludingUsers(any(), any(PageRequest.class)))
                                 .thenReturn(Collections.emptyList());
 
                 // Act
@@ -150,6 +146,35 @@ class FeedServiceTest {
                 assertThat(classifiedPost.type()).isEqualTo(PostType.ORGANIZATION);
                 assertThat(classifiedPost.reason()).isEqualTo("Post de organização");
                 assertThat(classifiedPost.liked()).isFalse();
+        }
+
+        @Test
+        void generateFeed_whenCurrentProfileIsOrganization_shouldSkipOwnOrganizationPosts() {
+                // Arrange current profile as organization
+                currentProfile.setType(ProfileType.organization);
+
+                Profile otherOrgProfile = createProfile(UUID.randomUUID(), "anotherOrg", ProfileType.organization);
+                Post otherOrgPost = createPost(otherOrgProfile, 0);
+
+                when(followRepository.findFollowedUserIds(currentProfileId)).thenReturn(Collections.emptyList());
+                when(followRepository.findSecondDegreeConnectionIds(currentProfileId))
+                                .thenReturn(Collections.emptyList());
+                when(followRepository.findFollowerIds(currentProfileId)).thenReturn(Collections.emptyList());
+                when(profileRepository.findByOrganization(eq(ProfileType.organization), any(PageRequest.class)))
+                                .thenReturn(List.of(currentProfileId, otherOrgProfile.getId()));
+                when(postRepository.findPostByOrganizationAndNotDeleted(eq(List.of(otherOrgProfile.getId())),
+                                any(PageRequest.class))).thenReturn(List.of(otherOrgPost));
+                when(postRepository.findRandomPostsExcludingUsers(any(), any(PageRequest.class)))
+                                .thenReturn(createRandomPosts(5));
+
+                // Act
+                List<FeedService.ClassifiedPost> result = feedService.generateFeed(currentProfile, 0, 10);
+
+                // Assert - only posts from other organizations should appear
+                assertThat(result)
+                                .noneMatch(cp -> cp.post().getProfile() != null
+                                                && cp.post().getProfile().getId().equals(currentProfileId));
+                assertThat(result).anyMatch(cp -> cp.post().getId().equals(otherOrgPost.getId()));
         }
 
         @Test
@@ -170,9 +195,7 @@ class FeedServiceTest {
                                 .thenReturn(List.of(secondDegreePost));
                 when(profileRepository.findByOrganization(eq(ProfileType.organization), any(PageRequest.class)))
                                 .thenReturn(Collections.emptyList());
-                when(postRepository.findPostByOrganizationAndNotDeleted(any(), any(PageRequest.class)))
-                                .thenReturn(Collections.emptyList());
-                when(postRepository.findRecentPostsExcludingUsers(any(), any(PageRequest.class)))
+                when(postRepository.findRandomPostsExcludingUsers(any(), any(PageRequest.class)))
                                 .thenReturn(Collections.emptyList());
 
                 // Act
@@ -203,9 +226,7 @@ class FeedServiceTest {
                 when(followRepository.findFollowerIds(currentProfileId)).thenReturn(Collections.emptyList());
                 when(profileRepository.findByOrganization(eq(ProfileType.organization), any(PageRequest.class)))
                                 .thenReturn(Collections.emptyList());
-                when(postRepository.findPostByOrganizationAndNotDeleted(any(), any(PageRequest.class)))
-                                .thenReturn(Collections.emptyList());
-                when(postRepository.findRecentPostsExcludingUsers(any(), any(PageRequest.class)))
+                when(postRepository.findRandomPostsExcludingUsers(any(), any(PageRequest.class)))
                                 .thenReturn(List.of(randomPost));
 
                 // Act
@@ -223,7 +244,7 @@ class FeedServiceTest {
         }
 
         @Test
-        void generateFeed_shouldClassifyOwnPostsAsFollowed() {
+        void generateFeed_shouldExcludeOwnPosts() {
                 // Arrange
                 Post ownPost = createPost(currentProfile, 0);
 
@@ -233,22 +254,14 @@ class FeedServiceTest {
                 when(followRepository.findFollowerIds(currentProfileId)).thenReturn(Collections.emptyList());
                 when(profileRepository.findByOrganization(eq(ProfileType.organization), any(PageRequest.class)))
                                 .thenReturn(Collections.emptyList());
-                when(postRepository.findPostByOrganizationAndNotDeleted(any(), any(PageRequest.class)))
-                                .thenReturn(Collections.emptyList());
-                when(postRepository.findRecentPostsExcludingUsers(any(), any(PageRequest.class)))
+                when(postRepository.findRandomPostsExcludingUsers(any(), any(PageRequest.class)))
                                 .thenReturn(List.of(ownPost));
 
                 // Act
                 List<FeedService.ClassifiedPost> result = feedService.generateFeed(currentProfile, 0, 10);
 
-                // Assert
-                assertThat(result).isNotEmpty();
-                FeedService.ClassifiedPost classifiedPost = result.stream()
-                                .filter(cp -> cp.post().getId().equals(ownPost.getId()))
-                                .findFirst()
-                                .orElse(null);
-                assertThat(classifiedPost).isNotNull();
-                assertThat(classifiedPost.type()).isEqualTo(PostType.FOLLOWED);
+                // Assert - own posts should be filtered out
+                assertThat(result).isEmpty();
         }
 
         @Test
@@ -264,9 +277,7 @@ class FeedServiceTest {
                 when(followRepository.findFollowerIds(currentProfileId)).thenReturn(Collections.emptyList());
                 when(profileRepository.findByOrganization(eq(ProfileType.organization), any(PageRequest.class)))
                                 .thenReturn(Collections.emptyList());
-                when(postRepository.findPostByOrganizationAndNotDeleted(any(), any(PageRequest.class)))
-                                .thenReturn(Collections.emptyList());
-                when(postRepository.findRecentPostsExcludingUsers(any(), any(PageRequest.class)))
+                when(postRepository.findRandomPostsExcludingUsers(any(), any(PageRequest.class)))
                                 .thenReturn(List.of(popularPost));
 
                 // Act
@@ -294,9 +305,7 @@ class FeedServiceTest {
                 when(followRepository.findFollowerIds(currentProfileId)).thenReturn(Collections.emptyList());
                 when(profileRepository.findByOrganization(eq(ProfileType.organization), any(PageRequest.class)))
                                 .thenReturn(Collections.emptyList());
-                when(postRepository.findPostByOrganizationAndNotDeleted(any(), any(PageRequest.class)))
-                                .thenReturn(Collections.emptyList());
-                when(postRepository.findRecentPostsExcludingUsers(any(), any(PageRequest.class)))
+                when(postRepository.findRandomPostsExcludingUsers(any(), any(PageRequest.class)))
                                 .thenReturn(manyPosts);
 
                 // Act
@@ -309,7 +318,7 @@ class FeedServiceTest {
         }
 
         @Test
-        void generateFeed_pagination_beyondAvailablePosts_shouldReturnEmptyList() {
+        void generateFeed_pagination_beyondAvailablePosts_shouldReturnRemainingPosts() {
                 // Arrange
                 List<Post> fewPosts = createRandomPosts(5);
 
@@ -319,16 +328,14 @@ class FeedServiceTest {
                 when(followRepository.findFollowerIds(currentProfileId)).thenReturn(Collections.emptyList());
                 when(profileRepository.findByOrganization(eq(ProfileType.organization), any(PageRequest.class)))
                                 .thenReturn(Collections.emptyList());
-                when(postRepository.findPostByOrganizationAndNotDeleted(any(), any(PageRequest.class)))
-                                .thenReturn(Collections.emptyList());
-                when(postRepository.findRecentPostsExcludingUsers(any(), any(PageRequest.class)))
+                when(postRepository.findRandomPostsExcludingUsers(any(), any(PageRequest.class)))
                                 .thenReturn(fewPosts);
 
                 // Act
                 List<FeedService.ClassifiedPost> result = feedService.generateFeed(currentProfile, 10, 10);
 
-                // Assert
-                assertThat(result).isEmpty();
+                // Assert - fallback random must reuse available posts until they are exhausted
+                assertThat(result).hasSize(fewPosts.size());
         }
 
         @Test
@@ -347,9 +354,7 @@ class FeedServiceTest {
                                 .thenReturn(List.of(duplicatePost));
                 when(profileRepository.findByOrganization(eq(ProfileType.organization), any(PageRequest.class)))
                                 .thenReturn(Collections.emptyList());
-                when(postRepository.findPostByOrganizationAndNotDeleted(any(), any(PageRequest.class)))
-                                .thenReturn(Collections.emptyList());
-                when(postRepository.findRecentPostsExcludingUsers(any(), any(PageRequest.class)))
+                when(postRepository.findRandomPostsExcludingUsers(any(), any(PageRequest.class)))
                                 .thenReturn(List.of(duplicatePost)); // Same post again
 
                 // Act
@@ -377,9 +382,7 @@ class FeedServiceTest {
                 when(followRepository.findFollowerIds(currentProfileId)).thenReturn(Collections.emptyList());
                 when(profileRepository.findByOrganization(eq(ProfileType.organization), any(PageRequest.class)))
                                 .thenReturn(Collections.emptyList());
-                when(postRepository.findPostByOrganizationAndNotDeleted(any(), any(PageRequest.class)))
-                                .thenReturn(Collections.emptyList());
-                when(postRepository.findRecentPostsExcludingUsers(any(), any(PageRequest.class)))
+                when(postRepository.findRandomPostsExcludingUsers(any(), any(PageRequest.class)))
                                 .thenReturn(List.of(postWithNullProfile));
 
                 // Act
@@ -408,7 +411,7 @@ class FeedServiceTest {
                                 .thenReturn(List.of(orgId));
                 when(postRepository.findPostByOrganizationAndNotDeleted(eq(List.of(orgId)), any(PageRequest.class)))
                                 .thenReturn(List.of(orgPost));
-                when(postRepository.findRecentPostsExcludingUsers(any(), any(PageRequest.class)))
+                when(postRepository.findRandomPostsExcludingUsers(any(), any(PageRequest.class)))
                                 .thenReturn(Collections.emptyList());
 
                 // Act
@@ -426,7 +429,8 @@ class FeedServiceTest {
 
         @Test
         void generateFeed_shouldMarkPostsLikedByUser() {
-                Post post = createPost(currentProfile, 0);
+                Profile anotherProfile = createProfile(UUID.randomUUID(), "friend", ProfileType.user);
+                Post post = createPost(anotherProfile, 0);
 
                 when(followRepository.findFollowedUserIds(currentProfileId)).thenReturn(Collections.emptyList());
                 when(followRepository.findSecondDegreeConnectionIds(currentProfileId))
@@ -434,9 +438,7 @@ class FeedServiceTest {
                 when(followRepository.findFollowerIds(currentProfileId)).thenReturn(Collections.emptyList());
                 when(profileRepository.findByOrganization(eq(ProfileType.organization), any(PageRequest.class)))
                                 .thenReturn(Collections.emptyList());
-                when(postRepository.findPostByOrganizationAndNotDeleted(any(), any(PageRequest.class)))
-                                .thenReturn(Collections.emptyList());
-                when(postRepository.findRecentPostsExcludingUsers(any(), any(PageRequest.class)))
+                when(postRepository.findRandomPostsExcludingUsers(any(), any(PageRequest.class)))
                                 .thenReturn(List.of(post));
                 when(likeRepository.findLikedPostIds(eq(currentProfileId), anyList()))
                                 .thenReturn(Set.of(post.getId()));

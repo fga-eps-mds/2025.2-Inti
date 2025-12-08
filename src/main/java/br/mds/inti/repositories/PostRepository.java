@@ -33,8 +33,8 @@ public interface PostRepository extends JpaRepository<Post, UUID> {
     @Query("SELECT p FROM Post p WHERE p.deletedAt IS NULL AND p.likesCount > :minLikes ORDER BY p.likesCount DESC")
     List<Post> findPopularPosts(@Param("minLikes") int minLikes, Pageable pageable);
 
-    @Query("SELECT p FROM Post p WHERE p.profile.id NOT IN :excludedUserIds AND p.deletedAt IS NULL ORDER BY p.createdAt DESC")
-    List<Post> findRecentPostsExcludingUsers(@Param("excludedUserIds") List<UUID> excludedUserIds, Pageable pageable);
+    @Query("SELECT p FROM Post p WHERE p.profile.id NOT IN :excludedUserIds AND p.deletedAt IS NULL ORDER BY function('RANDOM')")
+    List<Post> findRandomPostsExcludingUsers(@Param("excludedUserIds") List<UUID> excludedUserIds, Pageable pageable);
 
     @Query("select p from Post p where p.profile.id in :organizationIds and p.deletedAt is null order by p.createdAt desc")
     List<Post> findPostByOrganizationAndNotDeleted(@Param("organizationIds") List<UUID> organizationIds,
