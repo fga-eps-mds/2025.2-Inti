@@ -1,23 +1,44 @@
 // Search functionality
-let searchTimeout;
 const searchInput = document.getElementById("searchInput");
+const searchBtn = document.getElementById("searchBtn");
 const resultsContainer = document.getElementById("searchResults");
 
-if (searchInput) {
-  searchInput.addEventListener("input", (e) => {
-    const query = e.target.value.trim();
-
-    clearTimeout(searchTimeout);
-
-    if (query.length < 2) {
-      resultsContainer.innerHTML =
-        '<div class="initial-message">Digite para buscar usuários</div>';
+// Behavior: user types full username then clicks the search button (or presses Enter)
+if (searchBtn && searchInput) {
+  searchBtn.addEventListener("click", async () => {
+    const query = searchInput.value.trim();
+    if (!query) {
+      resultsContainer.innerHTML = '<div class="initial-message">Digite um username para buscar</div>';
       return;
     }
 
-    searchTimeout = setTimeout(async () => {
+    await performSearch(query);
+  });
+
+  // Allow pressing Enter in the input to trigger the search
+  searchInput.addEventListener("keydown", async (e) => {
+    if (e.key === "Enter") {
+      e.preventDefault();
+      const query = searchInput.value.trim();
+      if (!query) {
+        resultsContainer.innerHTML = '<div class="initial-message">Digite um username para buscar</div>';
+        return;
+      }
       await performSearch(query);
-    }, 300); // Debounce 300ms
+    }
+  });
+} else if (searchInput) {
+  // Fallback: if button missing, allow Enter to search
+  searchInput.addEventListener("keydown", async (e) => {
+    if (e.key === "Enter") {
+      e.preventDefault();
+      const query = searchInput.value.trim();
+      if (!query) {
+        resultsContainer.innerHTML = '<div class="initial-message">Digite um username para buscar</div>';
+        return;
+      }
+      await performSearch(query);
+    }
   });
 }
 
@@ -47,28 +68,56 @@ async function performSearch(query) {
 }
 
 function displayResults(users) {
-  const backendUrl = "https://20252-inti-production.up.railway.app";
+  const backendUrl = (typeof apiService !== "undefined" && apiService.baseURL) ? apiService.baseURL : "https://20252-inti-production.up.railway.app";
 
   resultsContainer.innerHTML = users
     .map((user) => {
-      const profilePicUrl = user.profile_picture_url
-        ? backendUrl + user.profile_picture_url
-        : "";
+      // Support different field names returned by backend (camelCase or snake_case)
+      const picField = user.profilePictureUrl || user.profile_picture_url || user.imageUrl || user.profile_image;
+
+      let profilePicUrl = "";
+      if (picField) {
+        // If backend already returned a full URL
+        if (/^https?:\/\//i.test(picField)) {
+          profilePicUrl = picField;
+        } else if (picField.startsWith("/")) {
+          // Path starting with slash (e.g. /images/xxx.jpg)
+          profilePicUrl = `${backendUrl}${picField}`;
+        } else {
+          // Bare filename — hit the /images endpoint
+          profilePicUrl = `${backendUrl}/images/${picField}`;
+        }
+      }
+
       const avatarStyle = profilePicUrl
         ? `background-image: url('${profilePicUrl}')`
         : `background-color: ${getRandomColor()}`;
 
+      const displayName = user.name || user.displayName || "Sem nome";
+      const username = user.username || user.userName || "";
+
       return `
-      <a href="public-profile.html?username=${user.username}" class="search-result-item">
+      <a href="public-profile.html?username=${encodeURIComponent(username)}" class="search-result-item">
         <div class="result-avatar" style="${avatarStyle}"></div>
         <div class="result-info">
-          <div class="result-name">${user.name}</div>
-          <div class="result-username">@${user.username}</div>
+          <div class="result-name">${escapeHtml(displayName)}</div>
+          <div class="result-username">@${escapeHtml(username)}</div>
         </div>
       </a>
     `;
     })
     .join("");
+}
+
+// Simple HTML escape to avoid injecting unsafe content
+function escapeHtml(str) {
+  if (!str) return "";
+  return String(str)
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/\"/g, "&quot;")
+    .replace(/'/g, "&#39;");
 }
 
 function getRandomColor() {

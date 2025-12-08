@@ -120,7 +120,8 @@ class ApiService {
   }
 
   async getPublicProfile(username) {
-    return this.request(`/profile/${username}`);
+    // New backend search endpoint for public profiles
+    return this.request(`/search/${username}`);
   }
 
   async updateProfile(formData) {
