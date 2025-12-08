@@ -3,6 +3,7 @@ package br.mds.inti.service;
 import br.mds.inti.model.dto.CreateProductDTO;
 import br.mds.inti.model.dto.EditProductDTO;
 import br.mds.inti.model.dto.ProductResponseDTO;
+import br.mds.inti.model.dto.ProductSummaryDTO;
 import br.mds.inti.model.entity.ArtistProducts;
 import br.mds.inti.model.entity.Profile;
 import br.mds.inti.repositories.ProductRepository;
@@ -12,6 +13,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
+
 
 import java.io.IOException;
 import java.math.BigDecimal;
@@ -143,4 +145,38 @@ public class ProductService {
         String imgLink = postService.generateImageUrl(product.getBlobName());
         return ProductResponseDTO.fromEntity(product, imgLink);
     }
+
+    public Page<ProductSummaryDTO> getProfileProducts(UUID profileId, Pageable pageable) {
+        profileService.getProfileById(profileId);
+
+        return productRepository.findByProfileIdAndDeletedAtIsNull(profileId, pageable)
+                .map(this::toProductSummaryDTO);
+    }
+
+    private ProductSummaryDTO toProductSummaryDTO(ArtistProducts product) {
+        String imgLink = postService.generateImageUrl(product.getBlobName());
+        String shortDescription = truncateDescription(product.getDescription());
+
+        return new ProductSummaryDTO(
+                product.getId(),
+                product.getTitle(),
+                imgLink,
+                product.getPrice(),
+                shortDescription
+        );
+    }
+
+    private String truncateDescription(String description) {
+        if (description == null || description.isBlank()) {
+            return "";
+        }
+
+        final int MAX_LENGTH = 100;
+        if (description.length() <= MAX_LENGTH) {
+            return description;
+        }
+
+        return description.substring(0, MAX_LENGTH) + "...";
+    }
+
 }
