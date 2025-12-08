@@ -166,23 +166,31 @@
       padding: var(--spacing-md) var(--spacing-lg);
       display: flex;
       align-items: center;
-      justify-content: space-between;
+      justify-content: center;
       gap: var(--spacing-md);
+      position: relative;
     }
 
     .logo-icon {
       width: 36px;
       height: 36px;
       object-fit: contain;
+      position: absolute;
+      left: var(--spacing-lg);
     }
 
     .page-title {
       font-family: "Libre Bodoni", serif;
-      font-size: 24px;
+      font-size: 30px;
       font-weight: 700;
       color: var(--primary);
       letter-spacing: 0.5px;
       text-align: center;
+      display: flex;
+      align-items: center;
+      background: none;
+      outline: none;
+      border: none;
     }
 
     .page-title-link {
@@ -204,6 +212,8 @@
       width: 6vw;
       height: 6vw;
       transform: rotate(-90deg);
+      position: relative;
+      right: 5px;
     }
 
 
@@ -216,7 +226,7 @@
       color: white;
       border-radius: 10px;
       padding: 8px 0;
-      width: 2.8vw;
+      width: 28vw;
       box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
       display: none;
       flex-direction: column;

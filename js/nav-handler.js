@@ -29,10 +29,12 @@ function ensureActionModal() {
     modal.innerHTML = `
       <div class="modal-content" role="dialog" aria-modal="true" aria-labelledby="actionModalTitle">
         <button class="close-modal" type="button" aria-label="Fechar modal">&times;</button>
-        <h3 class="modal-title" id="actionModalTitle">Criar</h3>
-        <button class="modal-item" type="button" data-action="post">📸 Criar post</button>
-        <button class="modal-item" type="button" data-action="product">🛒 Criar produto</button>
-        <button class="modal-item" type="button" data-action="event">📅 Criar evento</button>
+        <div style="position: relative; text-align: center;">
+          <h3 class="modal-title" id="actionModalTitle" style="color: #592e83; font-family: Maitree, serif; font-weight: bold;">Selecione uma opção:</h3>
+        </div>
+        <button class="modal-item" type="button" style="color: #592e83; font-family: Maitree, serif; font-weight: 600; font-size: 18px;">📸 Criar post</button>
+        <button class="modal-item" type="button" style="color: #592e83; font-family: Maitree, serif; font-weight: 600; font-size: 18px;">🛒 Criar produto</button>
+        <button class="modal-item" type="button" style="color: #592e83; font-family: Maitree, serif; font-weight: 600; font-size: 18px;" data-action="event">📅 Criar evento</button>
       </div>
     `;
     document.body.appendChild(modal);
