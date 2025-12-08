@@ -1,7 +1,12 @@
+const BACKEND_URL = "https://20252-inti-production.up.railway.app";
 const AUTH_TOKEN = localStorage.getItem("authToken");
 
-const urlParams = new URLSearchParams(window.location.search);
-
+let currentPublicProfile = null;
+let currentPublicProfileId = null;
+let currentPublicProfileUsername = null;
+let publicProfileProductsCache = null;
+let publicProfileProductsPromise = null;
+let publicProfileProductsLoaded = false;
 
 document.addEventListener("DOMContentLoaded", () => {
   if (!AUTH_TOKEN) {
@@ -13,6 +18,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
   const urlParams = new URLSearchParams(window.location.search);
   const username = urlParams.get("username");
+  currentPublicProfileUsername = username;
+  currentPublicProfileId = null;
 
   if (!username) {
     showError("Nenhum username informado!");
@@ -32,7 +39,7 @@ async function fetchProfileData(username) {
     console.log("Buscando perfil de:", username);
 
     const response = await fetch(
-      `https://20252-inti-production.up.railway.app/profile/${username}?size=${size}&page=${page}`,
+      `${BACKEND_URL}/profile/${username}?size=${size}&page=${page}`,
       {
         method: "GET",
         headers: {
@@ -48,6 +55,17 @@ async function fetchProfileData(username) {
 
     const profileData = await response.json();
     console.log("Dados recebidos:", profileData);
+
+    currentPublicProfile = profileData;
+    currentPublicProfileId =
+      profileData.id ||
+      profileData.profileId ||
+      profileData.profile_id ||
+      extractExplicitProfileId(profileData) ||
+      extractProfileIdFromObject(profileData);
+    publicProfileProductsCache = null;
+    publicProfileProductsLoaded = false;
+    publicProfileProductsPromise = null;
 
     populateProfileData(profileData);
   } catch (error) {
@@ -78,10 +96,9 @@ function populateProfileData(data) {
   const profileImg = document.querySelector(".img-user-icon");
   if (profileImg) {
     if (data.profile_picture_url) {
-      const backendUrl = "https://20252-inti-production.up.railway.app";
       const fullImageUrl = data.profile_picture_url.startsWith("http")
         ? data.profile_picture_url
-        : backendUrl + data.profile_picture_url;
+        : BACKEND_URL + data.profile_picture_url;
       setBackgroundImageWithBearer(profileImg, fullImageUrl, AUTH_TOKEN);
     } else {
       profileImg.style.backgroundImage = `url("../assets/image-user-icon.png")`;
@@ -115,8 +132,7 @@ function populateProfileData(data) {
       if (view === "posts") {
         populateUserPosts(data.posts || []);
       } else if (view === "products") {
-        
-        populateUserProducts(data.products || []);
+        showPublicProfileProducts();
       }
     });
   });
@@ -177,8 +193,7 @@ async function handleFollowClick(event) {
       : followBtn.dataset.followUrl;
     const method = isCurrentlyFollowing ? "DELETE" : "POST";
 
-    const backendUrl = "https://20252-inti-production.up.railway.app";
-    const fullUrl = backendUrl + endpoint;
+    const fullUrl = BACKEND_URL + endpoint;
 
     console.log(`${method} para: ${fullUrl}`);
 
@@ -257,6 +272,10 @@ function populateUserPosts(posts) {
     return;
   }
 
+  postsGrid.style.gridTemplateColumns = "";
+  postsGrid.style.gap = "";
+  postsGrid.style.display = "";
+
   postsGrid.innerHTML = "";
 
   if (!posts || posts.length === 0) {
@@ -284,10 +303,9 @@ function createPostElement(post, index) {
   postDiv.dataset.postId = post.id;
 
   if (post.imgLink) {
-    const backendUrl = "https://20252-inti-production.up.railway.app";
     const fullImageUrl = post.imgLink.startsWith("http")
       ? post.imgLink
-      : backendUrl + post.imgLink;
+      : BACKEND_URL + post.imgLink;
     setBackgroundImageWithBearer(postDiv, fullImageUrl, AUTH_TOKEN);
   } else {
     const randomColor = getRandomColor();
@@ -306,10 +324,265 @@ function createPostElement(post, index) {
   return postDiv;
 }
 
+async function showPublicProfileProducts() {
+  const postsGrid = document.querySelector(".user-posts-grid");
+  if (!postsGrid) return;
+
+  if (publicProfileProductsLoaded) {
+    populateUserProducts(publicProfileProductsCache || []);
+    return;
+  }
+
+  postsGrid.innerHTML = '<p class="no-posts">Carregando produtos...</p>';
+
+  try {
+    const products = await fetchPublicProfileProducts();
+    populateUserProducts(products);
+  } catch (error) {
+    console.error("Erro ao carregar produtos do perfil público:", error);
+    const fallback = Array.isArray(currentPublicProfile?.products)
+      ? currentPublicProfile.products
+      : [];
+
+    if (fallback.length) {
+      populateUserProducts(fallback);
+      return;
+    }
+
+    postsGrid.innerHTML = '<p class="no-posts">Erro ao carregar produtos.</p>';
+  }
+}
+
+async function fetchPublicProfileProducts() {
+  if (publicProfileProductsLoaded) {
+    return publicProfileProductsCache || [];
+  }
+
+  if (publicProfileProductsPromise) {
+    return publicProfileProductsPromise;
+  }
+
+  publicProfileProductsPromise = (async () => {
+    const profileId = await resolvePublicProfileId();
+
+    if (!profileId) {
+      const fallback = Array.isArray(currentPublicProfile?.products)
+        ? currentPublicProfile.products
+        : [];
+
+      if (fallback.length) {
+        publicProfileProductsCache = fallback;
+        publicProfileProductsLoaded = true;
+        return fallback;
+      }
+
+      throw new Error("ID do perfil não encontrado para carregar produtos.");
+    }
+
+    const response = await fetch(
+      `${BACKEND_URL}/products/profile/${profileId}`,
+      {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${AUTH_TOKEN}`,
+          "Content-Type": "application/json",
+        },
+      }
+    );
+
+    if (!response.ok) {
+      throw new Error(`Erro ao buscar produtos: ${response.status}`);
+    }
+
+    const data = await response.json();
+    const products = normalizeProductsResponse(data);
+    publicProfileProductsCache = products;
+    publicProfileProductsLoaded = true;
+    return products;
+  })();
+
+  try {
+    return await publicProfileProductsPromise;
+  } finally {
+    publicProfileProductsPromise = null;
+  }
+}
+
+function normalizeProductsResponse(response) {
+  if (!response) return [];
+  if (Array.isArray(response)) return response;
+  if (Array.isArray(response.content)) return response.content;
+  if (Array.isArray(response.data)) return response.data;
+  if (Array.isArray(response.items)) return response.items;
+  return [];
+}
+
+async function resolvePublicProfileId() {
+  const cachedId = getPublicProfileId();
+  if (cachedId) return cachedId;
+
+  if (!currentPublicProfileUsername) return null;
+
+  try {
+    const response = await fetch(
+      `${BACKEND_URL}/search/${encodeURIComponent(
+        currentPublicProfileUsername
+      )}`,
+      {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${AUTH_TOKEN}`,
+          "Content-Type": "application/json",
+        },
+      }
+    );
+
+    if (!response.ok) {
+      throw new Error(`Erro ao consultar perfil público: ${response.status}`);
+    }
+
+    const data = await response.json();
+    const candidates = normalizeProfilesResponse(data);
+
+    for (const profile of candidates) {
+      const candidateId = extractProfileIdFromObject(profile);
+      if (!candidateId) continue;
+
+      if (
+        typeof profile.username === "string" &&
+        typeof currentPublicProfileUsername === "string" &&
+        profile.username.toLowerCase() ===
+          currentPublicProfileUsername.toLowerCase()
+      ) {
+        currentPublicProfileId = candidateId;
+        return candidateId;
+      }
+    }
+    return null;
+  } catch (error) {
+    console.warn("Falha ao resolver ID do perfil público:", error);
+    return null;
+  }
+}
+
+function normalizeProfilesResponse(response) {
+  if (!response) return [];
+  if (Array.isArray(response)) return response;
+  if (Array.isArray(response.content)) return response.content;
+  if (Array.isArray(response.data)) return response.data;
+  if (Array.isArray(response.items)) return response.items;
+  if (Array.isArray(response.results)) return response.results;
+  return [];
+}
+
+function getPublicProfileId() {
+  if (!currentPublicProfile) return null;
+
+  if (currentPublicProfileId) {
+    return currentPublicProfileId;
+  }
+
+  const directId =
+    currentPublicProfile.id ||
+    currentPublicProfile.profileId ||
+    currentPublicProfile.profile_id;
+  if (directId) {
+    currentPublicProfileId = directId;
+    return directId;
+  }
+
+  const directCandidate = extractProfileIdFromObject(currentPublicProfile);
+  if (directCandidate) return directCandidate;
+
+  const postsCandidate = extractProfileIdFromCollection(
+    currentPublicProfile.posts
+  );
+  if (postsCandidate) return postsCandidate;
+
+  const productsCandidate = extractProfileIdFromCollection(
+    currentPublicProfile.products
+  );
+  if (productsCandidate) return productsCandidate;
+
+  return null;
+}
+
+function extractProfileIdFromCollection(items) {
+  if (!Array.isArray(items)) return null;
+
+  for (const item of items) {
+    const candidate = extractProfileIdFromObject(item);
+    if (candidate) {
+      if (!currentPublicProfileId) {
+        currentPublicProfileId = candidate;
+      }
+      return candidate;
+    }
+  }
+
+  return null;
+}
+
+function extractProfileIdFromObject(entity) {
+  if (!entity || typeof entity !== "object") return null;
+
+  const candidates = extractExplicitProfileId(entity);
+  if (candidates) {
+    return candidates;
+  }
+
+  const relationships = [entity.profile, entity.user, entity.owner, entity.author];
+  for (const relation of relationships) {
+    const relationCandidate = extractExplicitProfileId(relation);
+    if (relationCandidate) {
+      return relationCandidate;
+    }
+  }
+
+  return null;
+}
+
+function extractExplicitProfileId(entity) {
+  if (!entity || typeof entity !== "object") return null;
+
+  const candidates = [
+    entity.profileId,
+    entity.profile_id,
+    entity.userId,
+    entity.user_id,
+    entity.profileUuid,
+    entity.profile_uuid,
+    entity.userUuid,
+    entity.user_uuid,
+    entity.ownerId,
+    entity.owner_id,
+    entity.accountId,
+    entity.account_id,
+    entity.profile?.id,
+    entity.profile?.profileId,
+    entity.profile?.profile_id,
+    entity.profile?.userId,
+    entity.profile?.user_id,
+    entity.user?.profileId,
+    entity.user?.profile_id,
+    entity.user?.id,
+    entity.user?.userId,
+    entity.user?.user_id,
+    entity.owner?.profileId,
+    entity.owner?.profile_id,
+  ].filter(Boolean);
+
+  return candidates.length > 0 ? candidates[0] : null;
+}
+
 function populateUserProducts(products) {
   const postsGrid = document.querySelector(".user-posts-grid");
 
   if (!postsGrid) return;
+
+  postsGrid.style.display = "grid";
+  postsGrid.style.gridTemplateColumns = "repeat(2, minmax(0, 1fr))";
+  postsGrid.style.gap = "10px";
 
   postsGrid.innerHTML = "";
 
@@ -327,34 +600,167 @@ function populateUserProducts(products) {
     return 0;
   });
 
-  sortedProducts.forEach((product, index) => {
-    const productItem = createProductElement(product, index);
-    postsGrid.appendChild(productItem);
+  sortedProducts.forEach((product) => {
+    const card = createPublicProductCard(product);
+    postsGrid.appendChild(card);
   });
 }
 
-function createProductElement(product, index) {
-  const productDiv = document.createElement("div");
-  productDiv.className = `user-post-item product-item rect-${(index % 5) + 1}`;
-  productDiv.style.position = "relative";
+function createPublicProductCard(product = {}) {
+  const card = document.createElement("div");
+  card.className = "user-product-card";
+  card.style.background = "#f2ebfb";
+  card.style.borderRadius = "12px";
+  card.style.padding = "10px";
+  card.style.display = "flex";
+  card.style.flexDirection = "column";
+  card.style.gap = "8px";
 
-  if (product.imgLink || product.image_url || product.imageUrl) {
-    const backendUrl = "https://20252-inti-production.up.railway.app";
-    const imageUrl = product.imgLink || product.image_url || product.imageUrl;
-    const fullImageUrl = imageUrl.startsWith("http")
-      ? imageUrl
-      : backendUrl + imageUrl;
-    setBackgroundImageWithBearer(productDiv, fullImageUrl, AUTH_TOKEN);
+  const imageWrapper = document.createElement("div");
+  imageWrapper.className = "product-card-image";
+  imageWrapper.style.width = "100%";
+  imageWrapper.style.height = "120px";
+  imageWrapper.style.borderRadius = "10px";
+  imageWrapper.style.backgroundColor = "#d9d9d9";
+  imageWrapper.style.backgroundSize = "cover";
+  imageWrapper.style.backgroundPosition = "center";
+
+  const imageUrl = getPublicProductImageUrl(product);
+  if (imageUrl) {
+    setBackgroundImageWithBearer(imageWrapper, imageUrl, AUTH_TOKEN);
   } else {
-    productDiv.style.backgroundColor = getRandomColor();
-    productDiv.style.display = "flex";
-    productDiv.style.alignItems = "center";
-    productDiv.style.justifyContent = "center";
-    productDiv.style.color = "white";
-    productDiv.style.fontWeight = "bold";
+    imageWrapper.style.display = "flex";
+    imageWrapper.style.alignItems = "center";
+    imageWrapper.style.justifyContent = "center";
+    imageWrapper.style.color = "#592e83";
+    imageWrapper.style.fontWeight = "600";
+    const fallbackLetter = getPublicProductTitle(product)
+      .charAt(0)
+      .toUpperCase();
+    imageWrapper.textContent = fallbackLetter || "P";
   }
 
-  return productDiv;
+  const infoContainer = document.createElement("div");
+  infoContainer.className = "product-card-body";
+  infoContainer.style.display = "flex";
+  infoContainer.style.flexDirection = "column";
+  infoContainer.style.gap = "4px";
+
+  const titleElement = document.createElement("p");
+  titleElement.className = "product-card-title";
+  titleElement.textContent = getPublicProductTitle(product);
+  titleElement.style.fontWeight = "600";
+  titleElement.style.color = "#592e83";
+
+  const description = getPublicProductDescription(product);
+  if (description) {
+    const descriptionElement = document.createElement("p");
+    descriptionElement.className = "product-card-description";
+    descriptionElement.textContent = description;
+    descriptionElement.style.fontSize = "12px";
+    descriptionElement.style.color = "#525252";
+    infoContainer.appendChild(descriptionElement);
+  }
+
+  const price = formatPublicProductPrice(product);
+  if (price) {
+    const priceElement = document.createElement("p");
+    priceElement.className = "product-card-price";
+    priceElement.textContent = price;
+    priceElement.style.fontWeight = "700";
+    priceElement.style.color = "#171717";
+    infoContainer.appendChild(priceElement);
+  }
+
+  infoContainer.insertBefore(titleElement, infoContainer.firstChild);
+
+  card.appendChild(imageWrapper);
+  card.appendChild(infoContainer);
+
+  const productId = product.id || product.productId;
+  if (productId) {
+    card.tabIndex = 0;
+    card.addEventListener("click", () =>
+      navigateToPublicProductDetail(productId)
+    );
+    card.addEventListener("keydown", (event) => {
+      if (event.key === "Enter" || event.key === " ") {
+        event.preventDefault();
+        navigateToPublicProductDetail(productId);
+      }
+    });
+  }
+
+  return card;
+}
+
+function getPublicProductTitle(product = {}) {
+  return (
+    product.title ||
+    product.name ||
+    product.productName ||
+    product.displayName ||
+    "Produto"
+  );
+}
+
+function getPublicProductDescription(product = {}) {
+  return (
+    product.description ||
+    product.details ||
+    product.summary ||
+    product.about ||
+    ""
+  );
+}
+
+function formatPublicProductPrice(product = {}) {
+  const rawPrice =
+    product.price ?? product.value ?? product.cost ?? product.amount ?? null;
+
+  if (rawPrice === null || rawPrice === undefined || rawPrice === "") {
+    return "";
+  }
+
+  const numericPrice = Number(rawPrice);
+  if (!Number.isNaN(numericPrice)) {
+    return numericPrice.toLocaleString("pt-BR", {
+      style: "currency",
+      currency: "BRL",
+    });
+  }
+
+  return rawPrice;
+}
+
+function getPublicProductImageUrl(product = {}) {
+  const imagePath =
+    product.imageUrl ||
+    product.imgLink ||
+    product.image ||
+    product.coverImage ||
+    product.thumbnail;
+
+  if (!imagePath) return "";
+
+  const trimmed = String(imagePath).trim();
+  if (!trimmed) return "";
+
+  if (trimmed.startsWith("http")) {
+    return trimmed;
+  }
+
+  const normalizedPath = trimmed.startsWith("/") ? trimmed : `/${trimmed}`;
+  return `${BACKEND_URL}${normalizedPath}`;
+}
+
+function navigateToPublicProductDetail(productId) {
+  if (!productId) return;
+  const basePath = "./products-detail.html";
+  const separator = basePath.includes("?") ? "&" : "?";
+  window.location.href = `${basePath}${separator}id=${encodeURIComponent(
+    productId
+  )}`;
 }
 
 async function setBackgroundImageWithBearer(element, imageUrl, token) {
@@ -476,8 +882,7 @@ async function openPostModal(postId) {
   try {
     // Use apiService if available, otherwise fetch manually
     // Assuming apiService is global or we fetch manually
-    const backendUrl = "https://20252-inti-production.up.railway.app";
-    const response = await fetch(`${backendUrl}/post/${postId}`, {
+    const response = await fetch(`${BACKEND_URL}/post/${postId}`, {
       headers: {
         Authorization: `Bearer ${AUTH_TOKEN}`,
       },
@@ -504,7 +909,7 @@ async function openPostModal(postId) {
         "http"
       )
         ? post.author.profilePictureUrl
-        : backendUrl + post.author.profilePictureUrl;
+        : BACKEND_URL + post.author.profilePictureUrl;
       setBackgroundImageWithBearer(
         modalProfilePic,
         fullProfileImageUrl,
@@ -518,7 +923,7 @@ async function openPostModal(postId) {
     if (post.imageUrl && post.imageUrl.trim() !== "") {
       const fullImageUrl = post.imageUrl.startsWith("http")
         ? post.imageUrl
-        : backendUrl + post.imageUrl;
+        : BACKEND_URL + post.imageUrl;
       modalImage.src = fullImageUrl;
       modalImage.style.display = "block";
     } else {
