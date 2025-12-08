@@ -16,7 +16,9 @@ import org.springframework.web.server.ResponseStatusException;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.time.Instant;
+import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 import org.springframework.web.multipart.MultipartFile;
 
 @Service
@@ -63,6 +65,14 @@ public class ProductService {
         ArtistProducts product = productRepository.findByIdAndDeletedAtIsNull(id)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Anúncio não encontrado."));
         return toProductResponse(product);
+    }
+
+    public List<ProductResponseDTO> getProductsByProfile(UUID profileId) {
+        profileService.getProfileById(profileId);
+
+        return productRepository.findByProfileIdAndDeletedAtIsNull(profileId).stream()
+                .map(this::toProductResponse)
+                .collect(Collectors.toList());
     }
 
     public ProductResponseDTO updateProduct(UUID id, EditProductDTO dto, UUID profileId) {
