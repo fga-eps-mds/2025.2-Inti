@@ -7,6 +7,22 @@ const ACTION_MODAL_ROUTES = {
 let actionModalElement = null;
 let actionModalEscapeListenerAttached = false;
 
+function getUserType() {
+  try {
+    const stored = localStorage.getItem("userData");
+    if (!stored) return null;
+    const parsed = JSON.parse(stored);
+    return parsed?.type || null;
+  } catch (error) {
+    console.warn("Failed to parse userData from localStorage", error);
+    return null;
+  }
+}
+
+function canCreateEvents() {
+  return (getUserType() || "user").toLowerCase() === "organization";
+}
+
 function getAdjustedRoute(route) {
   const isInPagesDir = window.location.pathname.includes("/pages/");
   if (isInPagesDir && !route.startsWith("../")) {
@@ -22,6 +38,11 @@ function ensureActionModal() {
 
   let modal = document.getElementById("actionModal");
   if (!modal) {
+    const allowEventCreation = canCreateEvents();
+    const eventButtonMarkup = allowEventCreation
+      ? '<button class="modal-item" type="button" data-action="event" style="color: #592e83; font-family: Maitree, serif; font-weight: 600; font-size: 18px;">📅 Criar evento</button>'
+      : "";
+
     modal = document.createElement("div");
     modal.id = "actionModal";
     modal.className = "action-modal";
@@ -33,7 +54,7 @@ function ensureActionModal() {
         </div>
         <button class="modal-item" type="button" data-action="post" style="color: #592e83; font-family: Maitree, serif; font-weight: 600; font-size: 18px;">📸 Criar post</button>
         <button class="modal-item" type="button" data-action="product" style="color: #592e83; font-family: Maitree, serif; font-weight: 600; font-size: 18px;">🛒 Criar produto</button>
-        <button class="modal-item" type="button" data-action="event" style="color: #592e83; font-family: Maitree, serif; font-weight: 600; font-size: 18px;">📅 Criar evento</button>
+        ${eventButtonMarkup}
       </div>
     `;
     document.body.appendChild(modal);
