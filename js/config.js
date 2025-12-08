@@ -168,6 +168,16 @@ class ApiService {
     });
   }
 
+  async createProduct(formData) {
+    const headers = this.token ? { Authorization: `Bearer ${this.token}` } : {};
+
+    return this.request("/products", {
+      method: "POST",
+      headers,
+      body: formData,
+    });
+  }
+
   async deletePost(postId) {
     return this.request(`/post/${postId}`, {
       method: "DELETE",
