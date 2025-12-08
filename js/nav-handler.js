@@ -31,9 +31,9 @@ function ensureActionModal() {
         <div style="position: relative; text-align: center;">
           <h3 class="modal-title" id="actionModalTitle" style="color: #592e83; font-family: Maitree, serif; font-weight: bold;">Selecione uma opção:</h3>
         </div>
-        <button class="modal-item" type="button" style="color: #592e83; font-family: Maitree, serif; font-weight: 600; font-size: 18px;">📸 Criar post</button>
-        <button class="modal-item" type="button" style="color: #592e83; font-family: Maitree, serif; font-weight: 600; font-size: 18px;">🛒 Criar produto</button>
-        <button class="modal-item" type="button" style="color: #592e83; font-family: Maitree, serif; font-weight: 600; font-size: 18px;" data-action="event">📅 Criar evento</button>
+        <button class="modal-item" type="button" data-action="post" style="color: #592e83; font-family: Maitree, serif; font-weight: 600; font-size: 18px;">📸 Criar post</button>
+        <button class="modal-item" type="button" data-action="product" style="color: #592e83; font-family: Maitree, serif; font-weight: 600; font-size: 18px;">🛒 Criar produto</button>
+        <button class="modal-item" type="button" data-action="event" style="color: #592e83; font-family: Maitree, serif; font-weight: 600; font-size: 18px;">📅 Criar evento</button>
       </div>
     `;
     document.body.appendChild(modal);
