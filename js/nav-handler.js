@@ -1,6 +1,6 @@
 const ACTION_MODAL_ROUTES = {
   post: "pages/publish.html",
-  product: "pages/publish.html",
+  product: "pages/service.html",
   event: "pages/create-event.html",
 };
 
