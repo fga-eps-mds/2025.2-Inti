@@ -351,6 +351,18 @@ function appendProducts(products = []) {
 
   products.forEach((product) => {
     const card = createProductCard(product);
+    if (card && product && (product.id || product.productId)) {
+      const productId = product.id || product.productId;
+      card.dataset.productId = productId;
+      card.tabIndex = 0;
+      card.addEventListener("click", () => navigateToProductDetail(productId));
+      card.addEventListener("keydown", (event) => {
+        if (event.key === "Enter" || event.key === " ") {
+          event.preventDefault();
+          navigateToProductDetail(productId);
+        }
+      });
+    }
     productsState.container.appendChild(card);
   });
 }
@@ -425,6 +437,18 @@ function createProductCard(product = {}) {
   card.appendChild(infoContainer);
 
   return card;
+}
+
+function navigateToProductDetail(productId) {
+  if (!productId) return;
+  const route = getAdjustedRoute
+    ? getAdjustedRoute("pages/products-detail.html")
+    : "pages/products-detail.html";
+
+  const separator = route.includes("?") ? "&" : "?";
+  window.location.href = `${route}${separator}id=${encodeURIComponent(
+    productId
+  )}`;
 }
 
 function getProductTitle(product = {}) {
