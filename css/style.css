@@ -766,21 +766,20 @@ body.modal-open {
 /* Container da tela de login */
 .screen-container {
   width: 100%;
-  max-width: 390px;
-  min-height: 100vh;
-  background: white;
-  margin: 0 auto;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: var(--spacing-lg);
-  padding-bottom: 80px;
-  /* Space for fixed navbar */
+    max-width: 100vw;
+    min-height: 100vh;
+    background: white;
+    margin: 0 auto;
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+    padding: 0 5vw;
+    padding-top: 12vh;
 }
 
 .screen-login {
   width: 100%;
-  max-width: 320px;
+  max-width: 100%;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -790,11 +789,11 @@ body.modal-open {
 .login-title {
   font-family: "Libre Bodoni", serif;
   font-weight: 700;
-  font-size: 48px;
+  font-size: 60px;
   color: var(--primary);
   text-align: center;
   letter-spacing: 1.92px;
-  margin-bottom: 60px;
+  margin-bottom: 6vh;
 }
 
 /* Formulário de login */
@@ -802,37 +801,36 @@ body.modal-open {
   width: 100%;
   display: flex;
   flex-direction: column;
-  gap: 36px;
+  gap: 4.5vh;
   margin-bottom: var(--spacing-lg);
+  justify-content: center;
 }
 
 .form-group-login {
-  position: relative;
-  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;               
 }
 
 .input-label-login {
-  position: absolute;
-  left: 10px;
-  top: -9px;
+  margin: 0;
   font-family: "Maitree", serif;
-  font-size: 14px;
+  font-size: 20px;
   color: var(--primary);
-  background: white;
-  padding: 0 5px;
-  letter-spacing: 0.56px;
-  z-index: 1;
+  padding-left: 3vw;
 }
 
 .input-field-login {
   width: 100%;
-  height: 41.31px;
+  height: 7.5vh;
   background: var(--primary-lighter);
   border: none;
   border-radius: var(--radius-lg);
-  padding: 10px 20px;
+  display: flex;
+  align-items: center;
+  padding: 0 4vw; 
   font-family: "Maitree", serif;
-  font-size: 14px;
+  font-size: 18px;
   color: var(--primary);
   outline: none;
   transition: box-shadow 0.2s ease;
@@ -844,7 +842,7 @@ body.modal-open {
 
 .input-field-login::placeholder {
   color: rgba(89, 46, 131, 0.55);
-  font-size: 10px;
+  font-size: 18px;
 }
 
 /* Checkbox mostrar senha */
@@ -852,14 +850,15 @@ body.modal-open {
   display: flex;
   align-items: center;
   gap: 10px;
-  margin-bottom: var(--spacing-lg);
+  margin-bottom: 4.5vh;
   align-self: flex-start;
-  padding-left: 35px;
+  padding-left: 5vw;
+  margin-top: 1.5vw;
 }
 
 .checkbox-login {
-  width: 24px;
-  height: 24px;
+  width: 8vw;
+  height: 8vw;
   background: var(--primary-lighter);
   border: none;
   border-radius: 3px;
@@ -875,7 +874,7 @@ body.modal-open {
 }
 
 .checkbox-login:checked::after {
-  content: "✓";
+  content: "✔";
   position: absolute;
   top: 50%;
   left: 50%;
@@ -887,7 +886,7 @@ body.modal-open {
 
 .checkbox-label-login {
   font-family: "Maitree", serif;
-  font-size: 14px;
+  font-size: 20px;
   color: var(--primary);
   letter-spacing: 0.72px;
   cursor: pointer;
@@ -896,19 +895,23 @@ body.modal-open {
 
 /* Botão de login */
 .btn-login {
-  width: 250px;
-  height: 35px;
-  background: var(--primary-lighter);
-  border: none;
-  border-radius: 20px;
-  font-family: "Libre Bodoni", serif;
-  font-weight: 700;
-  font-size: 18px;
-  color: var(--primary);
-  letter-spacing: 0.72px;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  margin-bottom: var(--spacing-lg);
+  width: 80vw;
+    height: 7vh;
+    background: var(--primary-lighter);
+    border: none;
+    border-radius: 16px;
+    font-family: "Libre Bodoni", serif;
+    font-weight: 700;
+    font-size: 22px;
+    color: var(--primary);
+    letter-spacing: 0.72px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    margin-bottom: var(--spacing-lg);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding-top: 5px;
 }
 
 .btn-login:hover {
@@ -926,7 +929,7 @@ body.modal-open {
 .link-criar-conta {
   font-family: "Libre Bodoni", serif;
   font-weight: 700;
-  font-size: 18px;
+  font-size: 22px;
   color: var(--primary);
   text-decoration: none;
   text-align: center;
@@ -1032,7 +1035,7 @@ body.modal-open {
 }
 
 .checkbox:checked::after {
-  content: "✓";
+  content: "✔";
   position: absolute;
   top: 50%;
   left: 50%;
