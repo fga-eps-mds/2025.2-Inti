@@ -148,7 +148,7 @@ body.modal-open {
 }
 
 .screen {
-  width: 100%;          
+  width: 100%;
   min-height: 100vh;
   position: absolute;
   background: white;
@@ -171,7 +171,8 @@ body.modal-open {
   padding: var(--spacing-md) var(--spacing-lg);
   display: flex;
   align-items: center;
-  justify-content: center; /* centraliza o conteúdo principal */
+  justify-content: center;
+  /* centraliza o conteúdo principal */
   gap: var(--spacing-md);
   position: relative;
 }
@@ -191,12 +192,12 @@ body.modal-open {
   color: var(--primary);
   letter-spacing: 0.5px;
   text-align: center;
-  display: inline-flex;     
+  display: inline-flex;
   align-items: center;
   background: none;
   outline: none;
   border: none;
-  position: relative;       
+  position: relative;
 }
 
 
@@ -209,8 +210,8 @@ body.modal-open {
   width: 6vw;
   height: 6vw;
   transform: rotate(-90deg);
-  position: absolute;  
-  left: -8vw;          
+  position: absolute;
+  left: -8vw;
 }
 
 
@@ -218,7 +219,7 @@ body.modal-open {
   position: absolute;
   top: 9vh;
   left: 50%;
-  transform: translateX(-50%);  
+  transform: translateX(-50%);
   background: white;
   color: white;
   border-radius: 10px;
@@ -555,8 +556,8 @@ body.modal-open {
 /* Container interno da tela "Novo produto" */
 .screen-services {
   width: 100%;
-  height: 100%;
   max-width: 320px;
+  height: 100%;
   margin: 0 auto 10%;
   /* centraliza horizontalmente */
   display: flex;
@@ -566,33 +567,49 @@ body.modal-open {
   /* separação entre título e formulário */
 }
 
+.screen-services .form {
+  width: 100%;
+  max-width: 100%;
+  margin: 0;
+}
+
 /* Header simples com título centralizado */
 .header-new-product {
   position: relative;
   width: 100%;
-  padding-bottom: var(--spacing-lg);
+  padding: var(--spacing-lg) 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .btn-voltar-header {
-  position: relative;
-  top: 46px;
-  width: 20px;
-  height: 20px;
+  position: absolute;
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 24px;
+  height: 24px;
   opacity: 0.5;
   cursor: pointer;
+  border: none;
+  background: transparent;
+  padding: 0;
 }
+
+.btn-voltar-header img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
 
 .header-new-product .page-title {
-  font-family: "Tilt Warp", sans-serif;
-  font-optical-sizing: auto;
-  font-weight: 400;
-  font-style: normal;
+  font-family: "Libre Bodoni", serif;
+  font-weight: 700;
   font-size: 32px;
-  font-variation-settings:
-    "XROT" -8,
-    "YROT" 0;
+  text-align: center;
 }
-
 
 /* área interna da tela de novo produto */
 .new-product-content {
@@ -769,15 +786,15 @@ body.modal-open {
 /* Container da tela de login */
 .screen-container {
   width: 100%;
-    max-width: 100vw;
-    min-height: 100vh;
-    background: white;
-    margin: 0 auto;
-    display: flex;
-    align-items: flex-start;
-    justify-content: center;
-    padding: 0 5vw;
-    padding-top: 12vh;
+  max-width: 100vw;
+  min-height: 100vh;
+  background: white;
+  margin: 0 auto;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  padding: 0 5vw;
+  padding-top: 12vh;
 }
 
 .screen-login {
@@ -812,7 +829,7 @@ body.modal-open {
 .form-group-login {
   display: flex;
   flex-direction: column;
-  gap: 2px;               
+  gap: 2px;
 }
 
 .input-label-login {
@@ -831,7 +848,7 @@ body.modal-open {
   border-radius: var(--radius-lg);
   display: flex;
   align-items: center;
-  padding: 0 4vw; 
+  padding: 0 4vw;
   font-family: "Maitree", serif;
   font-size: 18px;
   color: var(--primary);
@@ -899,22 +916,22 @@ body.modal-open {
 /* Botão de login */
 .btn-login {
   width: 80vw;
-    height: 7vh;
-    background: var(--primary-lighter);
-    border: none;
-    border-radius: 16px;
-    font-family: "Libre Bodoni", serif;
-    font-weight: 700;
-    font-size: 22px;
-    color: var(--primary);
-    letter-spacing: 0.72px;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    margin-bottom: var(--spacing-lg);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    padding-top: 5px;
+  height: 7vh;
+  background: var(--primary-lighter);
+  border: none;
+  border-radius: 16px;
+  font-family: "Libre Bodoni", serif;
+  font-weight: 700;
+  font-size: 22px;
+  color: var(--primary);
+  letter-spacing: 0.72px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  margin-bottom: var(--spacing-lg);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding-top: 5px;
 }
 
 .btn-login:hover {
@@ -1410,9 +1427,9 @@ body.modal-open {
 /* Container interno da tela "Novo produto" */
 .screen-services {
   width: 100%;
-  height: 100%;
   max-width: 320px;
-  margin: 0 auto 10%;
+  height: 100%;
+  margin: 0 auto 20px;
   /* centraliza horizontalmente */
   display: flex;
   flex-direction: column;
@@ -1421,31 +1438,46 @@ body.modal-open {
   /* separação entre título e formulário */
 }
 
+.screen-services .form {
+  width: 100%;
+  max-width: 100%;
+  margin: 0;
+  padding-bottom: 70px;
+}
+
+.form-new-product button {
+  font-weight: bold;
+}
+
 /* Header simples com título centralizado */
 .header-new-product {
   position: relative;
   width: 100%;
-  padding-bottom: var(--spacing-lg);
+  padding: var(--spacing-lg) 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .btn-voltar-header {
-  position: relative;
-  top: 46px;
-  width: 20px;
-  height: 20px;
+  position: absolute;
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 24px;
+  height: 24px;
   opacity: 0.5;
   cursor: pointer;
+  border: none;
+  background: transparent;
+  padding: 0;
 }
 
 .header-new-product .page-title {
-  font-family: "Tilt Warp", sans-serif;
-  font-optical-sizing: auto;
-  font-weight: 400;
-  font-style: normal;
+  font-family: "Libre Bodoni", serif;
+  font-weight: bold;
   font-size: 32px;
-  font-variation-settings:
-    "XROT" -8,
-    "YROT" 0;
+  text-align: center;
 }
 
 
@@ -1571,4 +1603,3 @@ body.modal-open {
     column-count: 4;
   }
 }
-
