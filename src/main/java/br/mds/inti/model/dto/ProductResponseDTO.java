@@ -12,6 +12,9 @@ public class ProductResponseDTO {
 
     private UUID id;
     private UUID profileId;
+    private String profileUsername;
+    private String profileName;
+    private String profilePictureUrl;
     private String title;
     private String description;
     private BigDecimal price;
@@ -22,6 +25,9 @@ public class ProductResponseDTO {
         ProductResponseDTO dto = new ProductResponseDTO();
         dto.setId(product.getId());
         dto.setProfileId(product.getProfile().getId());
+        dto.setProfileUsername(product.getProfile().getUsername());
+        dto.setProfileName(product.getProfile().getName());
+        dto.setProfilePictureUrl(product.getProfile().getProfilePictureUrl());
         dto.setTitle(product.getTitle());
         dto.setDescription(product.getDescription());
         dto.setPrice(product.getPrice());

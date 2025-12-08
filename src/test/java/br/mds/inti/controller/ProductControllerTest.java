@@ -142,6 +142,9 @@ class ProductControllerTest {
         ProductResponseDTO dto = new ProductResponseDTO();
         dto.setId(UUID.randomUUID());
         dto.setProfileId(UUID.randomUUID());
+        dto.setProfileUsername("artist.username");
+        dto.setProfileName("Artist Name");
+        dto.setProfilePictureUrl("https://cdn.example.com/avatar.png");
         dto.setTitle("Product");
         dto.setDescription("Description");
         dto.setPrice(BigDecimal.ONE);
