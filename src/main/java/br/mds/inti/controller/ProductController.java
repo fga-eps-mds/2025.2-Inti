@@ -16,6 +16,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.UUID;
 
 @RestController
@@ -48,6 +49,12 @@ public class ProductController {
     public ResponseEntity<ProductResponseDTO> getProductById(@PathVariable UUID id) {
         ProductResponseDTO product = productService.getProductById(id);
         return ResponseEntity.ok(product);
+    }
+
+    @GetMapping("/profile/{profileId}")
+    public ResponseEntity<List<ProductResponseDTO>> getProductsByProfile(@PathVariable UUID profileId) {
+        List<ProductResponseDTO> products = productService.getProductsByProfile(profileId);
+        return ResponseEntity.ok(products);
     }
 
     @PutMapping(value = "/{id}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
