@@ -149,7 +149,11 @@ function initializeFollowButton(data) {
   followBtn.dataset.unfollowUrl = `/profile/${data.username}/unfollow`;
 
   const isFollowing =
-    data.following ?? data.is_following ?? data.followingCountIsMine ?? false;
+    data.isFollowing ??
+    data.following ??
+    data.is_following ??
+    data.followingCountIsMine ??
+    false;
 
   updateFollowButtonState(followBtn, isFollowing);
 
@@ -211,6 +215,9 @@ async function handleFollowClick(event) {
 
     const newFollowingState = !isCurrentlyFollowing;
     updateFollowButtonState(followBtn, newFollowingState);
+    if (currentPublicProfile) {
+      currentPublicProfile.isFollowing = newFollowingState;
+    }
 
     // Update followers counter
     const followersCountElement = document.querySelector(
