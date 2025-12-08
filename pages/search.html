@@ -12,7 +12,7 @@
   <style>
     .search-container {
       padding: 20px;
-      padding-top: 80px;
+      padding-top: 8vh;
       padding-bottom: 100px;
       max-width: 600px;
       margin: 0 auto;
@@ -23,9 +23,18 @@
       margin-bottom: 24px;
     }
 
+    .header-buscar {
+      display: flex;
+      justify-content: center;
+      flex-direction: row;
+      align-items: center;
+      padding: 12px 0 0;
+      border-bottom: 1px solid var(--gray-200);
+    }
+
     .search-input {
       width: 100%;
-      padding: 12px 16px 12px 44px;
+      padding: 12px 98px 12px 44px;
       border: 2px solid var(--gray-200);
       border-radius: var(--radius-lg);
       font-family: "Maitree", serif;
@@ -131,8 +140,7 @@
 <body>
   <div class="container">
     <div class="screen home-screen">
-      <header class="header-home">
-        <img src="../assets/MUSA-M.png" alt="MUSA" class="logo-icon" />
+      <header class="header-buscar">
         <h1 style="
               font-family: &quot;Libre Bodoni&quot;, serif;
               font-size: 36px;
@@ -141,7 +149,6 @@
             ">
           Buscar
         </h1>
-        <div style="width: 11vw"></div>
       </header>
 
       <div class="search-container">
@@ -150,7 +157,7 @@
             <circle cx="11" cy="11" r="8" stroke="currentColor" stroke-width="2" />
             <path d="M21 21L16.65 16.65" stroke="currentColor" stroke-width="2" />
           </svg>
-          <input type="text" class="search-input" placeholder="Buscar usuários ou organizações..." id="searchInput" />
+          <input type="search" class="search-input" placeholder="Buscar usuários ou organizações..." id="searchInput" />
           <button id="searchBtn" class="search-btn" aria-label="Pesquisar">Pesquisar</button>
         </div>
 
