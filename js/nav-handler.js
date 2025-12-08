@@ -28,7 +28,6 @@ function ensureActionModal() {
     modal.setAttribute("aria-hidden", "true");
     modal.innerHTML = `
       <div class="modal-content" role="dialog" aria-modal="true" aria-labelledby="actionModalTitle">
-        <button class="close-modal" type="button" aria-label="Fechar modal">&times;</button>
         <div style="position: relative; text-align: center;">
           <h3 class="modal-title" id="actionModalTitle" style="color: #592e83; font-family: Maitree, serif; font-weight: bold;">Selecione uma opção:</h3>
         </div>
