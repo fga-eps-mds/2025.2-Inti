@@ -133,15 +133,17 @@
       outline: none;
     }
 
-.container {
-  width: 100%;
-  max-width: 1200px; /* Aumentado de 390px para 1200px (igual seu exemplo) */
-  min-height: 100vh;
-  background: white;
-  margin: 0 auto;
-  box-shadow: var(--shadow-lg);
-  position: relative; /* Importante para posicionamento */
-}
+    .container {
+      width: 100%;
+      max-width: 1200px;
+      /* Aumentado de 390px para 1200px (igual seu exemplo) */
+      min-height: 100vh;
+      background: white;
+      margin: 0 auto;
+      box-shadow: var(--shadow-lg);
+      position: relative;
+      /* Importante para posicionamento */
+    }
 
     .screen {
       width: 100%;
@@ -560,11 +562,13 @@
       width: 100%;
       height: 100%;
       max-width: 320px;
-      margin: 0 auto 10%;                /* centraliza horizontalmente */
+      margin: 0 auto 10%;
+      /* centraliza horizontalmente */
       display: flex;
       flex-direction: column;
       align-items: center;
-      gap: var(--spacing-lg);        /* separação entre título e formulário */
+      gap: var(--spacing-lg);
+      /* separação entre título e formulário */
     }
 
     /* Header simples com título centralizado */
@@ -574,7 +578,7 @@
       padding-bottom: var(--spacing-lg);
     }
 
-    .btn-voltar-header{
+    .btn-voltar-header {
       position: relative;
       top: 46px;
       width: 20px;
@@ -628,7 +632,8 @@
     }
 
     .image-input {
-      display: none; /* esconde o input de arquivo */
+      display: none;
+      /* esconde o input de arquivo */
     }
 
     .global-font {
@@ -659,24 +664,24 @@
       PÁGINA - NOVO EVENTO
       ============================================ */
 
-      .row-group {
-        display: flex;
-        gap: var(--spacing-md);
-      }
+    .row-group {
+      display: flex;
+      gap: var(--spacing-md);
+    }
 
-      .imput-group-half {
-        flex: 1;
-      }
+    .imput-group-half {
+      flex: 1;
+    }
 
-      .input-field-icon {
-        position: absolute;
-        width: 20px;
-        height: 20px;
-        top: 25%;
-        right: 19px;
-        pointer-events: none;
-        }
-      
+    .input-field-icon {
+      position: absolute;
+      width: 20px;
+      height: 20px;
+      top: 25%;
+      right: 19px;
+      pointer-events: none;
+    }
+
 
     /* ============================================
       NAVIGATION BAR
@@ -985,6 +990,7 @@
       color: var(--primary);
       outline: none;
       transition: box-shadow 0.2s ease;
+
       &::-webkit-calendar-picker-indicator {
         opacity: 0;
       }
@@ -1243,6 +1249,151 @@
     }
 
     /* ============================================
+      PRODUCTS DETAIL
+      ============================================ */
+
+
+    /* Header tweaks */
+    .back-btn {
+      background: none;
+      border: none;
+      font-size: 26px;
+      color: var(--primary);
+      cursor: pointer;
+      width: 36px;
+      height: 36px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    /* Seller section */
+    .seller {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 14px 20px;
+      gap: 12px;
+      border-bottom: 1px solid var(--gray-200);
+      background: white;
+    }
+
+    .seller-left {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .seller-avatar {
+      width: 54px;
+      height: 54px;
+      border-radius: var(--radius-full);
+      background: var(--primary);
+      box-shadow: var(--shadow-sm);
+      flex-shrink: 0;
+    }
+
+    .seller-name {
+      font-family: "Libre Bodoni", serif;
+      font-size: 16px;
+      color: var(--gray-900);
+      margin-bottom: 2px;
+    }
+
+    .seller-handle {
+      font-family: "Maitree", serif;
+      font-size: 13px;
+      color: var(--gray-600);
+    }
+
+    .seller-phone {
+      font-family: "Maitree", serif;
+      font-size: 14px;
+      color: var(--gray-900);
+      text-align: right;
+    }
+
+    /* Product highlight */
+    .product-highlight {
+      padding: 18px 20px;
+      text-align: center;
+    }
+
+    .product-title {
+      font-family: "Libre Bodoni", serif;
+      color: var(--primary);
+      font-size: 22px;
+      margin-bottom: 12px;
+    }
+
+    .product-image {
+      width: 100%;
+      max-width: 420px;
+      height: 300px;
+      margin: 0 auto;
+      border-radius: var(--radius-lg);
+      background-size: cover;
+      background-position: center;
+      box-shadow: var(--shadow-md);
+      overflow: hidden;
+    }
+
+    .product-price {
+      margin-top: 10px;
+      font-family: "Libre Bodoni", serif;
+      font-size: 20px;
+      font-weight: 700;
+      color: var(--gray-900);
+    }
+
+    /* Description */
+    .product-description {
+      padding: 18px 20px 100px;
+      /* leave space for navbar */
+    }
+
+    .section-title {
+      color: var(--primary);
+      font-family: "Libre Bodoni", serif;
+      font-size: 18px;
+      margin-bottom: 8px;
+    }
+
+    .description-card {
+      background: var(--primary-lighter);
+      border-radius: var(--radius-md);
+      padding: 14px;
+      color: var(--gray-900);
+      font-family: "Maitree", serif;
+      font-size: 15px;
+      line-height: 1.5;
+      box-shadow: var(--shadow-sm);
+    }
+
+    /* Make image taller on larger screens */
+    @media (min-width: 768px) {
+      .product-image {
+        height: 420px;
+      }
+
+      .product-price {
+        font-size: 22px;
+      }
+    }
+
+    /* Keep navbar above everything */
+    .navbar {
+      position: fixed;
+      bottom: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 200;
+      width: 100%;
+      max-width: 1200px;
+      background: white;
+    }
+
+    /* ============================================
       RESPONSIVIDADE
       ============================================ */
     @media (max-width: 390px) {
@@ -1267,3 +1418,14 @@
       }
     }
 
+    @media (min-width: 768px) {
+      .events-grid {
+        column-count: 3;
+      }
+    }
+
+    @media (min-width: 1024px) {
+      .events-grid {
+        column-count: 4;
+      }
+    }
