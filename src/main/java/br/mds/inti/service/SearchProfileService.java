@@ -17,6 +17,6 @@ public class SearchProfileService {
         Profile publicProfile = profileRepository.findByUsername(username)
             .orElseThrow(() -> new ProfileNotFoundException(username));
             
-        return new SearchProfile(publicProfile.getName(), publicProfile.getUsername(), publicProfile.getProfilePictureUrl());
+        return new SearchProfile(publicProfile.getId(), publicProfile.getName(), publicProfile.getUsername(), publicProfile.getProfilePictureUrl());
     }
 }
