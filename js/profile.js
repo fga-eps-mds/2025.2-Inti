@@ -251,6 +251,15 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
+  const params = new URLSearchParams(window.location.search);
+  const shouldShowProducts = params.get("view") === "products";
+  if (shouldShowProducts && produtosTab) {
+    produtosTab.click();
+    const cleanUrl = new URL(window.location.href);
+    cleanUrl.searchParams.delete("view");
+    window.history.replaceState({}, "", cleanUrl.pathname + cleanUrl.search);
+  }
+
   window.addEventListener("scroll", handleProductsScroll);
 });
 
