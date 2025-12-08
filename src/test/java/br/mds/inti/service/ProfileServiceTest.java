@@ -103,6 +103,7 @@ class ProfileServiceTest {
 
         // Assert
         assertNotNull(result);
+        assertEquals(profileId, result.id());
         assertEquals(mockProfile.getName(), result.name());
         assertEquals(mockProfile.getUsername(), result.username());
         // CORREÇÃO: Agora espera a URL transformada
@@ -138,6 +139,7 @@ class ProfileServiceTest {
 
         // Assert
         assertNotNull(result);
+        assertEquals(profileId, result.id());
         assertEquals(mockProfile.getName(), result.name());
         assertEquals(mockProfile.getUsername(), result.username());
         verify(profileRepository).findByUsername(username);

@@ -19,6 +19,7 @@ import org.springframework.web.server.ResponseStatusException;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
@@ -36,11 +37,14 @@ class ProfileControllerTest {
     private ProfileController profileController;
 
     private ProfileResponse mockProfileResponse;
+    private UUID profileId;
     private FollowResponse mockFollowResponse;
 
     @BeforeEach
     void setUp() {
+        profileId = UUID.randomUUID();
         mockProfileResponse = new ProfileResponse(
+            profileId,
                 "Test User",
                 "testuser",
                 "emailtest@gmail.com",
