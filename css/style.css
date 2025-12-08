@@ -290,22 +290,6 @@
       object-fit: contain;
     }
 
-    /* ============================================
-      PINTEREST-STYLE MASONRY FEED
-      ============================================ */
-    .events-grid {
-      padding: var(--spacing-md) var(--spacing-lg);
-      column-count: 2;
-      column-gap: 16px;
-      margin-top: 3vh;
-    }
-
-    @media (min-width: 768px) {
-      .events-grid {
-        column-count: 3;
-      }
-    }
-
     .post {
       display: inline-block;
       width: 100%;
@@ -368,7 +352,7 @@
       flex-direction: row;
       justify-content: space-between;
       padding: 12px;
-      align-items: flex-start;
+      align-items: center;
     }
 
     .like {
@@ -458,10 +442,11 @@
       GRID DE EVENTOS
       ============================================ */
     .events-grid {
-      padding: var(--spacing-md) var(--spacing-lg);
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
+      padding: var(--spacing-md) 4.2vw;
+      display: flex;
+      flex-direction: column;
       gap: var(--spacing-lg);
+      margin-top: 3vh;
     }
 
     /* ============================================
@@ -1265,12 +1250,6 @@
         max-width: 100%;
       }
 
-      .events-grid {
-        column-count: 1;
-        gap: var(--spacing-md);
-        padding: var(--spacing-md);
-      }
-
       .filter-nav {
         padding: var(--spacing-md);
       }
@@ -1288,14 +1267,3 @@
       }
     }
 
-    @media (min-width: 768px) {
-      .events-grid {
-        column-count: 3;
-      }
-    }
-
-    @media (min-width: 1024px) {
-      .events-grid {
-        column-count: 4;
-      }
-    }
