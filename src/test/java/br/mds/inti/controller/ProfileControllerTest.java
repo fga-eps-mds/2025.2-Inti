@@ -44,7 +44,7 @@ class ProfileControllerTest {
     void setUp() {
         profileId = UUID.randomUUID();
         mockProfileResponse = new ProfileResponse(
-            profileId,
+                profileId,
                 "Test User",
                 "testuser",
                 "emailtest@gmail.com",
@@ -53,6 +53,7 @@ class ProfileControllerTest {
                 "Test bio",
                 10,
                 5,
+                Boolean.FALSE,
                 List.of());
 
         mockFollowResponse = new FollowResponse("Perfil seguido com sucesso.");
