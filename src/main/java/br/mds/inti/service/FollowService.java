@@ -77,7 +77,7 @@ public class FollowService {
             Profile profileToUnfollow = profileService.getProfile(username);
 
             Follow followToRemove = followRepository
-                    .findFollowRelationship(profileToUnfollow, me)
+                    .findFollowRelationship(me, profileToUnfollow)
                     .orElseThrow(() -> new RuntimeException("Follow não encontrado"));
 
             profileService.decrementFollowingCount(me);
