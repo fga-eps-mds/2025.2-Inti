@@ -382,9 +382,12 @@ Formato de `ProductResponseDTO` (exemplo):
 {
   "id": "a1b2c3d4-...",
   "profileId": "394a77ba-9e56-47e7-a3d4-715dba81eaf9",
+  "profileUsername": "artista_legal",
+  "profileName": "Artista Legal",
+  "profilePictureUrl": "https://cdn.inti.app/avatars/394a77ba-9e56.png",
   "title": "Caneca personalizada",
   "description": "Caneca de cerâmica 350ml",
-  "price": 39.90,
+  "price": 39.9,
   "imgLink": "/images/abcd-...jpg",
   "createdAt": "2025-11-25T17:08:15.123Z"
 }
