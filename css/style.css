@@ -148,10 +148,11 @@ body.modal-open {
 }
 
 .screen {
-  width: 100%;
+  width: 100%;          
   min-height: 100vh;
-  position: relative;
+  position: absolute;
   background: white;
+  top: 0;
 }
 
 /* ============================================
@@ -600,7 +601,7 @@ body.modal-open {
 
 /* aproveita o .form, mas ajusta o espaçamento */
 .form {
-  gap: 36px;
+  gap: 20px;
 }
 
 /* Campo de texto maior para descrição */
@@ -655,8 +656,8 @@ body.modal-open {
 }
 
 /* ============================================
-      PÁGINA - NOVO EVENTO
-      ============================================ */
+   PÁGINA - NOVO EVENTO
+   ============================================ */
 
 .row-group {
   display: flex;
@@ -675,6 +676,8 @@ body.modal-open {
   right: 19px;
   pointer-events: none;
 }
+
+
 
 
 /* ============================================
@@ -950,12 +953,11 @@ body.modal-open {
   color: var(--primary);
   text-align: center;
   letter-spacing: 1.92px;
-  margin-top: 86px;
-  margin-bottom: 60px;
+  margin-top: 40px;
 }
 
 .form {
-  width: 320px;
+  width: 350px;
   margin: 0 auto;
   display: flex;
   flex-direction: column;
@@ -977,13 +979,13 @@ body.modal-open {
 
 .input-field {
   width: 100%;
-  height: 41.31px;
+  height: 7.5vh;
   background: var(--primary-lighter);
   border: none;
   border-radius: var(--radius-lg);
   padding: 10px 20px;
   font-family: "Maitree", serif;
-  font-size: 14px;
+  font-size: 20px;
   color: var(--primary);
   outline: none;
   transition: box-shadow 0.2s ease;
@@ -999,18 +1001,15 @@ body.modal-open {
 
 .input-field::placeholder {
   color: rgba(89, 46, 131, 0.55);
-  font-size: 10px;
+  font-size: 18px;
 }
 
 .input-label {
-  position: absolute;
-  left: 10px;
-  top: -9px;
   font-family: "Maitree", serif;
-  font-size: 14px;
+  font-size: 18px;
   color: var(--primary);
-  background: white;
-  padding: 0 5px;
+  background: none;
+  padding: 0 10px;
   letter-spacing: 0.56px;
 }
 
@@ -1018,13 +1017,12 @@ body.modal-open {
   display: flex;
   align-items: center;
   gap: 10px;
-  margin: 10px 0;
-  padding-left: 35px;
+  padding-left: 10px;
 }
 
 .checkbox {
-  width: 24px;
-  height: 24px;
+  width: 30px;
+  height: 30px;
   background: var(--primary-lighter);
   border: none;
   border-radius: 3px;
@@ -1032,15 +1030,24 @@ body.modal-open {
   appearance: none;
   -webkit-appearance: none;
   position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--primary);
+}
+
+
+.checkbox:checked {
+  background-color: var(--primary);
+  color: white;
+}
+
+.checkbox::after {
+  content: "";
 }
 
 .checkbox:checked::after {
   content: "✔";
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  color: var(--primary);
   font-size: 18px;
 }
 
@@ -1077,19 +1084,21 @@ body.modal-open {
 }
 
 .btn-primary {
-  width: 250px;
-  margin-top: 30px;
+  width: 320px;
+  height: 50px;
+  margin-top: 20px;
+  border-radius: 16px;
 }
 
 .btn-link {
   font-family: "Libre Bodoni", serif;
   font-weight: 700;
-  font-size: 18px;
+  font-size: 22px;
   color: var(--primary);
   text-decoration: none;
   text-align: center;
   display: block;
-  margin: 20px auto;
+  margin: 0 auto 10px;
   letter-spacing: 0.72px;
   transition: opacity 0.2s ease;
 }
@@ -1105,6 +1114,7 @@ body.modal-open {
 
 .cadastro-screen .form {
   margin-top: 20px;
+  padding-bottom: 20px;
 }
 
 /* Página de cadastro */
@@ -1114,7 +1124,7 @@ body.modal-open {
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding-top: var(--spacing-xl);
+  padding-top: 0;
 }
 
 .cadastro-title {
@@ -1446,7 +1456,7 @@ body.modal-open {
 
 /* aproveita o .form, mas ajusta o espaçamento */
 .form {
-  gap: 36px;
+  gap: 20px;
 }
 
 /* Campo de texto maior para descrição */
@@ -1561,3 +1571,4 @@ body.modal-open {
     column-count: 4;
   }
 }
+
