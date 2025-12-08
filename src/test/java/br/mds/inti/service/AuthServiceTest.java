@@ -159,6 +159,7 @@ class AuthServiceTest {
 
         // Assert
         assertNotNull(response);
+        assertEquals(profileId, response.id());
         assertEquals("login-jwt-token", response.jwt());
         assertEquals("testuser", response.username());
         assertEquals("Test User", response.name());

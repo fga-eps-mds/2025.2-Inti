@@ -120,7 +120,9 @@ class AuthControllerTest {
     void login_WithValidCredentials_ShouldReturnOkStatusWithPayload() {
         // Arrange
         LoginRequest request = new LoginRequest("test@example.com", "password123");
+        UUID profileId = UUID.randomUUID();
         LoginResponse loginResponse = new LoginResponse(
+                profileId,
                 "login-jwt-token",
                 "testuser",
                 "Test User",
@@ -136,6 +138,7 @@ class AuthControllerTest {
         assertNotNull(response);
         assertEquals(HttpStatus.OK, response.getStatusCode());
         assertEquals(loginResponse, response.getBody());
+        assertEquals(profileId, response.getBody().id());
         assertEquals("testuser", response.getBody().username());
         verify(authService).login(request);
     }
