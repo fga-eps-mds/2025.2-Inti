@@ -140,7 +140,7 @@ public class ProfileService {
         }
 
         if (profile.getProfilePictureUrl() == null || profile.getProfilePictureUrl().isEmpty()) {
-            throw new ImageNotFoundException("Profile picture does not exist");
+            setPhoto(updateUserRequest.profilePicture());
         } else {
             if (updateUserRequest.profilePicture() != null && !updateUserRequest.profilePicture().isEmpty()) {
                 byte[] existingProfilePicture = blobService.downloadImage(profile.getProfilePictureUrl());
