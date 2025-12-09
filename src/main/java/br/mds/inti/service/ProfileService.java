@@ -137,8 +137,10 @@ public class ProfileService {
 
         String blobName = null;
         if (profile.getProfilePictureUrl() == null || profile.getProfilePictureUrl().isEmpty()) {
-            blobName = blobService.uploadImage(profile.getId(), updateUserRequest.profilePicture());
-            profile.setProfilePictureUrl(blobName);
+            if (updateUserRequest.profilePicture() == null || updateUserRequest.profilePicture().isEmpty()) {
+                throw new ImageNotFoundException("Profile picture is missing");
+            }
+            setPhoto(updateUserRequest.profilePicture());
         } else {
             if (updateUserRequest.profilePicture() != null && !updateUserRequest.profilePicture().isEmpty()) {
                 byte[] existingProfilePicture = blobService.downloadImage(profile.getProfilePictureUrl());
