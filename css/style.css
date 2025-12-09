@@ -558,7 +558,7 @@ body.modal-open {
   width: 100%;
   max-width: 320px;
   height: 100%;
-  margin: 0 auto 10%;
+  margin: 0 auto 20px;
   /* centraliza horizontalmente */
   display: flex;
   flex-direction: column;
@@ -571,6 +571,11 @@ body.modal-open {
   width: 100%;
   max-width: 100%;
   margin: 0;
+  padding-bottom: 70px;
+}
+
+.form-new-product button {
+  font-weight: bold;
 }
 
 /* Header simples com título centralizado */
@@ -597,19 +602,13 @@ body.modal-open {
   padding: 0;
 }
 
-.btn-voltar-header img {
-  width: 100%;
-  height: 100%;
-  object-fit: contain;
-}
-
-
 .header-new-product .page-title {
   font-family: "Libre Bodoni", serif;
-  font-weight: 700;
+  font-weight: bold;
   font-size: 32px;
   text-align: center;
 }
+
 
 /* área interna da tela de novo produto */
 .new-product-content {
@@ -685,17 +684,40 @@ body.modal-open {
   flex: 1;
 }
 
+
+.input-with-icon {
+  position: relative;
+}
+
+
+.input-with-icon .input-field {
+  padding-right: 44px;
+}
+
 .input-field-icon {
   position: absolute;
   width: 20px;
   height: 20px;
-  top: 25%;
+  top: 50%;
   right: 19px;
+  transform: translateY(-50%);
   pointer-events: none;
 }
 
+.page-title-link {
+  text-decoration: none;
+}
 
+#date, #time {
+  font-size: 12px;
+}
 
+#date::placeholder, #time::placeholder {
+  font-size: 12px;
+  display: flex;
+  align-items: center;
+  padding-bottom: 20px;
+}
 
 /* ============================================
       NAVIGATION BAR
@@ -996,6 +1018,26 @@ body.modal-open {
 .input-wrapper {
   position: relative;
   width: 100%;
+}
+
+.input-with-icon {
+  position: relative;
+}
+
+
+.input-with-icon .input-field {
+  padding-right: 44px;
+}
+
+
+.input-field-icon {
+  position: absolute;
+  width: 20px;
+  height: 20px;
+  top: 50%;
+  right: 19px;
+  transform: translateY(-50%);
+  pointer-events: none;
 }
 
 .input-field {
@@ -1559,17 +1601,36 @@ body.modal-open {
   flex: 1;
 }
 
+.input-with-icon {
+  position: relative;
+}
+
+.input-with-icon .input-field {
+  padding-right: 44px;
+}
+
 .input-field-icon {
   position: absolute;
   width: 20px;
   height: 20px;
-  top: 25%;
+  top: 50%;
   right: 19px;
+  transform: translateY(-50%);
   pointer-events: none;
 }
 
+.page-title-link {
+  text-decoration: none;
+  font-weight: bold;
+}
 
+#description, #administrativeRegion, #referencePoint, #city, #state {
+  font-size: 16px;
+}
 
+#description::placeholder, #administrativeRegion::placeholder, #referencePoint::placeholder, #city::placeholder, #state::placeholder {
+  font-size: 16px;
+}
 
 /* ============================================
       RESPONSIVIDADE
