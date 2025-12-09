@@ -7,7 +7,7 @@
   <link
     href="https://fonts.googleapis.com/css2?family=Maitree:wght@300;400;500;600&family=Libre+Bodoni:wght@400;700&display=swap"
     rel="stylesheet">
-
+  <link rel="stylesheet" href="../css/style.css">
   <link rel="icon" type="image/png" href="../assets/MUSA-M.svg">
   <title>HH UnB - Evento</title>
   <style>
@@ -380,77 +380,6 @@
       font-weight: bold;
     }
 
-
-    /*-------NavBar-------*/
-
-
-    .navbar {
-      position: fixed;
-      bottom: 0;
-      left: 0;
-      width: 100%;
-      height: 70px;
-      background: white;
-      display: flex;
-      align-items: center;
-      justify-content: space-around;
-      padding: 0 20px;
-      border-top: 1px solid var(--gray-200);
-      z-index: 1000;
-    }
-
-    .nav-btn {
-      background: none;
-      border: none;
-      cursor: pointer;
-      padding: 8px;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      color: var(--gray-400);
-      transition: all 0.2s ease;
-      position: relative;
-      flex: 1;
-    }
-
-    .nav-btn:hover {
-      color: var(--primary);
-    }
-
-    .nav-btn.active {
-      color: var(--primary);
-    }
-
-    .nav-btn svg {
-      width: 28px;
-      height: 28px;
-    }
-
-    .nav-btn-add {
-      width: 56px;
-      height: 56px;
-      background: var(--primary);
-      border-radius: 50%;
-      color: white;
-      flex: 0 0 56px;
-      position: relative;
-      top: -8px;
-    }
-
-    .nav-btn-add:hover {
-      background: var(--primary-light);
-      color: white;
-      transform: scale(1.05);
-    }
-
-    .nav-btn-add svg {
-      width: 32px;
-      height: 32px;
-    }
-
-
-
     @media (max-width: 768px) {
       .header-event-publish {
         padding: var(--spacing-sm) var(--spacing-md);
@@ -510,30 +439,6 @@
         height: 250px;
       }
 
-      .navbar {
-        padding: 0 var(--spacing-xs);
-      }
-
-      .nav-btn {
-        min-width: 40px;
-        padding: var(--spacing-xs);
-      }
-
-      .nav-btn svg {
-        width: 20px;
-        height: 20px;
-      }
-
-      .nav-btn-add {
-        width: 48px;
-        height: 48px;
-        flex: 0 0 48px;
-      }
-
-      .nav-btn-add svg {
-        width: 24px;
-        height: 24px;
-      }
     }
 
     @media (max-width: 360px) {
@@ -558,9 +463,6 @@
         margin: 0 auto;
       }
 
-      .navbar {
-        max-width: 100%;
-      }
     }
 
     /* Animações de notificação */
@@ -656,7 +558,7 @@
 
     <!-- Navigation Bar -->
     <nav class="navbar">
-      <button class="nav-btn active" aria-label="Home">
+      <button class="nav-btn" aria-label="Home">
         <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
           <path
             d="M3 9L12 2L21 9V20C21 20.5304 20.7893 21.0391 20.4142 21.4142C20.0391 21.7893 19.5304 22 19 22H5C4.46957 22 3.96086 21.7893 3.58579 21.4142C3.21071 21.0391 3 20.5304 3 20V9Z"
@@ -679,7 +581,7 @@
           <line x1="5" y1="12" x2="19" y2="12" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
         </svg>
       </button>
-      <button class="nav-btn" aria-label="Calendário">
+      <button class="nav-btn active" aria-label="Calendário">
         <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
           <rect x="3" y="4" width="18" height="18" rx="2" stroke="currentColor" stroke-width="2" stroke-linecap="round"
             stroke-linejoin="round" />
