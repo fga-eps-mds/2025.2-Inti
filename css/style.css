@@ -794,6 +794,10 @@ body.modal-open {
   align-items: flex-start;
   justify-content: center;
   padding: 0 5vw;
+  padding-top: 0;
+}
+
+.screen-container.auth-layout {
   padding-top: 12vh;
 }
 
