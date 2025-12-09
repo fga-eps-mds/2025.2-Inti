@@ -118,17 +118,6 @@ class ProfileControllerTest {
     }
 
     @Test
-    void getStringOrg_ShouldReturnTestString() {
-        // Act
-        ResponseEntity<String> response = profileController.getStringOrg();
-
-        // Assert
-        assertNotNull(response);
-        assertEquals(HttpStatus.OK, response.getStatusCode());
-        assertEquals("teste", response.getBody());
-    }
-
-    @Test
     void getMe_WithDifferentPagination_ShouldCallServiceWithCorrectParams() {
         // Arrange
         when(profileService.getProfile(2, 20)).thenReturn(mockProfileResponse);

@@ -4,23 +4,19 @@ import br.mds.inti.model.dto.PostResponse;
 import br.mds.inti.model.dto.ProfileResponse;
 import br.mds.inti.model.dto.UpdateUserRequest;
 import br.mds.inti.model.entity.Profile;
+import br.mds.inti.model.enums.ProfileType;
 import br.mds.inti.repositories.ProfileRepository;
-import br.mds.inti.service.exceptions.ProfileNotFoundException;
-import br.mds.inti.service.exceptions.UsernameAlreadyExistsException;
+import br.mds.inti.service.exception.ProfileNotFoundException;
+import br.mds.inti.service.exception.UsernameAlreadyExistsException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.http.HttpStatus;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.server.ResponseStatusException;
 
 import java.io.IOException;
 import java.time.Instant;
 import java.util.Arrays;
-import java.util.UUID;
 
 @Service
 public class OrganizationService {
@@ -34,7 +30,7 @@ public class OrganizationService {
     @Autowired
     BlobService blobService;
 
-    public ProfileResponse getProfile(int page, int size, Profile profile) {
+    public ProfileResponse getOrganization(int page, int size, Profile profile) {
 
         Page<PostResponse> post = postService.getPostByIdProfile(profile.getId(), PageRequest.of(page, size));
 
@@ -44,9 +40,11 @@ public class OrganizationService {
                 profile.getBio(), profile.getFollowersCount(), profile.getFollowingCount(), post.getContent());
     }
 
-    public ProfileResponse getProfileByUsername(String username, int page, int size) {
+    public ProfileResponse getOrganizationByUsername(String username, int page, int size) {
         Profile publicProfile = profileRepository.findByUsername(username)
                 .orElseThrow(() -> new ProfileNotFoundException(username));
+
+        if(!publicProfile.getType().equals(ProfileType.organization)) throw new ProfileNotFoundException("O perfil de username " + username + " não é uma organização");
 
         Page<PostResponse> post = postService.getPostByIdProfile(publicProfile.getId(), PageRequest.of(page, size));
 
@@ -57,16 +55,11 @@ public class OrganizationService {
                 publicProfile.getFollowingCount(), post.getContent());
     }
 
-    public Profile getProfile(String username) {
-        Profile publicProfile = profileRepository.findByUsername(username)
+    public Profile getOrganization(String username) {
+
+        return profileRepository.findByUsername(username)
                 .orElseThrow(() -> new ProfileNotFoundException(username));
 
-        return publicProfile;
-    }
-
-    public Profile getProfileById(UUID profileId) {
-        return profileRepository.findById(profileId)
-                .orElseThrow(() -> new ProfileNotFoundException(profileId.toString()));
     }
 
     public void incrementFollowingCount(Profile profile) {
@@ -114,7 +107,7 @@ public class OrganizationService {
             }
         }
 
-        String blobName = null;
+        String blobName;
         if (profile.getProfilePictureUrl() == null || profile.getProfilePictureUrl().isEmpty()) {
             blobName = blobService.uploadImage(profile.getId(), updateUserRequest.profilePicture());
             profile.setProfilePictureUrl(blobName);

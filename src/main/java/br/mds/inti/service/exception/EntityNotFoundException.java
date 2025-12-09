@@ -1,4 +1,4 @@
-package br.mds.inti.service.exceptions;
+package br.mds.inti.service.exception;
 
 public class EntityNotFoundException extends RuntimeException {
 

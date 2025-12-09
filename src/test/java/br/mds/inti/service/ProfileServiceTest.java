@@ -6,9 +6,8 @@ import br.mds.inti.model.dto.UpdateUserRequest;
 import br.mds.inti.model.entity.Profile;
 import br.mds.inti.model.enums.ProfileType;
 import br.mds.inti.repositories.ProfileRepository;
-import br.mds.inti.service.exceptions.ProfileNotFoundException;
-import br.mds.inti.service.exceptions.UsernameAlreadyExistsException;
-import br.mds.inti.service.exceptions.ImageNotFoundException;
+import br.mds.inti.service.exception.ProfileNotFoundException;
+import br.mds.inti.service.exception.UsernameAlreadyExistsException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -23,6 +22,7 @@ import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.io.IOException;
@@ -380,18 +380,26 @@ class ProfileServiceTest {
     }
 
     @Test
-    void updateUser_WhenProfilePictureIsNull_ShouldThrowImageNotFoundException() {
+    void updateUser_WhenProfilePictureIsNull_ShouldUploadImageInDatabase() throws IOException {
         // Arrange
         mockProfile.setProfilePictureUrl(null);
         when(securityContext.getAuthentication()).thenReturn(authentication);
         when(authentication.getPrincipal()).thenReturn(mockProfile);
+        when(blobService.uploadImage(any(), any())).thenReturn("uploaded-photo.jpg");
+        when(profileRepository.save(any())).thenReturn(mockProfile);
         SecurityContextHolder.setContext(securityContext);
 
-        UpdateUserRequest request = new UpdateUserRequest("New Name", null, null, null, null, null);
+        MultipartFile mockImage = new MockMultipartFile(
+                "logo",
+                "logo.jpg",
+                "image/jpeg",
+                "logo content".getBytes());
+
+        UpdateUserRequest request = new UpdateUserRequest("New Name", null, null, null, null, mockImage);
 
         // Act & Assert
-        assertThrows(ImageNotFoundException.class, () -> profileService.updateUser(request));
-        verify(profileRepository, never()).save(any());
+        profileService.updateUser(request);
+        assertEquals("uploaded-photo.jpg", mockProfile.getProfilePictureUrl());
     }
 
     @Test

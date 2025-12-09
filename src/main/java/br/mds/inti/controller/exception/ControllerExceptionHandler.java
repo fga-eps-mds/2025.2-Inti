@@ -9,12 +9,12 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import br.mds.inti.model.dto.ErrorResponse;
-import br.mds.inti.service.exceptions.ProfileNotFoundException;
-import br.mds.inti.service.exceptions.EntityNotFoundException;
+import br.mds.inti.service.exception.ProfileNotFoundException;
+import br.mds.inti.service.exception.EntityNotFoundException;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.time.Instant;
 import java.util.List;
-import java.util.Objects;
 
 @RestControllerAdvice
 public class ControllerExceptionHandler {
@@ -38,13 +38,19 @@ public class ControllerExceptionHandler {
     }
 
     @ExceptionHandler(ResponseStatusException.class)
-    public ResponseEntity<ErrorResponseDTO> handleResponseStatusException(ResponseStatusException ex) {
+    public ResponseEntity<StandardError> handleResponseStatusException(ResponseStatusException ex) {
 
-        var errorResponseDTO = ErrorResponseDTO.builder()
-                .errors(List.of(Objects.requireNonNull(ex.getReason())))
-                .build();
+        StandardError standardError = new StandardError(Instant.now(), ex.getStatusCode().value(), null, ex.getReason(), null);
 
-        return ResponseEntity.status(ex.getStatusCode()).body(errorResponseDTO);
+        return ResponseEntity.status(ex.getStatusCode()).body(standardError);
+    }
+
+    @ExceptionHandler(RuntimeException.class)
+    public ResponseEntity<StandardError> handleResponseStatusException(RuntimeException ex) {
+
+        StandardError standardError = new StandardError(Instant.now(), HttpStatus.BAD_REQUEST.value(), null, ex.getMessage(), null);
+
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(standardError);
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)

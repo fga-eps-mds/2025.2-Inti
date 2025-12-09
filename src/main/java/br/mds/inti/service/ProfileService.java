@@ -20,9 +20,8 @@ import br.mds.inti.model.dto.ProfileResponse;
 import br.mds.inti.model.dto.UpdateUserRequest;
 import br.mds.inti.model.entity.Profile;
 import br.mds.inti.repositories.ProfileRepository;
-import br.mds.inti.service.exceptions.UsernameAlreadyExistsException;
-import br.mds.inti.service.exceptions.ImageNotFoundException;
-import br.mds.inti.service.exceptions.ProfileNotFoundException;
+import br.mds.inti.service.exception.UsernameAlreadyExistsException;
+import br.mds.inti.service.exception.ProfileNotFoundException;
 
 @Service
 public class ProfileService {
@@ -66,10 +65,9 @@ public class ProfileService {
     }
 
     public Profile getProfile(String username) {
-        Profile publicProfile = profileRepository.findByUsername(username)
-                .orElseThrow(() -> new ProfileNotFoundException(username));
 
-        return publicProfile;
+        return profileRepository.findByUsername(username)
+                .orElseThrow(() -> new ProfileNotFoundException(username));
     }
 
     public Profile getProfileById(UUID profileId) {

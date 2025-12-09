@@ -28,23 +28,23 @@ public class OrganizationController {
     @Autowired
     private FollowService followService;
 
-    @GetMapping("/me")
+    @GetMapping
     public ResponseEntity<ProfileResponse> getMe(@RequestParam("size") Integer size,
             @RequestParam("page") Integer page) {
 
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         if(auth == null ||  !(auth.getPrincipal() instanceof Profile profile)) throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Unauthorized");
 
-        return ResponseEntity.ok().body(organizationService.getProfile(page, size, profile));
+        return ResponseEntity.ok().body(organizationService.getOrganization(page, size, profile));
     }
 
     @GetMapping("/{username}")
     public ResponseEntity<ProfileResponse> getPublicProfile(@PathVariable String username,
             @RequestParam("size") Integer size, @RequestParam("page") Integer page) {
-        return ResponseEntity.ok().body(organizationService.getProfileByUsername(username, page, size));
+        return ResponseEntity.ok().body(organizationService.getOrganizationByUsername(username, page, size));
     }
 
-    @PostMapping("/upload-me")
+    @PostMapping
     public ResponseEntity<Void> setMyOrgnizationPhoto(MultipartFile myImage) {
         try {
             Authentication auth = SecurityContextHolder.getContext().getAuthentication();
@@ -54,13 +54,13 @@ public class OrganizationController {
             return ResponseEntity.status(HttpStatus.CREATED).build();
 
         } catch (IOException e) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Error trying to set profile image");
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Error trying to set organization image");
 
         }
     }
 
-    @PatchMapping("/update")
-    public ResponseEntity<Void> user(@NotNull @ModelAttribute UpdateUserRequest updateUserRequest) {
+    @PatchMapping
+    public ResponseEntity<Void> updateOrganization(@NotNull @ModelAttribute UpdateUserRequest updateUserRequest) {
         try {
             Authentication auth = SecurityContextHolder.getContext().getAuthentication();
             if(auth == null ||  !(auth.getPrincipal() instanceof Profile profile)) throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Unauthorized");
@@ -68,7 +68,7 @@ public class OrganizationController {
             organizationService.updateOrganization(updateUserRequest, profile);
             return ResponseEntity.status(HttpStatus.CREATED).build();
         } catch (IOException e) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Error trying to update profile");
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Error trying to update organization");
         }
     }
 

@@ -9,8 +9,8 @@ import br.mds.inti.model.entity.pk.EventParticipantPK;
 import br.mds.inti.repositories.EventParticipantsRepository;
 import br.mds.inti.repositories.EventRepository;
 import br.mds.inti.repositories.ProfileRepository;
-import br.mds.inti.service.exceptions.EntityNotFoundException;
-import br.mds.inti.service.exceptions.EventParticipantAlreadyExistsException;
+import br.mds.inti.service.exception.EntityNotFoundException;
+import br.mds.inti.service.exception.EventParticipantAlreadyExistsException;
 import jakarta.validation.constraints.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -154,16 +154,11 @@ public class EventService {
     }
 
     public List<EventFollowingDTO> getEventsFromFollowing(Profile profile, UUID eventId) {
-        Optional<List<Profile>> followedByProfile = profileRepository.findEventParticipantsFollowedByProfile(eventId, profile.getId());
+        Optional<List<EventFollowingDTO>> followedByProfile = profileRepository.findFriendsGoingToEvent(eventId, profile.getId());
         if (followedByProfile.isEmpty() || followedByProfile.get().isEmpty()) {
             return List.of();
         }
 
-        return followedByProfile.get().stream()
-                .map(iterationProfile -> new EventFollowingDTO(
-                        iterationProfile.getId(),
-                        iterationProfile.getUsername(),
-                        iterationProfile.getProfilePictureUrl()
-                )).toList();
+        return followedByProfile.get();
     }
 }

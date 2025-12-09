@@ -2,10 +2,7 @@ package br.mds.inti.model.entity;
 
 import br.mds.inti.model.enums.ProfileType;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -16,10 +13,10 @@ import java.util.Collection;
 import java.util.List;
 import java.util.UUID;
 
-@Data
 @NoArgsConstructor
 @AllArgsConstructor
-@EqualsAndHashCode
+@Getter
+@Setter
 @Entity
 @Table(name = "profiles")
 public class Profile implements UserDetails {

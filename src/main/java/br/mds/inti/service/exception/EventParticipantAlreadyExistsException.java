@@ -1,4 +1,4 @@
-package br.mds.inti.service.exceptions;
+package br.mds.inti.service.exception;
 
 public class EventParticipantAlreadyExistsException extends RuntimeException{
     public EventParticipantAlreadyExistsException(String msg) {

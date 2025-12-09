@@ -7,6 +7,7 @@ import java.util.Arrays;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
@@ -38,8 +39,11 @@ public class SecurityConfig {
                 .csrf(csrf -> csrf.disable()).cors(cors -> cors.configurationSource(corsConfigurationSource()))
                 .sessionManagement(sm -> sm.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/auth/**", "/images/**")
-                        .permitAll()
+                        .requestMatchers("/auth/**", "/images/**").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/org/*").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/org/*/follow").authenticated()
+                        .requestMatchers(HttpMethod.DELETE, "/org/*/unfollow").authenticated()
+                        .requestMatchers("/org/**").hasRole("ORGANIZATION")
                         .anyRequest().authenticated())
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
                 .build();
