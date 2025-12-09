@@ -62,6 +62,84 @@
       -moz-osx-font-smoothing: grayscale;
     }
 
+    body.modal-open {
+      overflow: hidden;
+    }
+
+    .action-modal {
+      position: fixed;
+      inset: 0;
+      display: none;
+      align-items: flex-end;
+      justify-content: center;
+      background: rgba(0, 0, 0, 0.45);
+      backdrop-filter: blur(4px);
+      z-index: 2000;
+    }
+
+    .action-modal[aria-hidden="false"] {
+      display: flex;
+    }
+
+    .action-modal .modal-content {
+      width: 92%;
+      max-width: 400px;
+      background: #fff;
+      border-radius: 20px 20px 0 0;
+      padding: 25px;
+      margin: 0 auto;
+      box-shadow: 0 -3px 20px rgba(0, 0, 0, 0.22);
+      animation: modal-slide-up 0.28s ease-out;
+    }
+
+    .action-modal .close-modal {
+      background: none;
+      border: none;
+      font-size: 30px;
+      cursor: pointer;
+      float: right;
+      color: #6b6b6b;
+    }
+
+    .action-modal .modal-title {
+      margin: 10px 0 20px;
+      font-size: 20px;
+      text-align: center;
+      font-weight: 600;
+      font-family: "Quicksand", sans-serif;
+    }
+
+    .action-modal .modal-item {
+      width: 100%;
+      padding: 13px;
+      margin: 10px 0;
+      border: none;
+      background: #f1f1f1;
+      border-radius: 14px;
+      font-size: 16px;
+      cursor: pointer;
+      transition: background 0.2s ease;
+      font-family: "Quicksand", sans-serif;
+    }
+
+    .action-modal .modal-item:hover,
+    .action-modal .modal-item:focus-visible {
+      background: #e2e2e2;
+      outline: none;
+    }
+
+    @keyframes modal-slide-up {
+      from {
+        transform: translateY(80px);
+        opacity: 0;
+      }
+
+      to {
+        transform: translateY(0);
+        opacity: 1;
+      }
+    }
+
     .event-publish-screen {
       width: 100%;
       max-width: 100%;
