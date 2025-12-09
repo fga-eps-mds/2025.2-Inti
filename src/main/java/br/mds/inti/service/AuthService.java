@@ -7,7 +7,7 @@ import br.mds.inti.model.dto.auth.LoginResponse;
 import br.mds.inti.model.entity.Profile;
 import br.mds.inti.model.enums.ProfileType;
 import br.mds.inti.repositories.ProfileRepository;
-import br.mds.inti.service.exceptions.ProfileAlreadyExistsException;
+import br.mds.inti.service.exception.ProfileAlreadyExistsException;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;

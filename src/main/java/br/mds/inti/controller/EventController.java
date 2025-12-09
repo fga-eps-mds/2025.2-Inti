@@ -1,11 +1,7 @@
 package br.mds.inti.controller;
 
-import br.mds.inti.model.dto.EventDetailResponse;
-import br.mds.inti.model.dto.EventParticipantResponse;
-import br.mds.inti.model.dto.EventListResponse;
-import br.mds.inti.model.dto.EventRequestDTO;
+import br.mds.inti.model.dto.*;
 import br.mds.inti.model.dto.EventResponseDTO;
-import br.mds.inti.model.dto.MyEvent;
 import br.mds.inti.model.entity.Profile;
 import br.mds.inti.model.entity.pk.EventParticipantPK;
 import br.mds.inti.model.enums.ProfileType;
@@ -91,5 +87,14 @@ public class EventController {
 
         return ResponseEntity.ok().body(list);
     }
+
+   @GetMapping("/following")
+   public ResponseEntity<List<EventFollowingDTO>> getEventsFromFollowing(@PathVariable UUID eventId) {
+       Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+       Profile profile = (Profile) authentication.getPrincipal();
+
+       List<EventFollowingDTO> events = eventService.getEventsFromFollowing(profile, eventId);
+       return ResponseEntity.ok(events);
+   }
 
 }

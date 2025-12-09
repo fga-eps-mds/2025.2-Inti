@@ -3,6 +3,7 @@ package br.mds.inti.controller;
 import java.io.IOException;
 import java.util.UUID;
 
+import br.mds.inti.model.dto.ProductSummaryDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;

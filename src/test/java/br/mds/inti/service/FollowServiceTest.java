@@ -6,7 +6,7 @@ import br.mds.inti.model.entity.Profile;
 import br.mds.inti.model.entity.pk.FollowsPK;
 import br.mds.inti.model.enums.ProfileType;
 import br.mds.inti.repositories.FollowRepository;
-import br.mds.inti.service.exceptions.ProfileNotFoundException;
+import br.mds.inti.service.exception.ProfileNotFoundException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

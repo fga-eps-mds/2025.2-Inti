@@ -18,10 +18,9 @@ public class JwtService {
     @Value("${api.security.token.secret}")
     private String secret;
 
-    private long expirationMillis = 1000L * 60 * 60 * 24 * 30;
-    private Date expiresAt = new Date(System.currentTimeMillis() + expirationMillis);
-
     public String generateToken(Profile profile) {
+        long expirationMillis = 1000L * 60 * 60 * 24 * 30;
+        Date expiresAt = new Date(System.currentTimeMillis() + expirationMillis);
 
         return JWT.create()
                 .withSubject(profile.getUsername())
