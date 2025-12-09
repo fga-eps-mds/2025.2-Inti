@@ -92,9 +92,14 @@ async function register(name, username, email, password, type = "user") {
 
 // Função para fazer logout
 function logout() {
-  apiService.clearAuthToken();
+  if (typeof apiService !== 'undefined') {
+    apiService.clearAuthToken();
+  }
   localStorage.removeItem("isAuthenticated");
   localStorage.removeItem("userData");
+
+  window.location.replace('/login.html');
+
   return true;
 }
 
