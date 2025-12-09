@@ -42,6 +42,62 @@ document.addEventListener("DOMContentLoaded", () => {
     likeBtn.addEventListener("click", handleLikeClick);
   }
 
+  const optionsBtn = document.querySelector(".btn-delete");
+  const optionsMenu = document.querySelector(".post-options-menu");
+  const deleteOption = document.querySelector(".post-delete-option");
+  const deleteModal = document.getElementById("deleteModal");
+  const deleteCancelBtn = document.getElementById("deleteCancelBtn");
+  const deleteConfirmBtn = document.getElementById("deleteConfirmBtn");
+
+  if (optionsBtn && optionsMenu) {
+    optionsBtn.addEventListener("click", (event) => {
+      event.stopPropagation();
+      optionsMenu.classList.toggle("hidden");
+    });
+    optionsMenu.addEventListener("click", (event) => {
+      event.stopPropagation();
+    });
+  }
+
+  document.addEventListener("click", () => {
+    if (optionsMenu) {
+      optionsMenu.classList.add("hidden");
+    }
+  });
+
+  if (deleteOption) {
+    deleteOption.addEventListener("click", (event) => {
+      event.preventDefault();
+      event.stopPropagation();
+
+      if (optionsMenu) {
+        optionsMenu.classList.add("hidden");
+      }
+
+      if (deleteModal) {
+        deleteModal.classList.remove("hidden");
+      }
+    });
+  }
+
+  if (deleteCancelBtn && deleteModal) {
+    deleteCancelBtn.addEventListener("click", () => {
+      deleteModal.classList.add("hidden");
+    });
+  }
+
+  if (deleteModal) {
+    deleteModal.addEventListener("click", (event) => {
+      if (event.target === deleteModal) {
+        deleteModal.classList.add("hidden");
+      }
+    });
+  }
+
+  if (deleteConfirmBtn) {
+    deleteConfirmBtn.addEventListener("click", handleDeletePostClick);
+  }
+
   // Add event listener for back button
   const backBtn = document.querySelector(".voltar");
   if (backBtn) {
@@ -162,6 +218,35 @@ function renderPost(post) {
     document.querySelector(".like button").classList.remove("liked");
     if (likeBtn) likeBtn.src = "../assets/img_Like1.svg";
   }
+
+ 
+  try {
+    const stored = localStorage.getItem("userData");
+    const userData = stored ? JSON.parse(stored) : null;
+    const currentUsername = userData?.username?.toLowerCase();
+    const postUsername = (post.author && post.author.username
+      ? post.author.username
+      : null);
+
+    const optionsBtn = document.querySelector(".btn-delete");
+    const optionsMenu = document.querySelector(".post-options-menu");
+
+    if (!currentUsername || !postUsername || currentUsername !== postUsername.toLowerCase()) {
+      if (optionsBtn) optionsBtn.style.display = "none";
+      if (optionsMenu) {
+        optionsMenu.classList.add("hidden");
+        optionsMenu.style.display = ""; 
+      }
+    } else {
+      if (optionsBtn) optionsBtn.style.display = "block";
+      if (optionsMenu) {
+        optionsMenu.classList.add("hidden"); 
+        optionsMenu.style.display = "";      
+      }
+    }
+  } catch (e) {
+    console.warn("Não foi possível verificar o usuário logado para controle de exclusão.", e);
+  }
 }
 
 async function setBackgroundImageWithBearer(element, imageUrl, token) {
@@ -249,6 +334,41 @@ async function handleLikeClick(event) {
     console.error("Error toggling like:", error);
     if (typeof toast !== "undefined") {
       toast.error("Erro ao curtir post");
+    }
+  }
+}
+
+async function handleDeletePostClick(event) {
+  event.preventDefault();
+  event.stopPropagation();
+
+  const postDetailEl = document.querySelector(".post-detail");
+  const postId = postDetailEl?.dataset.postId;
+
+  if (!postId) {
+    console.error("Post ID não encontrado para exclusão.");
+    return;
+  }
+
+  try {
+    await apiService.deletePost(postId);
+
+    if (typeof toast !== "undefined") {
+      toast.success("Publicação excluída com sucesso.");
+    }
+
+    const deleteModal = document.getElementById("deleteModal");
+    if (deleteModal) {
+      deleteModal.classList.add("hidden");
+    }
+
+    window.history.back();
+  } catch (error) {
+    console.error("Erro ao excluir post:", error);
+    if (typeof toast !== "undefined") {
+      toast.error("Erro ao excluir publicação.");
+    } else {
+      alert("Erro ao excluir publicação.");
     }
   }
 }

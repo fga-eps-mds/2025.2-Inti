@@ -92,6 +92,7 @@
       display: flex;
       flex-direction: row;
       align-items: center;
+      position: relative;
     }
 
     .info-user img {
@@ -108,6 +109,53 @@
       line-height: 1.3;
     }
 
+    .btn-delete {
+      padding-top: 5px;
+      margin-left: auto;
+      border: none;
+      background: none;
+      width: 8.5vw;
+      height: 8.5vw;
+    }
+
+    .btn-delete img {
+      width: 8.5vw;
+      height: 8.5vw;
+      margin-left: 0;
+    }
+
+    .post-options-menu {
+      position: absolute;
+      top: 100%;
+      right: 0;
+      margin-top: 4px;
+      background: #ffffff;
+      border-radius: 8px;
+      box-shadow: var(--shadow-md);
+      padding: 4px 0;
+      z-index: 10;
+      min-width: 160px;
+    }
+
+    .post-options-menu.hidden {
+      display: none;
+    }
+
+    .post-options-menu button {
+      width: 100%;
+      padding: 8px 12px;
+      border: none;
+      background: none;
+      text-align: center;
+      font-size: 14px;
+      font-family: "Maitree", serif;
+      color: #d32f2f;
+      cursor: pointer;
+    }
+
+    .post-options-menu button:hover {
+      background-color: var(--gray-100);
+    }
 
     .post-img {
       width: 100%;
@@ -152,6 +200,69 @@
       font-size: 20px;
       padding-top: 0px;
     }
+
+    .delete-modal-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.5);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 50;
+    }
+
+    .delete-modal-backdrop.hidden {
+      display: none;
+    }
+
+    .delete-modal {
+      background: #ffffff;
+      padding: 20px;
+      border-radius: 16px;
+      box-shadow: var(--shadow-lg);
+      max-width: 320px;
+      width: 90%;
+      text-align: center;
+      font-family: "Maitree", serif;
+    }
+
+    .delete-modal h2 {
+      font-size: 18px;
+      margin-bottom: 8px;
+      color: #592e83;
+    }
+
+    .delete-modal p {
+      font-size: 14px;
+      color: var(--gray-600);
+      margin-bottom: 16px;
+    }
+
+    .delete-modal-actions {
+      display: flex;
+      gap: 12px;
+      justify-content: center;
+    }
+
+    .delete-modal-actions button {
+      flex: 1;
+      padding: 8px 12px;
+      border-radius: 9999px;
+      border: none;
+      font-size: 14px;
+      cursor: pointer;
+      font-family: "Maitree", serif;
+    }
+
+    .delete-modal-cancel {
+      background: var(--gray-100);
+      color: var(--gray-600);
+    }
+
+    .delete-modal-confirm {
+      background: #d32f2f;
+      color: #ffffff;
+    }
   </style>
 </head>
 
@@ -173,6 +284,12 @@
           <p>Natan França</p>
           <p>@natan8643</p>
         </div>
+        <button class="btn-delete">
+          <img src="../assets/3points.svg" alt="">
+        </button>
+        <div class="post-options-menu hidden">
+          <button type="button" class="post-delete-option">Excluir publicação</button>
+        </div>
       </div>
       <img src="" class="post-img" alt="">
       <div class="info-post">
@@ -186,6 +303,17 @@
       </div>
     </div>
   </main>
+
+  <div class="delete-modal-backdrop hidden" id="deleteModal">
+    <div class="delete-modal">
+      <h2>Excluir publicação?</h2>
+      <p>Essa ação não pode ser desfeita.</p>
+      <div class="delete-modal-actions">
+        <button type="button" class="delete-modal-cancel" id="deleteCancelBtn">Cancelar</button>
+        <button type="button" class="delete-modal-confirm" id="deleteConfirmBtn">Excluir</button>
+      </div>
+    </div>
+  </div>
 
   <nav class="navbar">
     <button class="nav-btn" aria-label="Home">
