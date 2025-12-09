@@ -15,10 +15,10 @@
   --accent: #a38bba;
 
   /*fontes */
-  --font-primary: 'Tilt Warp', sans-serif;
+  --font-primary: "Tilt Warp", sans-serif;
 
   /*fontes */
-  --font-primary: 'Tilt Warp', sans-serif;
+  --font-primary: "Tilt Warp", sans-serif;
 
   /* Tons neutros */
   --gray-50: #fafafa;
@@ -29,7 +29,6 @@
   --gray-500: #737373;
   --gray-600: #525252;
   --gray-900: #171717;
-
 
   /* Espaçamentos */
   --spacing-xs: 4px;
@@ -200,11 +199,9 @@ body.modal-open {
   position: relative;
 }
 
-
 .page-title p {
   padding-top: 5px;
 }
-
 
 .page-title img {
   width: 6vw;
@@ -213,7 +210,6 @@ body.modal-open {
   position: absolute;
   left: -8vw;
 }
-
 
 .dropdown {
   position: absolute;
@@ -609,7 +605,6 @@ body.modal-open {
   text-align: center;
 }
 
-
 /* área interna da tela de novo produto */
 .new-product-content {
   width: 100%;
@@ -684,11 +679,9 @@ body.modal-open {
   flex: 1;
 }
 
-
 .input-with-icon {
   position: relative;
 }
-
 
 .input-with-icon .input-field {
   padding-right: 44px;
@@ -708,11 +701,13 @@ body.modal-open {
   text-decoration: none;
 }
 
-#date, #time {
+#date,
+#time {
   font-size: 12px;
 }
 
-#date::placeholder, #time::placeholder {
+#date::placeholder,
+#time::placeholder {
   font-size: 12px;
   display: flex;
   align-items: center;
@@ -1024,11 +1019,9 @@ body.modal-open {
   position: relative;
 }
 
-
 .input-with-icon .input-field {
   padding-right: 44px;
 }
-
 
 .input-field-icon {
   position: absolute;
@@ -1098,7 +1091,6 @@ body.modal-open {
   justify-content: center;
   color: var(--primary);
 }
-
 
 .checkbox:checked {
   background-color: var(--primary);
@@ -1322,7 +1314,6 @@ body.modal-open {
       PRODUCTS DETAIL
       ============================================ */
 
-
 /* Header tweaks */
 .back-btn {
   background: none;
@@ -1464,8 +1455,6 @@ body.modal-open {
   background: white;
 }
 
-
-
 /* ============================================
    PÁGINA - NOVO PRODUTO / SERVIÇOS
    ============================================ */
@@ -1525,7 +1514,6 @@ body.modal-open {
   font-size: 32px;
   text-align: center;
 }
-
 
 /* área interna da tela de novo produto */
 .new-product-content {
@@ -1624,11 +1612,19 @@ body.modal-open {
   font-weight: bold;
 }
 
-#description, #administrativeRegion, #referencePoint, #city, #state {
+#description,
+#administrativeRegion,
+#referencePoint,
+#city,
+#state {
   font-size: 16px;
 }
 
-#description::placeholder, #administrativeRegion::placeholder, #referencePoint::placeholder, #city::placeholder, #state::placeholder {
+#description::placeholder,
+#administrativeRegion::placeholder,
+#referencePoint::placeholder,
+#city::placeholder,
+#state::placeholder {
   font-size: 16px;
 }
 

@@ -1,7 +1,6 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="pt-BR">
-
-<head>
+  <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>MUSA - Novo evento</title>
@@ -9,229 +8,409 @@
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-        href="https://fonts.googleapis.com/css2?family=Maitree:wght@300;400;500;600&family=Libre+Bodoni:wght@400;700&display=swap"
-        rel="stylesheet" />
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Tilt+Warp&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
-        integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
-    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
-        integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+      href="https://fonts.googleapis.com/css2?family=Maitree:wght@300;400;500;600&family=Libre+Bodoni:wght@400;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Tilt+Warp&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+      integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
+      crossorigin=""
+    />
+    <script
+      src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+      integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
+      crossorigin=""
+    ></script>
+  </head>
 
-</head>
-
-<body>
+  <body>
     <div class="screen-container">
-        <div class="screen-services">
+      <div class="screen-services">
+        <header class="header-new-product">
+          <a href="home.html">
+            <img
+              src="../assets/Seta Select.svg"
+              alt="Voltar"
+              class="btn-voltar-header"
+            />
+          </a>
+          <h1 class="page-title">
+            <a
+              href="eventList.html"
+              class="page-title-link"
+              aria-label="Ir para lista de eventos"
+            >
+              Novo evento
+            </a>
+          </h1>
+        </header>
 
-            <header class="header-new-product">
-                <a href="home.html">
-                    <img src="../assets/Seta Select.svg" alt="Voltar" class="btn-voltar-header" />
-                </a>
-                <h1 class="page-title">
-                    <a href="eventList.html" class="page-title-link" aria-label="Ir para lista de eventos">
-                        Novo evento
-                    </a>
-                </h1>
-            </header>
+        <main class="new-product-content">
+          <form class="form form-new-product" enctype="multipart/form-data">
+            <!-- Campo: Título -->
+            <div class="form-group">
+              <div class="input-wrapper">
+                <label for="title" class="input-label">Título</label>
+                <input
+                  type="text"
+                  id="title"
+                  name="title"
+                  class="input-field"
+                  placeholder="Digite o título"
+                  required
+                />
+              </div>
+            </div>
 
-            <main class="new-product-content">
-                <form class="form form-new-product" enctype="multipart/form-data">
-                    <!-- Campo: Título -->
-                    <div class="form-group">
-                        <div class="input-wrapper">
-                            <label for="title" class="input-label">Título</label>
-                            <input type="text" id="title" name="title" class="input-field" placeholder="Digite o título"
-                                required />
+            <!-- Campo: Descrição -->
+            <div class="form-group">
+              <div class="input-wrapper">
+                <label for="description" class="input-label">Descrição</label>
+                <textarea
+                  id="description"
+                  name="description"
+                  class="input-field textarea-field"
+                  placeholder="Descreva seu evento"
+                  required
+                ></textarea>
+              </div>
+            </div>
 
-                        </div>
+            <div class="row-group">
+              <div class="input-group-half">
+                <!-- Campo: Data -->
+
+                <div class="form-group">
+                  <div class="input-wrapper">
+                    <label for="date" class="input-label">Data</label>
+                    <div class="input-with-icon">
+                      <input
+                        type="text"
+                        id="date"
+                        name="date"
+                        class="input-field"
+                        placeholder="DD/MM/AAAA"
+                        inputmode="numeric"
+                        maxlength="10"
+                        autocomplete="off"
+                        required
+                      />
+                      <img
+                        src="../assets/img_calendar.svg"
+                        alt="Ícone de calendário"
+                        class="input-field-icon"
+                      />
                     </div>
+                  </div>
+                </div>
+              </div>
 
-                    <!-- Campo: Descrição -->
-                    <div class="form-group">
-                        <div class="input-wrapper">
-                            <label for="description" class="input-label">Descrição</label>
-                            <textarea id="description" name="description" class="input-field textarea-field"
-                                placeholder="Descreva seu evento" required></textarea>
-                        </div>
+              <div class="input-group-half">
+                <!-- Campo: Horário -->
+                <div class="form-group">
+                  <div class="input-wrapper">
+                    <label for="time" class="input-label">Horário</label>
+                    <div class="input-with-icon">
+                      <input
+                        type="text"
+                        id="time"
+                        name="time"
+                        class="input-field"
+                        placeholder="HH:MM"
+                        inputmode="numeric"
+                        maxlength="5"
+                        autocomplete="off"
+                        required
+                      />
+                      <img
+                        src="../assets/img_watch.svg"
+                        alt="Ícone de relógio"
+                        class="input-field-icon"
+                      />
                     </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <!-- Campo: Localização -->
+            <div class="form-group">
+              <div class="input-wrapper">
+                <div
+                  class="map-picker"
+                  style="display: flex; flex-direction: column; gap: 12px"
+                >
+                  <div
+                    id="mapPreview"
+                    style="
+                      height: 220px;
+                      border-radius: 16px;
+                      overflow: hidden;
+                      border: 1px solid #dcdcdc;
+                    "
+                  ></div>
+                  <p
+                    class="map-helper-text"
+                    style="font-size: 14px; color: #6b6b6b"
+                  >
+                    Clique no mapa para selecionar o local exato do evento.
+                  </p>
+                </div>
+                <input
+                  type="hidden"
+                  id="localizacao_autocomplete"
+                  name="location"
+                />
+                <input
+                  type="hidden"
+                  id="street_address"
+                  name="street_address"
+                />
+                <input type="hidden" id="latitude" name="latitude" />
+                <input type="hidden" id="longitude" name="longitude" />
+              </div>
+            </div>
 
-                    <div class="row-group">
-                        <div class="input-group-half">
-                            <!-- Campo: Data -->
+            <div class="form-group">
+              <div class="input-wrapper">
+                <label for="administrativeRegion" class="input-label"
+                  >Região Administrativa</label
+                >
+                <input
+                  type="text"
+                  id="administrativeRegion"
+                  name="administrativeRegion"
+                  class="input-field"
+                  placeholder="Digite a região administrativa"
+                  required
+                />
+              </div>
+            </div>
 
-                            <div class="form-group">
-                                <div class="input-wrapper">
-                                    <label for="date" class="input-label">Data</label>
-                                    <div class="input-with-icon">
-                                        <input
-                                            type="text"
-                                            id="date"
-                                            name="date"
-                                            class="input-field"
-                                            placeholder="DD/MM/AAAA"
-                                            inputmode="numeric"
-                                            maxlength="10"
-                                            autocomplete="off"
-                                            required
-                                        />
-                                        <img src="../assets/img_calendar.svg" alt="Ícone de calendário" class="input-field-icon" />
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+            <div class="form-group">
+              <div class="input-wrapper">
+                <label for="referencePoint" class="input-label"
+                  >Ponto de referência</label
+                >
+                <input
+                  type="text"
+                  id="referencePoint"
+                  name="referencePoint"
+                  class="input-field"
+                  placeholder="Informe um ponto de referência"
+                  required
+                />
+              </div>
+            </div>
 
-                        <div class="input-group-half">
+            <div class="row-group">
+              <div class="input-group-half">
+                <div class="form-group">
+                  <div class="input-wrapper">
+                    <label for="city" class="input-label">Cidade</label>
+                    <input
+                      type="text"
+                      id="city"
+                      name="city"
+                      class="input-field"
+                      placeholder="Digite a cidade"
+                      required
+                    />
+                  </div>
+                </div>
+              </div>
+              <div class="input-group-half">
+                <div class="form-group">
+                  <div class="input-wrapper">
+                    <label for="state" class="input-label">Estado</label>
+                    <input
+                      type="text"
+                      id="state"
+                      name="state"
+                      class="input-field"
+                      placeholder="Digite o estado"
+                      required
+                    />
+                  </div>
+                </div>
+              </div>
+            </div>
 
-                            <!-- Campo: Horário -->
-                            <div class="form-group">
-                                <div class="input-wrapper">
-                                    <label for="time" class="input-label">Horário</label>
-                                    <div class="input-with-icon">
-                                        <input
-                                            type="text"
-                                            id="time"
-                                            name="time"
-                                            class="input-field"
-                                            placeholder="HH:MM"
-                                            inputmode="numeric"
-                                            maxlength="5"
-                                            autocomplete="off"
-                                            required
-                                        />
-                                        <img src="../assets/img_watch.svg" alt="Ícone de relógio" class="input-field-icon" />
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <!-- Campo: Localização -->
-                    <div class="form-group">
-                        <div class="input-wrapper">
-                            <div class="map-picker" style="display: flex; flex-direction: column; gap: 12px;">
-                                <div id="mapPreview"
-                                    style="height: 220px; border-radius: 16px; overflow: hidden; border: 1px solid #dcdcdc;">
-                                </div>
-                                <p class="map-helper-text" style="font-size: 14px; color: #6b6b6b;">
-                                    Clique no mapa para selecionar o local exato do evento.
-                                </p>
-                            </div>
-                            <input type="hidden" id="localizacao_autocomplete" name="location">
-                            <input type="hidden" id="street_address" name="street_address">
-                            <input type="hidden" id="latitude" name="latitude">
-                            <input type="hidden" id="longitude" name="longitude">
-                        </div>
-                    </div>
+            <!-- Campo: Valor do ingresso -->
+            <div class="form-group"></div>
 
-                    <div class="form-group">
-                        <div class="input-wrapper">
-                            <label for="administrativeRegion" class="input-label">Região Administrativa</label>
-                            <input type="text" id="administrativeRegion" name="administrativeRegion" class="input-field"
-                                placeholder="Digite a região administrativa" required />
-                        </div>
-                    </div>
+            <div class="form-group image-upload-group">
+              <label for="image" class="image-upload-area">
+                <input
+                  type="file"
+                  id="image"
+                  name="image"
+                  accept="image/*"
+                  class="image-input"
+                />
+                <div class="image-upload-content">
+                  <img
+                    src="../assets/UploadImage.svg"
+                    alt="Selecionar imagem"
+                    class="image-placeholder-icon"
+                    id="imagePlaceholderIcon"
+                  />
+                  <p class="global-font" id="imagePlaceholderText">
+                    Adicionar imagem de capa
+                  </p>
+                  <img
+                    id="imagePreview"
+                    alt="Prévia da imagem selecionada"
+                    style="
+                      display: none;
+                      width: 100%;
+                      max-height: 260px;
+                      object-fit: cover;
+                      border-radius: 12px;
+                    "
+                  />
+                </div>
+              </label>
+            </div>
 
-                    <div class="form-group">
-                        <div class="input-wrapper">
-                            <label for="referencePoint" class="input-label">Ponto de referência</label>
-                            <input type="text" id="referencePoint" name="referencePoint" class="input-field"
-                                placeholder="Informe um ponto de referência" required />
-                        </div>
-                    </div>
+            <button type="submit" class="btn btn-primary">Criar Evento</button>
+          </form>
 
-                    <div class="row-group">
-                        <div class="input-group-half">
-                            <div class="form-group">
-                                <div class="input-wrapper">
-                                    <label for="city" class="input-label">Cidade</label>
-                                    <input type="text" id="city" name="city" class="input-field"
-                                        placeholder="Digite a cidade" required />
-                                </div>
-                            </div>
-                        </div>
-                        <div class="input-group-half">
-                            <div class="form-group">
-                                <div class="input-wrapper">
-                                    <label for="state" class="input-label">Estado</label>
-                                    <input type="text" id="state" name="state" class="input-field"
-                                        placeholder="Digite o estado" required />
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-
-
-                    <!-- Campo: Valor do ingresso -->
-                    <div class="form-group">
-
-                    </div>
-
-                    <div class="form-group image-upload-group">
-                        <label for="image" class="image-upload-area">
-                            <input type="file" id="image" name="image" accept="image/*" class="image-input" />
-                            <div class="image-upload-content">
-                                <img src="../assets/UploadImage.svg" alt="Selecionar imagem"
-                                    class="image-placeholder-icon" id="imagePlaceholderIcon" />
-                                <p class="global-font" id="imagePlaceholderText">Adicionar imagem de capa</p>
-                                <img id="imagePreview" alt="Prévia da imagem selecionada"
-                                    style="display: none; width: 100%; max-height: 260px; object-fit: cover; border-radius: 12px;" />
-                            </div>
-                        </label>
-                    </div>
-
-                    <button type="submit" class="btn btn-primary">Criar Evento</button>
-                </form>
-
-                <div class="line-navbar"></div>
-            </main>
-        </div>
+          <div class="line-navbar"></div>
+        </main>
+      </div>
     </div>
 
     <!-- Navigation Bar -->
     <nav class="navbar">
-        <button class="nav-btn" aria-label="Home">
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
-                <path
-                    d="M3 9L12 2L21 9V20C21 20.5304 20.7893 21.0391 20.4142 21.4142C20.0391 21.7893 19.5304 22 19 22H5C4.46957 22 3.96086 21.7893 3.58579 21.4142C3.21071 21.0391 3 20.5304 3 20V9Z"
-                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
-                <path d="M9 22V12H15V22" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                    stroke-linejoin="round" />
-            </svg>
-        </button>
-        <button class="nav-btn" aria-label="Explorar">
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
-                <circle cx="11" cy="11" r="8" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                    stroke-linejoin="round" />
-                <path d="M21 21L16.65 16.65" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                    stroke-linejoin="round" />
-            </svg>
-        </button>
-        <button class="nav-btn nav-btn-add " aria-label="Adicionar">
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
-                <line x1="12" y1="5" x2="12" y2="19" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
-                <line x1="5" y1="12" x2="19" y2="12" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
-            </svg>
-        </button>
-        <button class="nav-btn" aria-label="Calendário">
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
-                <rect x="3" y="4" width="18" height="18" rx="2" stroke="currentColor" stroke-width="2"
-                    stroke-linecap="round" stroke-linejoin="round" />
-                <line x1="16" y1="2" x2="16" y2="6" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
-                <line x1="8" y1="2" x2="8" y2="6" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
-                <line x1="3" y1="10" x2="21" y2="10" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
-            </svg>
-        </button>
-        <button class="nav-btn" aria-label="Perfil">
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
-                <path
-                    d="M20 21V19C20 17.9391 19.5786 16.9217 18.8284 16.1716C18.0783 15.4214 17.0609 15 16 15H8C6.93913 15 5.92172 15.4214 5.17157 16.1716C4.42143 16.9217 4 17.9391 4 19V21"
-                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
-                <circle cx="12" cy="7" r="4" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                    stroke-linejoin="round" />
-            </svg>
-        </button>
+      <button class="nav-btn" aria-label="Home">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+          <path
+            d="M3 9L12 2L21 9V20C21 20.5304 20.7893 21.0391 20.4142 21.4142C20.0391 21.7893 19.5304 22 19 22H5C4.46957 22 3.96086 21.7893 3.58579 21.4142C3.21071 21.0391 3 20.5304 3 20V9Z"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          />
+          <path
+            d="M9 22V12H15V22"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          />
+        </svg>
+      </button>
+      <button class="nav-btn" aria-label="Explorar">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+          <circle
+            cx="11"
+            cy="11"
+            r="8"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          />
+          <path
+            d="M21 21L16.65 16.65"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          />
+        </svg>
+      </button>
+      <button class="nav-btn nav-btn-add" aria-label="Adicionar">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+          <line
+            x1="12"
+            y1="5"
+            x2="12"
+            y2="19"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+          />
+          <line
+            x1="5"
+            y1="12"
+            x2="19"
+            y2="12"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+          />
+        </svg>
+      </button>
+      <button class="nav-btn" aria-label="Calendário">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+          <rect
+            x="3"
+            y="4"
+            width="18"
+            height="18"
+            rx="2"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          />
+          <line
+            x1="16"
+            y1="2"
+            x2="16"
+            y2="6"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+          />
+          <line
+            x1="8"
+            y1="2"
+            x2="8"
+            y2="6"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+          />
+          <line
+            x1="3"
+            y1="10"
+            x2="21"
+            y2="10"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+          />
+        </svg>
+      </button>
+      <button class="nav-btn" aria-label="Perfil">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+          <path
+            d="M20 21V19C20 17.9391 19.5786 16.9217 18.8284 16.1716C18.0783 15.4214 17.0609 15 16 15H8C6.93913 15 5.92172 15.4214 5.17157 16.1716C4.42143 16.9217 4 17.9391 4 19V21"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          />
+          <circle
+            cx="12"
+            cy="7"
+            r="4"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          />
+        </svg>
+      </button>
     </nav>
 
     <script src="../js/config.js"></script>
@@ -239,6 +418,5 @@
     <script src="../js/create-event.js"></script>
     <script src="../js/router.js"></script>
     <script src="../js/nav-handler.js"></script>
-</body>
-
+  </body>
 </html>

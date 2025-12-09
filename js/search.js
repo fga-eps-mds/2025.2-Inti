@@ -8,7 +8,8 @@ if (searchBtn && searchInput) {
   searchBtn.addEventListener("click", async () => {
     const query = searchInput.value.trim();
     if (!query) {
-      resultsContainer.innerHTML = '<div class="initial-message">Digite um username para buscar</div>';
+      resultsContainer.innerHTML =
+        '<div class="initial-message">Digite um username para buscar</div>';
       return;
     }
 
@@ -21,7 +22,8 @@ if (searchBtn && searchInput) {
       e.preventDefault();
       const query = searchInput.value.trim();
       if (!query) {
-        resultsContainer.innerHTML = '<div class="initial-message">Digite um username para buscar</div>';
+        resultsContainer.innerHTML =
+          '<div class="initial-message">Digite um username para buscar</div>';
         return;
       }
       await performSearch(query);
@@ -34,7 +36,8 @@ if (searchBtn && searchInput) {
       e.preventDefault();
       const query = searchInput.value.trim();
       if (!query) {
-        resultsContainer.innerHTML = '<div class="initial-message">Digite um username para buscar</div>';
+        resultsContainer.innerHTML =
+          '<div class="initial-message">Digite um username para buscar</div>';
         return;
       }
       await performSearch(query);
@@ -68,12 +71,19 @@ async function performSearch(query) {
 }
 
 function displayResults(users) {
-  const backendUrl = (typeof apiService !== "undefined" && apiService.baseURL) ? apiService.baseURL : "https://20252-inti-production.up.railway.app";
+  const backendUrl =
+    typeof apiService !== "undefined" && apiService.baseURL
+      ? apiService.baseURL
+      : "https://20252-inti-production.up.railway.app";
 
   resultsContainer.innerHTML = users
     .map((user) => {
       // Support different field names returned by backend (camelCase or snake_case)
-      const picField = user.profilePictureUrl || user.profile_picture_url || user.imageUrl || user.profile_image;
+      const picField =
+        user.profilePictureUrl ||
+        user.profile_picture_url ||
+        user.imageUrl ||
+        user.profile_image;
 
       let profilePicUrl = "";
       if (picField) {

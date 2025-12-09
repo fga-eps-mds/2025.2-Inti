@@ -92,8 +92,12 @@ function updateAvatarPreviewFromProfile(imagePath) {
 }
 
 async function fetchProtectedImage(path) {
-  const fullUrl = path.startsWith("http") ? path : `${apiService.baseURL}${path}`;
-  const headers = apiService.token ? { Authorization: `Bearer ${apiService.token}` } : {};
+  const fullUrl = path.startsWith("http")
+    ? path
+    : `${apiService.baseURL}${path}`;
+  const headers = apiService.token
+    ? { Authorization: `Bearer ${apiService.token}` }
+    : {};
   const response = await fetch(fullUrl, { headers });
   if (!response.ok) {
     throw new Error("Erro ao carregar imagem");
@@ -155,13 +159,16 @@ async function handleProfileSubmit(event) {
   const bio = bioInput ? bioInput.value.trim() : "";
 
   if (!username) {
-    if (typeof toast !== "undefined") toast.warning("Informe um nome de usuário.");
+    if (typeof toast !== "undefined")
+      toast.warning("Informe um nome de usuário.");
     return;
   }
 
-  const hasAvatarSelection = avatarInput && avatarInput.files && avatarInput.files[0];
+  const hasAvatarSelection =
+    avatarInput && avatarInput.files && avatarInput.files[0];
   if (!hasAvatarSelection && !profileData.profile_picture_url) {
-    if (typeof toast !== "undefined") toast.warning("Envie uma foto de perfil antes de salvar.");
+    if (typeof toast !== "undefined")
+      toast.warning("Envie uma foto de perfil antes de salvar.");
     return;
   }
 
@@ -183,7 +190,8 @@ async function handleProfileSubmit(event) {
   appendIfChanged("userBio", bio, profileData.bio);
 
   if (!hasChanges && !hasAvatarSelection) {
-    if (typeof toast !== "undefined") toast.warning("Nenhuma alteração foi feita.");
+    if (typeof toast !== "undefined")
+      toast.warning("Nenhuma alteração foi feita.");
     return;
   }
 
@@ -223,16 +231,22 @@ function handleProfileSubmitError(error) {
   console.error("Erro ao atualizar perfil:", error);
   const message = (error && error.message) || "Erro ao atualizar perfil.";
   if (message.toLowerCase().includes("username")) {
-    if (typeof toast !== "undefined") toast.error("Nome de usuário indisponível. Escolha outro.");
+    if (typeof toast !== "undefined")
+      toast.error("Nome de usuário indisponível. Escolha outro.");
     return;
   }
 
-  if (typeof toast !== "undefined") toast.error("Não foi possível atualizar o perfil. Tente novamente.");
+  if (typeof toast !== "undefined")
+    toast.error("Não foi possível atualizar o perfil. Tente novamente.");
 }
 
 function handleEditProfileError(error) {
   console.error("Erro ao carregar perfil para edição:", error);
-  if (error && error.message && (error.message.includes("401") || error.message.includes("403"))) {
+  if (
+    error &&
+    error.message &&
+    (error.message.includes("401") || error.message.includes("403"))
+  ) {
     localStorage.removeItem("isAuthenticated");
     localStorage.removeItem("authToken");
     localStorage.removeItem("userData");
