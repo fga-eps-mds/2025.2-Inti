@@ -140,6 +140,9 @@ public class ProfileService {
         }
 
         if (profile.getProfilePictureUrl() == null || profile.getProfilePictureUrl().isEmpty()) {
+            if (updateUserRequest.profilePicture() == null || updateUserRequest.profilePicture().isEmpty()) {
+                throw new ImageNotFoundException("Profile picture is missing");
+            }
             setPhoto(updateUserRequest.profilePicture());
         } else {
             if (updateUserRequest.profilePicture() != null && !updateUserRequest.profilePicture().isEmpty()) {
