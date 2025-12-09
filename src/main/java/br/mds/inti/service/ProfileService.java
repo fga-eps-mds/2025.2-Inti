@@ -19,6 +19,7 @@ import br.mds.inti.model.dto.PostResponse;
 import br.mds.inti.model.dto.ProfileResponse;
 import br.mds.inti.model.dto.UpdateUserRequest;
 import br.mds.inti.model.entity.Profile;
+import br.mds.inti.repositories.FollowRepository;
 import br.mds.inti.repositories.ProfileRepository;
 import br.mds.inti.service.exception.UsernameAlreadyExistsException;
 import br.mds.inti.service.exception.ProfileNotFoundException;
@@ -33,7 +34,10 @@ public class ProfileService {
     private PostService postService;
 
     @Autowired
-    BlobService blobService;
+    private BlobService blobService;
+
+    @Autowired
+    private FollowRepository followRepository;
 
     public ProfileResponse getProfile(int page, int size) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
@@ -43,10 +47,10 @@ public class ProfileService {
 
             Page<PostResponse> post = postService.getPostByIdProfile(profile.getId(), PageRequest.of(page, size));
 
-            return new ProfileResponse(profile.getName(), profile.getUsername(), profile.getPublicEmail(),
-                    profile.getPhone(),
-                    postService.generateImageUrl(profile.getProfilePictureUrl()),
-                    profile.getBio(), profile.getFollowersCount(), profile.getFollowingCount(), post.getContent());
+            return new ProfileResponse(profile.getId(), profile.getName(), profile.getUsername(),
+                    profile.getPublicEmail(), profile.getPhone(),
+                    postService.generateImageUrl(profile.getProfilePictureUrl()), profile.getBio(),
+                    profile.getFollowersCount(), profile.getFollowingCount(), Boolean.FALSE, post.getContent());
         }
         throw new RuntimeException("profile nao autenticado");
     }
@@ -57,11 +61,19 @@ public class ProfileService {
 
         Page<PostResponse> post = postService.getPostByIdProfile(publicProfile.getId(), PageRequest.of(page, size));
 
-        return new ProfileResponse(publicProfile.getName(), publicProfile.getUsername(), publicProfile.getPublicEmail(),
-                publicProfile.getPhone(),
+        Boolean isFollowing = Boolean.FALSE;
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        if (auth != null && auth.getPrincipal() instanceof Profile) {
+            Profile requester = (Profile) auth.getPrincipal();
+            if (!requester.getId().equals(publicProfile.getId())) {
+                isFollowing = followRepository.findFollowRelationship(requester, publicProfile).isPresent();
+            }
+        }
+
+        return new ProfileResponse(publicProfile.getId(), publicProfile.getName(), publicProfile.getUsername(),
+                publicProfile.getPublicEmail(), publicProfile.getPhone(),
                 postService.generateImageUrl(publicProfile.getProfilePictureUrl()), publicProfile.getBio(),
-                publicProfile.getFollowersCount(),
-                publicProfile.getFollowingCount(), post.getContent());
+                publicProfile.getFollowersCount(), publicProfile.getFollowingCount(), isFollowing, post.getContent());
     }
 
     public Profile getProfile(String username) {

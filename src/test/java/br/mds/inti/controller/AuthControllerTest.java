@@ -3,6 +3,7 @@ package br.mds.inti.controller;
 import br.mds.inti.model.dto.auth.LoginRequest;
 import br.mds.inti.model.dto.auth.ProfileCreationResponse;
 import br.mds.inti.model.dto.auth.RegisterRequest;
+import br.mds.inti.model.dto.auth.LoginResponse;
 import br.mds.inti.model.entity.Profile;
 import br.mds.inti.model.enums.ProfileType;
 import br.mds.inti.service.AuthService;
@@ -116,20 +117,29 @@ class AuthControllerTest {
     }
 
     @Test
-    void login_WithValidCredentials_ShouldReturnOkStatusWithToken() {
+    void login_WithValidCredentials_ShouldReturnOkStatusWithPayload() {
         // Arrange
         LoginRequest request = new LoginRequest("test@example.com", "password123");
-        String expectedToken = "login-jwt-token";
+        UUID profileId = UUID.randomUUID();
+        LoginResponse loginResponse = new LoginResponse(
+                profileId,
+                "login-jwt-token",
+                "testuser",
+                "Test User",
+                "test@example.com",
+                ProfileType.user);
 
-        when(authService.login(request)).thenReturn(expectedToken);
+        when(authService.login(request)).thenReturn(loginResponse);
 
         // Act
-        ResponseEntity<String> response = authController.login(request);
+        ResponseEntity<LoginResponse> response = authController.login(request);
 
         // Assert
         assertNotNull(response);
         assertEquals(HttpStatus.OK, response.getStatusCode());
-        assertEquals(expectedToken, response.getBody());
+        assertEquals(loginResponse, response.getBody());
+        assertEquals(profileId, response.getBody().id());
+        assertEquals("testuser", response.getBody().username());
         verify(authService).login(request);
     }
 

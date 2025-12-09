@@ -5,6 +5,7 @@ import br.mds.inti.model.dto.PostResponse;
 import br.mds.inti.model.dto.UserSummaryResponse;
 import br.mds.inti.model.entity.Post;
 import br.mds.inti.model.entity.Profile;
+import br.mds.inti.repositories.LikeRepository;
 import br.mds.inti.repositories.PostRepository;
 import org.springframework.transaction.annotation.Transactional;
 import lombok.extern.slf4j.Slf4j;
@@ -35,6 +36,9 @@ public class PostService {
     @Autowired
     BlobService blobService;
 
+    @Autowired
+    LikeRepository likeRepository;
+
     public void createPost(Profile profile, MultipartFile image, String description) {
         String blobName = "";
         try {
@@ -58,16 +62,17 @@ public class PostService {
     public void deletePost(Profile profile, UUID postId) {
 
         Optional<Post> postOptional = postRepository.findById(postId);
-        if (postOptional.isEmpty()) throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Post not found");
+        if (postOptional.isEmpty())
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Post not found");
 
         Post post = postOptional.get();
-        if (!post.getProfile().getId().equals(profile.getId())) throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "User is not the owner of the post");
+        if (!post.getProfile().getId().equals(profile.getId()))
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "User is not the owner of the post");
 
         blobService.deleteImage(post.getBlobName());
         postRepository.softDeletePost(postId);
     }
 
-    
     public Page<PostResponse> getPostByIdProfile(UUID profileId, Pageable peageble) {
 
         Page<Post> postByprofile = postRepository.findAllByProfileIdAndNotDeleted(profileId, peageble);
@@ -88,7 +93,7 @@ public class PostService {
     }
 
     @Transactional(readOnly = true)
-    public PostDetailResponse getPostById(UUID postId) {
+    public PostDetailResponse getPostById(UUID postId, Profile profile) {
         Post post = postRepository.findById(postId)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Post not found"));
 
@@ -110,6 +115,8 @@ public class PostService {
                         like.getProfile().getProfilePictureUrl()))
                 .collect(Collectors.toList());
 
+        boolean liked = profile != null && likeRepository.findByProfileAndPostId(profile, post.getId()).isPresent();
+
         return new PostDetailResponse(
                 post.getId(),
                 generateImageUrl(post.getBlobName()),
@@ -117,6 +124,7 @@ public class PostService {
                 post.getLikesCount(),
                 post.getCreatedAt().toString(),
                 author,
-                likedBy);
+                likedBy,
+                liked);
     }
 }

@@ -76,13 +76,13 @@ class FollowServiceTest {
         mockProfileToFollow.setCreatedAt(Instant.now());
 
         mockFollowsPK = new FollowsPK();
-        mockFollowsPK.setFollowerProfileId(mockProfileToFollow.getId());
-        mockFollowsPK.setFollowingProfileId(mockProfileMe.getId());
+        mockFollowsPK.setFollowerProfileId(mockProfileMe.getId());
+        mockFollowsPK.setFollowingProfileId(mockProfileToFollow.getId());
 
         mockFollow = new Follow();
         mockFollow.setId(mockFollowsPK);
-        mockFollow.setFollowerProfile(mockProfileToFollow);
-        mockFollow.setFollowingProfile(mockProfileMe);
+        mockFollow.setFollowerProfile(mockProfileMe);
+        mockFollow.setFollowingProfile(mockProfileToFollow);
         mockFollow.setCreatedAt(Instant.now());
     }
 
@@ -153,7 +153,7 @@ class FollowServiceTest {
         SecurityContextHolder.setContext(securityContext);
 
         when(profileService.getProfile("usertofollow")).thenReturn(mockProfileToFollow);
-        when(followRepository.findFollowRelationship(any(), any()))
+        when(followRepository.findFollowRelationship(mockProfileMe, mockProfileToFollow))
                 .thenReturn(Optional.of(mockFollow));
 
         // Act
@@ -187,7 +187,7 @@ class FollowServiceTest {
         SecurityContextHolder.setContext(securityContext);
 
         when(profileService.getProfile("usertofollow")).thenReturn(mockProfileToFollow);
-        when(followRepository.findFollowRelationship(any(), any()))
+        when(followRepository.findFollowRelationship(mockProfileMe, mockProfileToFollow))
                 .thenReturn(Optional.empty());
 
         // Act & Assert

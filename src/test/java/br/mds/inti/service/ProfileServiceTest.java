@@ -3,9 +3,12 @@ package br.mds.inti.service;
 import br.mds.inti.model.dto.PostResponse;
 import br.mds.inti.model.dto.ProfileResponse;
 import br.mds.inti.model.dto.UpdateUserRequest;
+import br.mds.inti.model.entity.Follow;
 import br.mds.inti.model.entity.Profile;
 import br.mds.inti.model.enums.ProfileType;
+import br.mds.inti.repositories.FollowRepository;
 import br.mds.inti.repositories.ProfileRepository;
+import org.junit.jupiter.api.AfterEach;
 import br.mds.inti.service.exception.ProfileNotFoundException;
 import br.mds.inti.service.exception.UsernameAlreadyExistsException;
 import org.junit.jupiter.api.BeforeEach;
@@ -47,6 +50,9 @@ class ProfileServiceTest {
     private BlobService blobService;
 
     @Mock
+    private FollowRepository followRepository;
+
+    @Mock
     private Authentication authentication;
 
     @Mock
@@ -77,6 +83,11 @@ class ProfileServiceTest {
         mockProfile.setCreatedAt(Instant.now());
     }
 
+    @AfterEach
+    void tearDown() {
+        SecurityContextHolder.clearContext();
+    }
+
     @Test
     void getProfile_WhenAuthenticated_ShouldReturnProfileResponse() {
         // Arrange
@@ -103,8 +114,10 @@ class ProfileServiceTest {
 
         // Assert
         assertNotNull(result);
+        assertEquals(profileId, result.id());
         assertEquals(mockProfile.getName(), result.name());
         assertEquals(mockProfile.getUsername(), result.username());
+        assertEquals(Boolean.FALSE, result.isFollowing());
         // CORREÇÃO: Agora espera a URL transformada
         assertEquals("/images/http://example.com/avatar.jpg", result.profile_picture_url());
         assertEquals(mockProfile.getBio(), result.bio());
@@ -138,9 +151,39 @@ class ProfileServiceTest {
 
         // Assert
         assertNotNull(result);
+        assertEquals(profileId, result.id());
         assertEquals(mockProfile.getName(), result.name());
         assertEquals(mockProfile.getUsername(), result.username());
+        assertEquals(Boolean.FALSE, result.isFollowing());
         verify(profileRepository).findByUsername(username);
+    }
+
+    @Test
+    void getProfileByUsername_WhenAuthenticatedAndFollowing_ShouldSetIsFollowingTrue() {
+        // Arrange
+        String username = "testuser";
+        when(profileRepository.findByUsername(username)).thenReturn(Optional.of(mockProfile));
+
+        Profile requester = new Profile();
+        requester.setId(UUID.randomUUID());
+        requester.setUsername("viewer");
+
+        when(securityContext.getAuthentication()).thenReturn(authentication);
+        when(authentication.getPrincipal()).thenReturn(requester);
+        SecurityContextHolder.setContext(securityContext);
+
+        when(followRepository.findFollowRelationship(requester, mockProfile))
+                .thenReturn(Optional.of(new Follow()));
+
+        Page<PostResponse> mockPosts = new PageImpl<>(List.of());
+        when(postService.getPostByIdProfile(profileId, PageRequest.of(0, 10))).thenReturn(mockPosts);
+
+        // Act
+        ProfileResponse result = profileService.getProfileByUsername(username, 0, 10);
+
+        // Assert
+        assertTrue(result.isFollowing());
+        verify(followRepository).findFollowRelationship(requester, mockProfile);
     }
 
     @Test

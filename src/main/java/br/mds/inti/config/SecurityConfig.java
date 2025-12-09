@@ -39,7 +39,7 @@ public class SecurityConfig {
                 .csrf(csrf -> csrf.disable()).cors(cors -> cors.configurationSource(corsConfigurationSource()))
                 .sessionManagement(sm -> sm.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/auth/**", "/images/**").permitAll()
+                        .requestMatchers("/auth/**", "/images/**", "/geo/reverse").permitAll()
                         .requestMatchers(HttpMethod.GET, "/org/*").permitAll()
                         .requestMatchers(HttpMethod.POST, "/org/*/follow").authenticated()
                         .requestMatchers(HttpMethod.DELETE, "/org/*/unfollow").authenticated()

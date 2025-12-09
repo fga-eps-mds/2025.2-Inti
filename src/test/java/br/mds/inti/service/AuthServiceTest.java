@@ -3,6 +3,7 @@ package br.mds.inti.service;
 import br.mds.inti.model.dto.auth.LoginRequest;
 import br.mds.inti.model.dto.auth.ProfileCreationResponse;
 import br.mds.inti.model.dto.auth.RegisterRequest;
+import br.mds.inti.model.dto.auth.LoginResponse;
 import br.mds.inti.model.entity.Profile;
 import br.mds.inti.model.enums.ProfileType;
 import br.mds.inti.repositories.ProfileRepository;
@@ -145,7 +146,7 @@ class AuthServiceTest {
     }
 
     @Test
-    void login_WithValidCredentials_ShouldReturnJwtToken() {
+    void login_WithValidCredentials_ShouldReturnLoginPayload() {
         // Arrange
         LoginRequest request = new LoginRequest("test@example.com", "password123");
 
@@ -154,11 +155,16 @@ class AuthServiceTest {
         when(jwtService.generateToken(mockProfile)).thenReturn("login-jwt-token");
 
         // Act
-        String token = authService.login(request);
+        LoginResponse response = authService.login(request);
 
         // Assert
-        assertNotNull(token);
-        assertEquals("login-jwt-token", token);
+        assertNotNull(response);
+        assertEquals(profileId, response.id());
+        assertEquals("login-jwt-token", response.jwt());
+        assertEquals("testuser", response.username());
+        assertEquals("Test User", response.name());
+        assertEquals("test@example.com", response.email());
+        assertEquals(ProfileType.user, response.type());
         verify(profileRepository).findByEmail("test@example.com");
         verify(passwordEncoder).matches("password123", "encodedPassword");
         verify(jwtService).generateToken(mockProfile);
