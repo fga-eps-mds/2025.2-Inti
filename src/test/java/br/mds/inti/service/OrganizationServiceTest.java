@@ -5,6 +5,7 @@ import br.mds.inti.model.dto.ProfileResponse;
 import br.mds.inti.model.dto.UpdateUserRequest;
 import br.mds.inti.model.entity.Profile;
 import br.mds.inti.model.enums.ProfileType;
+import br.mds.inti.repositories.FollowRepository;
 import br.mds.inti.repositories.ProfileRepository;
 import br.mds.inti.service.exception.ProfileNotFoundException;
 import br.mds.inti.service.exception.UsernameAlreadyExistsException;
@@ -18,6 +19,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.mock.web.MockMultipartFile;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
@@ -41,6 +43,9 @@ class OrganizationServiceTest {
     @Mock
     private BlobService blobService;
 
+    @Mock
+    private FollowRepository followRepository;
+
     @InjectMocks
     private OrganizationService organizationService;
 
@@ -49,6 +54,7 @@ class OrganizationServiceTest {
 
     @BeforeEach
     void setUp() {
+        SecurityContextHolder.clearContext();
         organizationId = UUID.randomUUID();
         mockOrganization = new Profile();
         mockOrganization.setId(organizationId);
@@ -69,8 +75,7 @@ class OrganizationServiceTest {
     void getOrganization_WhenCalledWithProfile_ShouldReturnProfileResponse() {
         UUID postId = UUID.randomUUID();
         Page<PostResponse> mockPosts = new PageImpl<>(List.of(
-                new PostResponse(postId, "http://example.com/img1.jpg", "Desc", 1, "2024-01-01")
-        ));
+                new PostResponse(postId, "http://example.com/img1.jpg", "Desc", 1, "2024-01-01")));
 
         when(postService.getPostByIdProfile(organizationId, PageRequest.of(0, 10))).thenReturn(mockPosts);
         when(postService.generateImageUrl("http://example.com/logo.jpg"))
