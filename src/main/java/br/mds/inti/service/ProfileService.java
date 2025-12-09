@@ -22,6 +22,7 @@ import br.mds.inti.model.entity.Profile;
 import br.mds.inti.repositories.FollowRepository;
 import br.mds.inti.repositories.ProfileRepository;
 import br.mds.inti.service.exception.UsernameAlreadyExistsException;
+import br.mds.inti.service.exception.ImageNotFoundException;
 import br.mds.inti.service.exception.ProfileNotFoundException;
 
 @Service
