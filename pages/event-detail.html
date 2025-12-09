@@ -160,8 +160,9 @@
       padding: var(--spacing-md) var(--spacing-lg);
       display: flex;
       align-items: center;
-      justify-content: space-between;
+      justify-content: center;
       gap: var(--spacing-md);
+      position: relative;
     }
 
     .logo-icon {
@@ -172,8 +173,8 @@
 
     .page-title {
       font-family: "Libre Bodoni", serif;
-      font-size: clamp(24px, 5vw, 36px);
-      font-weight: 700;
+      font-size: clamp(28px, 5vw, 36px);
+      font-weight: bold;
       color: var(--primary);
       letter-spacing: 0.5px;
       padding-top: 8px;
@@ -189,6 +190,10 @@
       justify-content: center;
       transition: opacity 0.2s;
       min-width: 40px;
+      position: absolute;
+      left: 3vw;
+      top: 50%;
+      transform: translateY(-50%);
     }
 
     .back-btn img {
@@ -217,9 +222,9 @@
       display: flex;
       align-items: center;
       justify-content: space-between;
-      margin-bottom: var(--spacing-lg);
+      margin-bottom: var(--spacing-md);
       flex-wrap: wrap;
-      padding: 0px 20px;
+      padding: 10px 15px 0;
     }
 
     .name-event {
@@ -265,7 +270,6 @@
 
     .description {
       text-align: left;
-      margin-bottom: var(--spacing-xl);
       font-size: 16px;
       padding: 0px 20px;
     }
@@ -331,8 +335,7 @@
     .friends {
       font-weight: 600;
       color: var(--primary);
-      margin-bottom: var(--spacing-md);
-      padding: 0px 20px;
+      padding: 10px 20px 0;
     }
 
     .friends-icons {
@@ -476,10 +479,6 @@
         padding: var(--spacing-sm);
       }
 
-      .page-title {
-        font-size: 20px;
-      }
-
       .logo-icon {
         width: 32px;
         height: 32px;
@@ -602,7 +601,7 @@
         <img src="../assets/Seta Select.svg" alt="Voltar">
       </a>
       <div class="header-content">
-        <h1 class="page-title">Publicação</h1>
+        <h1 class="page-title">Evento</h1>
       </div>
       <div class="header-spacer"></div>
     </header>
