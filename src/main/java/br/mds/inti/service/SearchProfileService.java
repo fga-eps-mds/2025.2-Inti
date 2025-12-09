@@ -5,7 +5,7 @@ import org.springframework.stereotype.Service;
 import br.mds.inti.model.dto.SearchProfile;
 import br.mds.inti.model.entity.Profile;
 import br.mds.inti.repositories.ProfileRepository;
-import br.mds.inti.service.exceptions.ProfileNotFoundException;
+import br.mds.inti.service.exception.ProfileNotFoundException;
 
 @Service
 public class SearchProfileService {

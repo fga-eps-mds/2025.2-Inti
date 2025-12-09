@@ -5,12 +5,15 @@ import br.mds.inti.model.dto.ProfileResponse;
 import br.mds.inti.model.dto.UpdateUserRequest;
 import br.mds.inti.model.entity.Profile;
 import br.mds.inti.model.enums.ProfileType;
+import br.mds.inti.repositories.FollowRepository;
 import br.mds.inti.repositories.ProfileRepository;
 import br.mds.inti.service.exception.ProfileNotFoundException;
 import br.mds.inti.service.exception.UsernameAlreadyExistsException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -28,16 +31,18 @@ public class OrganizationService {
     private PostService postService;
 
     @Autowired
+    private FollowRepository followRepository;
+
+    @Autowired
     BlobService blobService;
 
     public ProfileResponse getOrganization(int page, int size, Profile profile) {
 
         Page<PostResponse> post = postService.getPostByIdProfile(profile.getId(), PageRequest.of(page, size));
 
-        return new ProfileResponse(profile.getName(), profile.getUsername(), profile.getPublicEmail(),
-                profile.getPhone(),
+        return new ProfileResponse(profile.getId(), profile.getName(), profile.getUsername(), profile.getPublicEmail(), profile.getPhone(),
                 postService.generateImageUrl(profile.getProfilePictureUrl()),
-                profile.getBio(), profile.getFollowersCount(), profile.getFollowingCount(), post.getContent());
+                profile.getBio(), profile.getFollowersCount(), profile.getFollowingCount(), Boolean.FALSE, post.getContent());
     }
 
     public ProfileResponse getOrganizationByUsername(String username, int page, int size) {
@@ -48,11 +53,20 @@ public class OrganizationService {
 
         Page<PostResponse> post = postService.getPostByIdProfile(publicProfile.getId(), PageRequest.of(page, size));
 
-        return new ProfileResponse(publicProfile.getName(), publicProfile.getUsername(), publicProfile.getPublicEmail(),
+        Boolean isFollowing = Boolean.FALSE;
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        if (auth != null && auth.getPrincipal() instanceof Profile) {
+            Profile requester = (Profile) auth.getPrincipal();
+            if (!requester.getId().equals(publicProfile.getId())) {
+                isFollowing = followRepository.findFollowRelationship(requester, publicProfile).isPresent();
+            }
+        }
+
+        return new ProfileResponse(publicProfile.getId(), publicProfile.getName(), publicProfile.getUsername(), publicProfile.getPublicEmail(),
                 publicProfile.getPhone(),
                 postService.generateImageUrl(publicProfile.getProfilePictureUrl()), publicProfile.getBio(),
                 publicProfile.getFollowersCount(),
-                publicProfile.getFollowingCount(), post.getContent());
+                publicProfile.getFollowingCount(), isFollowing, post.getContent());
     }
 
     public Profile getOrganization(String username) {

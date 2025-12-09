@@ -4,6 +4,8 @@ package br.mds.inti.controller;
 import br.mds.inti.model.dto.FollowResponse;
 import br.mds.inti.model.dto.ProfileResponse;
 import br.mds.inti.model.dto.UpdateUserRequest;
+import br.mds.inti.model.entity.Profile;
+import br.mds.inti.model.enums.ProfileType;
 import br.mds.inti.service.FollowService;
 import br.mds.inti.service.OrganizationService;
 import org.junit.jupiter.api.BeforeEach;
@@ -15,11 +17,16 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.mock.web.MockMultipartFile;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.io.IOException;
+import java.time.Instant;
 import java.util.List;
+import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.*;
@@ -37,12 +44,34 @@ class OrganizationControllerTest {
     @InjectMocks
     private OrganizationController organizationController;
 
+    @Mock
+    private SecurityContext securityContext;
+
+    @Mock
+    private Authentication authentication;
+
     private ProfileResponse mockOrgResponse;
     private FollowResponse mockFollowResponse;
+    private Profile mockProfileMe;
+    private Profile mockProfileToFollow;
 
     @BeforeEach
     void setUp() {
+        UUID profileIdMe = UUID.randomUUID();
+
+        mockProfileMe = new Profile();
+        mockProfileMe.setId(profileIdMe);
+        mockProfileMe.setUsername("me");
+        mockProfileMe.setName("My Profile");
+        mockProfileMe.setEmail("me@example.com");
+        mockProfileMe.setPassword("password");
+        mockProfileMe.setFollowersCount(10);
+        mockProfileMe.setFollowingCount(5);
+        mockProfileMe.setType(ProfileType.user);
+        mockProfileMe.setCreatedAt(Instant.now());
+
         mockOrgResponse = new ProfileResponse(
+                UUID.randomUUID(),
                 "Test Org",
                 "testorg",
                 "org@example.com",
@@ -51,6 +80,7 @@ class OrganizationControllerTest {
                 "Org description",
                 100,
                 50,
+                Boolean.FALSE,
                 List.of());
 
         mockFollowResponse = new FollowResponse("Organization followed successfully.");
@@ -58,6 +88,10 @@ class OrganizationControllerTest {
 
     @Test
     void getMyOrganization_ShouldReturnOrganizationResponse() {
+        when(securityContext.getAuthentication()).thenReturn(authentication);
+        when(authentication.getPrincipal()).thenReturn(mockProfileMe);
+        SecurityContextHolder.setContext(securityContext);
+
         when(organizationService.getOrganization(anyInt(), anyInt(), any())).thenReturn(mockOrgResponse);
 
         ResponseEntity<ProfileResponse> response = organizationController.getMe(10, 0);
@@ -109,6 +143,10 @@ class OrganizationControllerTest {
 
     @Test
     void setOrganizationLogo_ShouldReturnCreated() throws IOException {
+        when(securityContext.getAuthentication()).thenReturn(authentication);
+        when(authentication.getPrincipal()).thenReturn(mockProfileMe);
+        SecurityContextHolder.setContext(securityContext);
+
         MultipartFile mockImage = new MockMultipartFile(
                 "logo",
                 "logo.jpg",
@@ -125,6 +163,10 @@ class OrganizationControllerTest {
 
     @Test
     void setOrganizationLogo_WhenIOExceptionThrown_ShouldThrowResponseStatusException() throws IOException {
+        when(securityContext.getAuthentication()).thenReturn(authentication);
+        when(authentication.getPrincipal()).thenReturn(mockProfileMe);
+        SecurityContextHolder.setContext(securityContext);
+
         MultipartFile mockImage = new MockMultipartFile(
                 "logo",
                 "logo.jpg",
@@ -142,6 +184,10 @@ class OrganizationControllerTest {
 
     @Test
     void updateOrganization_ShouldReturnCreated() throws IOException {
+        when(securityContext.getAuthentication()).thenReturn(authentication);
+        when(authentication.getPrincipal()).thenReturn(mockProfileMe);
+        SecurityContextHolder.setContext(securityContext);
+
         UpdateUserRequest updateRequest = new UpdateUserRequest(
                 "Updated Org Name",
                 "updatedorg",
@@ -160,6 +206,10 @@ class OrganizationControllerTest {
 
     @Test
     void updateOrganization_WhenIOExceptionThrown_ShouldThrowResponseStatusException() throws IOException {
+        when(securityContext.getAuthentication()).thenReturn(authentication);
+        when(authentication.getPrincipal()).thenReturn(mockProfileMe);
+        SecurityContextHolder.setContext(securityContext);
+
         UpdateUserRequest updateRequest = new UpdateUserRequest(
                 "Updated Org Name",
                 "updatedorg",
