@@ -101,7 +101,7 @@ function populateProfileData(data) {
         : BACKEND_URL + data.profile_picture_url;
       setBackgroundImageWithBearer(profileImg, fullImageUrl, AUTH_TOKEN);
     } else {
-      profileImg.style.backgroundImage = `url("../assets/image-user-icon.png")`;
+      profileImg.style.backgroundImage = `url("../assets/profilePic.svg")`;
       profileImg.style.backgroundSize = "cover";
       profileImg.style.backgroundPosition = "center";
     }
@@ -169,13 +169,13 @@ function updateFollowButtonState(followBtn, isFollowing) {
 
   if (isFollowing) {
     followBtn.classList.add("active");
-    img.src = "../assets/unfollow-icon.png"; // Ensure asset exists or use text
+    img.src = "../assets/unfollow-icon.svg"; // Ensure asset exists or use text
     // Fallback if image doesn't exist, maybe change style
     followBtn.dataset.following = "true";
     followBtn.title = "Deixar de seguir";
   } else {
     followBtn.classList.remove("active");
-    img.src = "../assets/follow-icon.png";
+    img.src = "../assets/follow-icon.svg";
     followBtn.dataset.following = "false";
     followBtn.title = "Seguir";
   }
