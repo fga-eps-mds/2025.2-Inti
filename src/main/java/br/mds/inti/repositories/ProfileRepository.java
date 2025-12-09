@@ -1,6 +1,6 @@
 package br.mds.inti.repositories;
 
-import br.mds.inti.model.dto.EventFollowingDTO;
+import br.mds.inti.model.dto.FollowingAttendeeDTO;
 import br.mds.inti.model.entity.Profile;
 import br.mds.inti.model.enums.ProfileType;
 
@@ -35,7 +35,7 @@ public interface ProfileRepository extends JpaRepository<Profile, UUID> {
         WHERE ep.event.id = :eventId
         AND f.followerProfile.id = :myUserId
    """)
-    Optional<List<EventFollowingDTO>> findFriendsGoingToEvent(
+    Optional<List<FollowingAttendeeDTO>> findFriendsGoingToEvent(
         @Param("eventId") UUID eventId,
         @Param("myUserId") UUID myUserId
     );

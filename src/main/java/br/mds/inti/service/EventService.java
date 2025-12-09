@@ -162,8 +162,8 @@ public class EventService {
                 .toList();
     }
 
-    public List<EventFollowingDTO> getEventsFromFollowing(Profile profile, UUID eventId) {
-        Optional<List<EventFollowingDTO>> followedByProfile = profileRepository.findFriendsGoingToEvent(eventId, profile.getId());
+    public List<FollowingAttendeeDTO> getEventsFromFollowing(Profile profile, UUID eventId) {
+        Optional<List<FollowingAttendeeDTO>> followedByProfile = profileRepository.findFriendsGoingToEvent(eventId, profile.getId());
         if (followedByProfile.isEmpty() || followedByProfile.get().isEmpty()) {
             return List.of();
         }

@@ -89,12 +89,12 @@ public class EventController {
     }
 
    @GetMapping("/following")
-   public ResponseEntity<List<EventFollowingDTO>> getEventsFromFollowing(@PathVariable UUID eventId) {
+   public ResponseEntity<EventFollowingAttendeesDTO> getEventsFromFollowing(@RequestParam("eventId") UUID eventId) {
        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
        Profile profile = (Profile) authentication.getPrincipal();
 
-       List<EventFollowingDTO> events = eventService.getEventsFromFollowing(profile, eventId);
-       return ResponseEntity.ok(events);
+       List<FollowingAttendeeDTO> events = eventService.getEventsFromFollowing(profile, eventId);
+       return ResponseEntity.ok(new EventFollowingAttendeesDTO(events));
    }
 
 }
