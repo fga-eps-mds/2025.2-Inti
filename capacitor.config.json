@@ -1,0 +1,26 @@
+{
+  "appId": "Musa",
+  "appName": "Musa",
+  "webDir": "dist",
+  "server": {
+    "url": "https://2025-2-inti.vercel.app/",
+    "cleartext": true
+  },
+  "plugins": {
+    "Keyboard": {
+      "resize": "body",
+      "resizeOnFullScreen": false
+    },
+    "SplashScreen": {
+      "launchShowDuration": 500,
+      "launchAutoHide": true,
+      "launchFadeOutDuration": 500,
+      "backgroundColor": "#ffffffff",
+      "iosSpinnerStyle": "large",
+      "splashFullScreen": true,
+      "splashImmersive": true,
+      "layoutName": "launch_screen",
+      "useDialog": true
+    }
+  }
+}
