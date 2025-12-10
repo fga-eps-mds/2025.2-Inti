@@ -1,0 +1,237 @@
+PODS:
+  - Capacitor (7.4.3):
+    - CapacitorCordova
+  - CapacitorApp (7.1.0):
+    - Capacitor
+  - CapacitorBrowser (7.0.2):
+    - Capacitor
+  - CapacitorCamera (7.0.2):
+    - Capacitor
+  - CapacitorClearCache (2.0.0):
+    - Capacitor
+  - CapacitorCommunityFcm (7.1.3):
+    - Capacitor
+    - FirebaseMessaging
+  - CapacitorCommunityFileOpener (7.0.1):
+    - Capacitor
+  - CapacitorCordova (7.4.3)
+  - CapacitorDevice (7.0.2):
+    - Capacitor
+  - CapacitorFilesystem (7.1.4):
+    - Capacitor
+    - IONFilesystemLib (~> 1.0.1)
+  - CapacitorFileTransfer (1.0.5):
+    - Capacitor
+    - IONFileTransferLib (~> 1.0.1)
+  - CapacitorFileViewer (1.0.4):
+    - Capacitor
+    - IONFileViewerLib (~> 1.0.1)
+  - CapacitorGeolocation (7.1.5):
+    - Capacitor
+    - IONGeolocationLib (= 1.0.1)
+  - CapacitorKeyboard (7.0.3):
+    - Capacitor
+  - CapacitorLocalNotifications (7.0.3):
+    - Capacitor
+  - CapacitorNetwork (7.0.2):
+    - Capacitor
+  - CapacitorPreferences (7.0.2):
+    - Capacitor
+  - CapacitorPushNotifications (7.0.3):
+    - Capacitor
+  - CapacitorScreenOrientation (7.0.2):
+    - Capacitor
+  - CapacitorShare (7.0.2):
+    - Capacitor
+  - CapacitorSplashScreen (7.0.3):
+    - Capacitor
+  - CapacitorStatusBar (7.0.3):
+    - Capacitor
+  - CapgoCapacitorNativeBiometric (0.0.1):
+    - Capacitor
+  - FirebaseCore (11.15.0):
+    - FirebaseCoreInternal (~> 11.15.0)
+    - GoogleUtilities/Environment (~> 8.1)
+    - GoogleUtilities/Logger (~> 8.1)
+  - FirebaseCoreInternal (11.15.0):
+    - "GoogleUtilities/NSData+zlib (~> 8.1)"
+  - FirebaseInstallations (11.15.0):
+    - FirebaseCore (~> 11.15.0)
+    - GoogleUtilities/Environment (~> 8.1)
+    - GoogleUtilities/UserDefaults (~> 8.1)
+    - PromisesObjC (~> 2.4)
+  - FirebaseMessaging (11.15.0):
+    - FirebaseCore (~> 11.15.0)
+    - FirebaseInstallations (~> 11.0)
+    - GoogleDataTransport (~> 10.0)
+    - GoogleUtilities/AppDelegateSwizzler (~> 8.1)
+    - GoogleUtilities/Environment (~> 8.1)
+    - GoogleUtilities/Reachability (~> 8.1)
+    - GoogleUtilities/UserDefaults (~> 8.1)
+    - nanopb (~> 3.30910.0)
+  - GoogleDataTransport (10.1.0):
+    - nanopb (~> 3.30910.0)
+    - PromisesObjC (~> 2.4)
+  - GoogleUtilities/AppDelegateSwizzler (8.1.0):
+    - GoogleUtilities/Environment
+    - GoogleUtilities/Logger
+    - GoogleUtilities/Network
+    - GoogleUtilities/Privacy
+  - GoogleUtilities/Environment (8.1.0):
+    - GoogleUtilities/Privacy
+  - GoogleUtilities/Logger (8.1.0):
+    - GoogleUtilities/Environment
+    - GoogleUtilities/Privacy
+  - GoogleUtilities/Network (8.1.0):
+    - GoogleUtilities/Logger
+    - "GoogleUtilities/NSData+zlib"
+    - GoogleUtilities/Privacy
+    - GoogleUtilities/Reachability
+  - "GoogleUtilities/NSData+zlib (8.1.0)":
+    - GoogleUtilities/Privacy
+  - GoogleUtilities/Privacy (8.1.0)
+  - GoogleUtilities/Reachability (8.1.0):
+    - GoogleUtilities/Logger
+    - GoogleUtilities/Privacy
+  - GoogleUtilities/UserDefaults (8.1.0):
+    - GoogleUtilities/Logger
+    - GoogleUtilities/Privacy
+  - IONFilesystemLib (1.0.1)
+  - IONFileTransferLib (1.0.1)
+  - IONFileViewerLib (1.0.1)
+  - IONGeolocationLib (1.0.1)
+  - nanopb (3.30910.0):
+    - nanopb/decode (= 3.30910.0)
+    - nanopb/encode (= 3.30910.0)
+  - nanopb/decode (3.30910.0)
+  - nanopb/encode (3.30910.0)
+  - PromisesObjC (2.4.0)
+
+DEPENDENCIES:
+  - "Capacitor (from `../../node_modules/@capacitor/ios`)"
+  - "CapacitorApp (from `../../node_modules/@capacitor/app`)"
+  - "CapacitorBrowser (from `../../node_modules/@capacitor/browser`)"
+  - "CapacitorCamera (from `../../node_modules/@capacitor/camera`)"
+  - CapacitorClearCache (from `../../node_modules/capacitor-clear-cache`)
+  - "CapacitorCommunityFcm (from `../../node_modules/@capacitor-community/fcm`)"
+  - "CapacitorCommunityFileOpener (from `../../node_modules/@capacitor-community/file-opener`)"
+  - "CapacitorCordova (from `../../node_modules/@capacitor/ios`)"
+  - "CapacitorDevice (from `../../node_modules/@capacitor/device`)"
+  - "CapacitorFilesystem (from `../../node_modules/@capacitor/filesystem`)"
+  - "CapacitorFileTransfer (from `../../node_modules/@capacitor/file-transfer`)"
+  - "CapacitorFileViewer (from `../../node_modules/@capacitor/file-viewer`)"
+  - "CapacitorGeolocation (from `../../node_modules/@capacitor/geolocation`)"
+  - "CapacitorKeyboard (from `../../node_modules/@capacitor/keyboard`)"
+  - "CapacitorLocalNotifications (from `../../node_modules/@capacitor/local-notifications`)"
+  - "CapacitorNetwork (from `../../node_modules/@capacitor/network`)"
+  - "CapacitorPreferences (from `../../node_modules/@capacitor/preferences`)"
+  - "CapacitorPushNotifications (from `../../node_modules/@capacitor/push-notifications`)"
+  - "CapacitorScreenOrientation (from `../../node_modules/@capacitor/screen-orientation`)"
+  - "CapacitorShare (from `../../node_modules/@capacitor/share`)"
+  - "CapacitorSplashScreen (from `../../node_modules/@capacitor/splash-screen`)"
+  - "CapacitorStatusBar (from `../../node_modules/@capacitor/status-bar`)"
+  - "CapgoCapacitorNativeBiometric (from `../../node_modules/@capgo/capacitor-native-biometric`)"
+
+SPEC REPOS:
+  trunk:
+    - FirebaseCore
+    - FirebaseCoreInternal
+    - FirebaseInstallations
+    - FirebaseMessaging
+    - GoogleDataTransport
+    - GoogleUtilities
+    - IONFilesystemLib
+    - IONFileTransferLib
+    - IONFileViewerLib
+    - IONGeolocationLib
+    - nanopb
+    - PromisesObjC
+
+EXTERNAL SOURCES:
+  Capacitor:
+    :path: "../../node_modules/@capacitor/ios"
+  CapacitorApp:
+    :path: "../../node_modules/@capacitor/app"
+  CapacitorBrowser:
+    :path: "../../node_modules/@capacitor/browser"
+  CapacitorCamera:
+    :path: "../../node_modules/@capacitor/camera"
+  CapacitorClearCache:
+    :path: "../../node_modules/capacitor-clear-cache"
+  CapacitorCommunityFcm:
+    :path: "../../node_modules/@capacitor-community/fcm"
+  CapacitorCommunityFileOpener:
+    :path: "../../node_modules/@capacitor-community/file-opener"
+  CapacitorCordova:
+    :path: "../../node_modules/@capacitor/ios"
+  CapacitorDevice:
+    :path: "../../node_modules/@capacitor/device"
+  CapacitorFilesystem:
+    :path: "../../node_modules/@capacitor/filesystem"
+  CapacitorFileTransfer:
+    :path: "../../node_modules/@capacitor/file-transfer"
+  CapacitorFileViewer:
+    :path: "../../node_modules/@capacitor/file-viewer"
+  CapacitorGeolocation:
+    :path: "../../node_modules/@capacitor/geolocation"
+  CapacitorKeyboard:
+    :path: "../../node_modules/@capacitor/keyboard"
+  CapacitorLocalNotifications:
+    :path: "../../node_modules/@capacitor/local-notifications"
+  CapacitorNetwork:
+    :path: "../../node_modules/@capacitor/network"
+  CapacitorPreferences:
+    :path: "../../node_modules/@capacitor/preferences"
+  CapacitorPushNotifications:
+    :path: "../../node_modules/@capacitor/push-notifications"
+  CapacitorScreenOrientation:
+    :path: "../../node_modules/@capacitor/screen-orientation"
+  CapacitorShare:
+    :path: "../../node_modules/@capacitor/share"
+  CapacitorSplashScreen:
+    :path: "../../node_modules/@capacitor/splash-screen"
+  CapacitorStatusBar:
+    :path: "../../node_modules/@capacitor/status-bar"
+  CapgoCapacitorNativeBiometric:
+    :path: "../../node_modules/@capgo/capacitor-native-biometric"
+
+SPEC CHECKSUMS:
+  Capacitor: 28d6c01026a9a3f7156529498ec1f389a2a28dbc
+  CapacitorApp: 26587c2ce485d88ddb39adb21cac64f8e481afe3
+  CapacitorBrowser: 22541e48442de44dc629c214388290d6eecc6ae9
+  CapacitorCamera: f9e54db0a18bb218a8dc360907d63aaefe9209ff
+  CapacitorClearCache: c8cc34c9684dc624b9185eb91abb7d5f46a3a21a
+  CapacitorCommunityFcm: 7c1b4ee8f425f77f7380832eb1ba0aa12ba4dd75
+  CapacitorCommunityFileOpener: 97362898506cf0a4194639f6fc05276af607191c
+  CapacitorCordova: 435121e81a2df4d0034f0fb11fcefab5104cfdb5
+  CapacitorDevice: 81ae78d5d1942707caad79276badd458bf6ec603
+  CapacitorFilesystem: f9bd850c41e048180e5dc0cbb90f2033ede9d2cc
+  CapacitorFileTransfer: 10ebf2c246d5e579d6c32aa995f0317154c13f66
+  CapacitorFileViewer: 1e0fa8be42e4be7a7316265b771da701a39d5199
+  CapacitorGeolocation: 84f868bea4c2499aebc3bb3a88fd0a508f87ab87
+  CapacitorKeyboard: 62f36104f26d53d8b3a2a43f2a69fe714f1777d5
+  CapacitorLocalNotifications: 0811aef56ab2e5f7f9ae72f47d3473ab50c29038
+  CapacitorNetwork: 695069886b3c5ed514db69aa3d026b8dc3c03a6b
+  CapacitorPreferences: 65107ed7437d96ee72583df5763985e3c0ff2bc2
+  CapacitorPushNotifications: bdd621fbd562be34a41f4a7b1750efa000447d5a
+  CapacitorScreenOrientation: e0d5b9ef293b269b8f93373355d5b276f50fabea
+  CapacitorShare: be166411fa995ead2d39b104aa0aae56d8615c66
+  CapacitorSplashScreen: e388b8e0ed0e982a9d3a40417f478e7a018a8763
+  CapacitorStatusBar: 0659ddc7b1713764a05831463d215b177a15d054
+  CapgoCapacitorNativeBiometric: be4ceeff38739d9c0f59b8c41456a3b01cfeddf0
+  FirebaseCore: efb3893e5b94f32b86e331e3bd6dadf18b66568e
+  FirebaseCoreInternal: 9afa45b1159304c963da48addb78275ef701c6b4
+  FirebaseInstallations: 317270fec08a5d418fdbc8429282238cab3ac843
+  FirebaseMessaging: 3b26e2cee503815e01c3701236b020aa9b576f09
+  GoogleDataTransport: aae35b7ea0c09004c3797d53c8c41f66f219d6a7
+  GoogleUtilities: 00c88b9a86066ef77f0da2fab05f65d7768ed8e1
+  IONFilesystemLib: 89258b8e3e85465da93127d25d7ce37f977e8a6f
+  IONFileTransferLib: b268561ab0ba7f386eea228c4986b55ba0146ca9
+  IONFileViewerLib: 9e6b09451afa7705545d4d20e2974b4f1555390c
+  IONGeolocationLib: 20f9d0248a0b5264511fb57a37e25dd2badf797a
+  nanopb: fad817b59e0457d11a5dfbde799381cd727c1275
+  PromisesObjC: f5707f49cb48b9636751c5b2e7d227e43fba9f47
+
+PODFILE CHECKSUM: 009757e785514db017ad1d072352f9c3d7384b99
+
+COCOAPODS: 1.16.2
