@@ -124,57 +124,57 @@ if (typeof module !== "undefined" && module.exports) {
 // INICIALIZAÇÃO DA UI DE LOGOUT
 // ==========================================
 
-document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener("DOMContentLoaded", () => {
   // Elementos do DOM
-  const logoutContainer = document.getElementById('logout-btn-container');
-  const btnLogout = document.getElementById('btn-logout');
-  const modal = document.getElementById('modal-logout-confirm');
-  const btnCancel = document.getElementById('btn-cancel-logout');
-  const btnConfirm = document.getElementById('btn-confirm-logout');
+  const logoutContainer = document.getElementById("logout-btn-container");
+  const btnLogout = document.getElementById("btn-logout");
+  const modal = document.getElementById("modal-logout-confirm");
+  const btnCancel = document.getElementById("btn-cancel-logout");
+  const btnConfirm = document.getElementById("btn-confirm-logout");
 
-  if (typeof isAuthenticated === 'function' && isAuthenticated()) {
+  if (typeof isAuthenticated === "function" && isAuthenticated()) {
     if (logoutContainer) {
-      logoutContainer.style.display = 'block';
+      logoutContainer.style.display = "block";
     }
   } else {
     if (logoutContainer) {
-      logoutContainer.style.display = 'none';
+      logoutContainer.style.display = "none";
     }
   }
 
   // 2. Abrir Modal ao clicar no ícone
   if (btnLogout && modal) {
-    btnLogout.addEventListener('click', (e) => {
+    btnLogout.addEventListener("click", (e) => {
       e.preventDefault();
-      modal.classList.add('active'); 
+      modal.classList.add("active");
     });
   }
 
   // 3. Fechar Modal (Cancelar)
   if (btnCancel && modal) {
-    btnCancel.addEventListener('click', () => {
-      modal.classList.remove('active');
+    btnCancel.addEventListener("click", () => {
+      modal.classList.remove("active");
     });
   }
 
-  // 4. Fechar Modal clicando fora da caixa 
-  window.addEventListener('click', (e) => {
+  // 4. Fechar Modal clicando fora da caixa
+  window.addEventListener("click", (e) => {
     if (e.target === modal) {
-      modal.classList.remove('active');
+      modal.classList.remove("active");
     }
   });
 
-  // 5. Confirmar Logout 
+  // 5. Confirmar Logout
   if (btnConfirm) {
-    btnConfirm.addEventListener('click', () => {
+    btnConfirm.addEventListener("click", () => {
       // Fecha o modal se estiver aberto
       if (modal) {
-        modal.classList.remove('active');
+        modal.classList.remove("active");
       }
 
       // Feedback visual
-      if (typeof toast !== 'undefined' && toast?.success) {
-        toast.success('Logout realizado com sucesso!');
+      if (typeof toast !== "undefined" && toast?.success) {
+        toast.success("Logout realizado com sucesso!");
       }
 
       // Limpa autenticação
@@ -183,8 +183,8 @@ document.addEventListener('DOMContentLoaded', () => {
       // Redireciona após pequeno atraso para permitir o toast
       setTimeout(() => {
         // Usa mesma rota do app para login, ajustando quando dentro de /pages/
-        const isInPagesDir = window.location.pathname.includes('/pages/');
-        const target = isInPagesDir ? '../index.html' : 'index.html';
+        const isInPagesDir = window.location.pathname.includes("/pages/");
+        const target = isInPagesDir ? "../index.html" : "index.html";
         window.location.href = target;
       }, 600);
     });
