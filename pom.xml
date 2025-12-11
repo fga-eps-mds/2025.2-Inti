@@ -161,10 +161,12 @@
 				<version>0.8.14</version>
 				<configuration>
 					<excludes>
-						<exclude>**/config/**</exclude>
-						<exclude>**/model/**</exclude>
-						<exclude>**/exception/**</exclude>
-						<exclude>**/IntiApplication*</exclude>
+						<exclude>br/mds/inti/model/**</exclude>
+						<exclude>br/mds/inti/model/entity/**</exclude>
+						<exclude>br/mds/inti/model/enums</exclude>
+						<exclude>br/mds/inti/model/dto/**</exclude>
+						<exclude>br/mds/inti/controller/exception/**</exclude>
+						<exclude>br/mds/inti/service/exceptions/**</exclude>
 					</excludes>
 				</configuration>
 				<executions>

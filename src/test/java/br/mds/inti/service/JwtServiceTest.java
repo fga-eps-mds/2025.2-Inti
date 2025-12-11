@@ -46,13 +46,13 @@ class JwtServiceTest {
     }
 
     @Test
-    void generateToken_ShouldContainUsernameAsSubject() {
+    void generateToken_ShouldContainEmailAsSubject() {
         // Act
         String token = jwtService.generateToken(mockProfile);
 
         // Assert
-        String decodedUsername = JWT.decode(token).getSubject();
-        assertEquals("testuser", decodedUsername);
+        String decodedEmail = JWT.decode(token).getSubject();
+        assertEquals("test@example.com", decodedEmail);
     }
 
     @Test
@@ -65,16 +65,16 @@ class JwtServiceTest {
     }
 
     @Test
-    void validateToken_WithValidToken_ShouldReturnUsername() {
+    void validateToken_WithValidToken_ShouldReturnEmail() {
         // Arrange
         String token = jwtService.generateToken(mockProfile);
 
         // Act
-        String username = jwtService.validateToken(token);
+        String email = jwtService.validateToken(token);
 
         // Assert
-        assertNotNull(username);
-        assertEquals("testuser", username);
+        assertNotNull(email);
+        assertEquals("test@example.com", email);
     }
 
     @Test
@@ -92,7 +92,7 @@ class JwtServiceTest {
     void validateToken_WithTokenSignedByDifferentSecret_ShouldThrowException() {
         // Arrange
         String tokenWithDifferentSecret = JWT.create()
-                .withSubject("testuser")
+                .withSubject("test@example.com")
                 .sign(Algorithm.HMAC256("different-secret"));
 
         // Act & Assert
@@ -105,10 +105,10 @@ class JwtServiceTest {
     void generateToken_ForDifferentProfiles_ShouldGenerateDifferentTokens() {
         // Arrange
         Profile profile1 = new Profile();
-        profile1.setUsername("user1");
+        profile1.setEmail("user1@example.com");
 
         Profile profile2 = new Profile();
-        profile2.setUsername("user2");
+        profile2.setEmail("user2@example.com");
 
         // Act
         String token1 = jwtService.generateToken(profile1);
@@ -119,27 +119,41 @@ class JwtServiceTest {
     }
 
     @Test
-    void validateToken_ShouldExtractCorrectUsernameFromToken() {
+    void validateToken_ShouldExtractCorrectEmailFromToken() {
         // Arrange
-        Profile profileWithSpecificUsername = new Profile();
-        profileWithSpecificUsername.setUsername("specificusername123");
-        String token = jwtService.generateToken(profileWithSpecificUsername);
+        Profile profileWithSpecificEmail = new Profile();
+        profileWithSpecificEmail.setEmail("specificemail123@example.com");
+        String token = jwtService.generateToken(profileWithSpecificEmail);
 
         // Act
-        String extractedUsername = jwtService.validateToken(token);
+        String extractedEmail = jwtService.validateToken(token);
 
         // Assert
-        assertEquals("specificusername123", extractedUsername);
+        assertEquals("specificemail123@example.com", extractedEmail);
     }
 
     @Test
-    void generateToken_WithNullUsername_ShouldNotThrowException() {
+    void generateToken_WithNullEmail_ShouldThrowException() {
         // Arrange
-        Profile profileWithNullUsername = new Profile();
-        profileWithNullUsername.setUsername(null);
+        Profile profileWithNullEmail = new Profile();
+        profileWithNullEmail.setEmail(null);
 
-        // Act & Assert - Não deve lançar exceção durante geração
-        assertDoesNotThrow(() -> jwtService.generateToken(profileWithNullUsername));
+        // Act & Assert
+        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class,
+                () -> jwtService.generateToken(profileWithNullEmail));
+        assertEquals("Profile email must be defined to generate a JWT token", exception.getMessage());
+    }
+
+    @Test
+    void generateToken_WithBlankEmail_ShouldThrowException() {
+        // Arrange
+        Profile profileWithBlankEmail = new Profile();
+        profileWithBlankEmail.setEmail("   ");
+
+        // Act & Assert
+        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class,
+                () -> jwtService.generateToken(profileWithBlankEmail));
+        assertEquals("Profile email must be defined to generate a JWT token", exception.getMessage());
     }
 
     @Test

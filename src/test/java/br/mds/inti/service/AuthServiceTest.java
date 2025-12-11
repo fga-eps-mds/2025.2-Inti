@@ -7,17 +7,22 @@ import br.mds.inti.model.dto.auth.LoginResponse;
 import br.mds.inti.model.entity.Profile;
 import br.mds.inti.model.enums.ProfileType;
 import br.mds.inti.repositories.ProfileRepository;
+import br.mds.inti.service.exception.ProfileAlreadyExistsException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.security.crypto.password.PasswordEncoder;
+
+import org.hibernate.exception.ConstraintViolationException;
 
 import java.time.Instant;
 import java.util.Optional;
 import java.util.UUID;
+import java.sql.SQLException;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
@@ -225,5 +230,28 @@ class AuthServiceTest {
 
         // Assert
         verify(profileRepository).save(any(Profile.class));
+    }
+
+    @Test
+    void register_WhenUsernameAlreadyExists_ShouldThrowProfileAlreadyExistsException() {
+        RegisterRequest request = new RegisterRequest(
+                "test@example.com",
+                "Test User",
+                "testuser",
+                "password123",
+                ProfileType.user);
+
+        when(passwordEncoder.encode("password123")).thenReturn("encodedPassword");
+        ConstraintViolationException constraintViolationException = new ConstraintViolationException(
+                "duplicate", new SQLException("duplicate"), "profiles_username_key");
+        DataIntegrityViolationException dataIntegrityViolationException = new DataIntegrityViolationException(
+                "duplicate", constraintViolationException);
+        when(profileRepository.save(any(Profile.class))).thenThrow(dataIntegrityViolationException);
+
+        ProfileAlreadyExistsException exception = assertThrows(ProfileAlreadyExistsException.class,
+                () -> authService.register(request));
+
+        assertEquals("Username already in use", exception.getMessage());
+        verify(jwtService, never()).generateToken(any());
     }
 }

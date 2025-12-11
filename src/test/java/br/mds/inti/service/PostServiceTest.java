@@ -1,6 +1,7 @@
 package br.mds.inti.service;
 
 import br.mds.inti.model.dto.PostDetailResponse;
+import br.mds.inti.model.dto.PostResponse;
 import br.mds.inti.model.entity.Like;
 import br.mds.inti.model.entity.Post;
 import br.mds.inti.model.entity.Profile;
@@ -12,11 +13,16 @@ import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.io.IOException;
+import java.util.List;
 import java.util.Optional;
 import java.time.Instant;
 import java.util.UUID;
@@ -243,6 +249,31 @@ class PostServiceTest {
 
         assertThat(response.liked()).isFalse();
         verify(likeRepository, never()).findByProfileAndPostId(any(Profile.class), any(UUID.class));
+    }
+
+    @Test
+    void getPostByIdProfile_shouldMapPostsToResponses() {
+        UUID profileId = UUID.randomUUID();
+        Post post = new Post();
+        post.setId(UUID.randomUUID());
+        post.setBlobName("blob.png");
+        post.setDescription("Desc");
+        post.setLikesCount(4);
+        post.setCreatedAt(Instant.now());
+
+        Page<Post> page = new PageImpl<>(List.of(post));
+        Pageable pageable = PageRequest.of(0, 10);
+        when(postRepository.findAllByProfileIdAndNotDeleted(profileId, pageable)).thenReturn(page);
+
+        Page<PostResponse> response = postService.getPostByIdProfile(profileId, pageable);
+
+        assertThat(response.getTotalElements()).isEqualTo(1);
+        PostResponse dto = response.getContent().get(0);
+        assertThat(dto.id()).isEqualTo(post.getId());
+        assertThat(dto.imgLink()).isEqualTo("/images/blob.png");
+        assertThat(dto.description()).isEqualTo("Desc");
+        assertThat(dto.likesCount()).isEqualTo(4);
+        verify(postRepository).findAllByProfileIdAndNotDeleted(profileId, pageable);
     }
 
     private Profile buildProfile() {
