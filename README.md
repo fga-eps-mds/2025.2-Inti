@@ -548,68 +548,7 @@ Observações:
 
 ---
 
-## 🎟️ Eventos (`/event`)
-
-### POST `/event`
-
-- **Requer:** usuário autenticado com `ProfileType.organization`.
-- **Content-Type:** `multipart/form-data` usando `EventRequestDTO`.
-- **Campos principais**: `title`, `eventTime` (ISO-8601), `description`, `image`, `streetAddress`, `administrativeRegion`, `city`, `state`, `referencePoint`, `latitude`, `longitude`.
-- **Resposta 201**:
-
-### GET `/event/{eventid}`
-
-- **Path params:** `eventid` (UUID do evento).
-- **Autenticação:** opcional; caso fornecida, o serviço adapta a resposta com informações específicas do usuário.
-- **Resposta 200** (`EventDetailResponse`): detalhes completos, participantes e status de inscrição.
-
-### GET `/event/my`
-
-- **Autenticação:** JWT obrigatório (usa o perfil autenticado para filtrar eventos criados por ele).
-- **Resposta 200** (`List<MyEvent>`): eventos de autoria do usuário, com metadados básicos (id, título, status).
-
-### POST `/event/{eventid}/attendees`
-
-- **Path params:** `eventid` (UUID).
-- **Autenticação:** JWT obrigatório.
-- **Resposta 200** (`EventParticipantResponse`): confirma a inscrição do perfil no evento.
-
-### DELETE `/event/{eventid}/attendees`
-
-- **Path params:** `eventid` (UUID).
-- **Autenticação:** JWT obrigatório.
-- **Resposta 204**: remove a inscrição do usuário naquele evento.
-
-```json
-{
-  "id": "a0c33f9f-0f9e-4d9d-b111-2b13997f6a63",
-  "message": "Evento criado com sucesso"
-}
-```
-
-### GET `/event/lists`
-
-- Lista resumida de eventos.
-
-```json
-[
-  {
-    "title": "Feira da Engenharia",
-    "imageUrl": "/images/evento.png",
-    "data": "2025-12-01T18:00:00",
-    "id": "b3e8f6b5-3c18-4874-86be-16a6d2d58b35"
-  }
-]
-
-### GET `/event/following`
-
-- **Autenticação:** JWT obrigatório; utiliza o grafo de follow do usuário.
-- **Resposta 200** (`List<EventFollowingDTO>`): eventos promovidos por perfis que o usuário segue.
-```
-
----
-
-## 🧾 Erros comuns
+## Erros comuns
 
 | Situação                                         | Resposta                                             |
 | ------------------------------------------------ | ---------------------------------------------------- |
@@ -621,7 +560,7 @@ Observações:
 
 ---
 
-## 🧪 Testar mais rápido (cURL)
+## Testar mais rápido (cURL)
 
 ```bash
 # Registrar e obter token
@@ -642,10 +581,3 @@ curl -X POST http://localhost:8080/post \
 ```
 
 ---
-
-## ✅ Check-list rápido antes de integrar
-
-- [x] Adicionar header `Authorization` em rotas protegidas.
-- [x] Enviar `Content-Type` correto (`application/json` ou `multipart/form-data`).
-- [x] Converter datas para ISO-8601 (UTC) ao chamar a API.
-- [x] Usar IDs UUID válidos nos paths.
