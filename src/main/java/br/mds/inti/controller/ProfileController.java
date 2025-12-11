@@ -16,7 +16,6 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
 
 import br.mds.inti.model.dto.FollowResponse;
-import br.mds.inti.model.dto.ProductSummaryDTO;
 import br.mds.inti.model.dto.ProfileResponse;
 import br.mds.inti.model.dto.UpdateUserRequest;
 import br.mds.inti.service.FollowService;
