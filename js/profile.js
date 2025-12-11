@@ -83,7 +83,10 @@ function sortPostsByDate(posts) {
 
 function handleProfileError(error) {
   console.error("Error loading profile:", error);
-  if (error?.message && (error.message.includes("401") || error.message.includes("403"))) {
+  if (
+    error?.message &&
+    (error.message.includes("401") || error.message.includes("403"))
+  ) {
     localStorage.removeItem("isAuthenticated");
     localStorage.removeItem("authToken");
     localStorage.removeItem("userData");

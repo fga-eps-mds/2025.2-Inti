@@ -4,7 +4,9 @@ document.addEventListener("DOMContentLoaded", function () {
   const imageInput = document.getElementById("image");
   const imagePreview = document.getElementById("imagePreview");
   const placeholderIcon = document.querySelector(".image-placeholder-icon");
-  const placeholderText = document.querySelector(".image-upload-content .global-font");
+  const placeholderText = document.querySelector(
+    ".image-upload-content .global-font"
+  );
   const titleInput = document.getElementById("title");
   const descriptionInput = document.getElementById("description");
   const priceInput = document.getElementById("price");

@@ -1,239 +1,463 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="../css/style.css" />
+    <link rel="stylesheet" href="../css/style.css" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Maitree:wght@300;400;500;600&family=Libre+Bodoni:wght@400;700&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Libre+Bodoni:ital,wght@0,400..700;1,400..700&family=Maitree:wght@200;300;400;500;600;700&family=Quicksand:wght@300..700&display=swap"
+      rel="stylesheet"
+    />
+    <title>Document</title>
+    <style>
+      :root {
+        /* Cores principais */
+        --primary: #592e83;
+        --primary-light: #7a4fa3;
+        --primary-lighter: #f2ebfb;
+        --accent: #a38bba;
 
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="stylesheet" href="../css/style.css">
-  <link rel="stylesheet" href="../css/style.css" />
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link
-    href="https://fonts.googleapis.com/css2?family=Maitree:wght@300;400;500;600&family=Libre+Bodoni:wght@400;700&display=swap"
-    rel="stylesheet" />
-  <link
-    href="https://fonts.googleapis.com/css2?family=Libre+Bodoni:ital,wght@0,400..700;1,400..700&family=Maitree:wght@200;300;400;500;600;700&family=Quicksand:wght@300..700&display=swap"
-    rel="stylesheet">
-  <title>Document</title>
-  <style>
-    :root {
-      /* Cores principais */
-      --primary: #592e83;
-      --primary-light: #7a4fa3;
-      --primary-lighter: #f2ebfb;
-      --accent: #a38bba;
+        /* Tons neutros */
+        --gray-50: #fafafa;
+        --gray-100: #f5f5f5;
+        --gray-200: #e5e5e5;
+        --gray-300: #d4d4d4;
+        --gray-400: #a3a3a3;
+        --gray-500: #737373;
+        --gray-600: #525252;
+        --gray-900: #171717;
 
-      /* Tons neutros */
-      --gray-50: #fafafa;
-      --gray-100: #f5f5f5;
-      --gray-200: #e5e5e5;
-      --gray-300: #d4d4d4;
-      --gray-400: #a3a3a3;
-      --gray-500: #737373;
-      --gray-600: #525252;
-      --gray-900: #171717;
+        /* Espaçamentos */
+        --spacing-xs: 4px;
+        --spacing-sm: 8px;
+        --spacing-md: 16px;
+        --spacing-lg: 24px;
+        --spacing-xl: 32px;
 
-      /* Espaçamentos */
-      --spacing-xs: 4px;
-      --spacing-sm: 8px;
-      --spacing-md: 16px;
-      --spacing-lg: 24px;
-      --spacing-xl: 32px;
+        /* Bordas */
+        --radius-sm: 8px;
+        --radius-md: 12px;
+        --radius-lg: 16px;
+        --radius-full: 9999px;
 
-      /* Bordas */
-      --radius-sm: 8px;
-      --radius-md: 12px;
-      --radius-lg: 16px;
-      --radius-full: 9999px;
+        /* Sombras */
+        --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+        --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+      }
 
-      /* Sombras */
-      --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
-      --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
-      --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
-    }
+      .cabecalho {
+        display: flex;
+        flex-direction: row;
+        width: 100%;
+        justify-content: center;
+        align-items: center;
+        padding-top: 2vh;
+      }
 
+      .titulo {
+        width: auto;
+        justify-content: center;
+        color: #592e83;
+        font-family: "Libre Bodoni", serif;
+        font-weight: bold;
+        font-size: 36px;
+      }
 
-    .cabecalho {
-      display: flex;
-      flex-direction: row;
-      width: 100%;
-      justify-content: center;
-      align-items: center;
-      padding-top: 2vh;
-    }
+      header button {
+        position: absolute;
+        left: 7vw;
+        background: none;
+        outline: none;
+        border: none;
+      }
 
-    .titulo {
-      width: auto;
-      justify-content: center;
-      color: #592e83;
-      font-family: "Libre Bodoni", serif;
-      font-weight: bold;
-      font-size: 36px;
-    }
+      main {
+        padding: 0 20px;
+      }
 
-    header button {
-      position: absolute;
-      left: 7vw;
-      background: none;
-      outline: none;
-      border: none;
-    }
+      .post-detail {
+        margin-top: 30px;
+      }
 
-    main {
-      padding: 0 20px;
-    }
+      .info-user {
+        width: 100%;
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        position: relative;
+      }
 
-    .post-detail {
-      margin-top: 30px;
-    }
+      .info-user img {
+        width: 48px;
+        height: 48px;
+        border-radius: 100%;
+        margin-left: 5px;
+        object-fit: cover;
+        object-position: center;
+      }
 
-    .info-user {
-      width: 100%;
-      display: flex;
-      flex-direction: row;
-      align-items: center;
-    }
+      .text-info {
+        display: flex;
+        flex-direction: column;
+        margin-left: 5px;
+        line-height: 1.3;
+      }
 
-    .info-user img {
-      width: 48px;
-      height: 48px;
-      border-radius: 100%;
-      margin-left: 5px;
-    }
+      .btn-delete {
+        padding-top: 5px;
+        margin-left: auto;
+        border: none;
+        background: none;
+        width: 8.5vw;
+        height: 8.5vw;
+      }
 
-    .text-info {
-      display: flex;
-      flex-direction: column;
-      margin-left: 5px;
-      line-height: 1.3;
-    }
+      .btn-delete img {
+        width: 8.5vw;
+        height: 8.5vw;
+        margin-left: 0;
+      }
 
+      .post-options-menu {
+        position: absolute;
+        top: 100%;
+        right: 0;
+        margin-top: 4px;
+        background: #ffffff;
+        border-radius: 8px;
+        box-shadow: var(--shadow-md);
+        padding: 4px 0;
+        z-index: 10;
+        min-width: 160px;
+      }
 
-    .post-img {
-      width: 100%;
-      height: 300px;
-      border-radius: 16px;
-      object-fit: cover;
-      object-position: center;
-      margin-top: 10px;
-    }
+      .post-options-menu.hidden {
+        display: none;
+      }
 
-    .info-post {
-      display: flex;
-      flex-direction: row;
-      align-items: center;
-      justify-content: space-between;
-      padding: 0 8px;
-      padding-top: 5px;
-    }
+      .post-options-menu button {
+        width: 100%;
+        padding: 8px 12px;
+        border: none;
+        background: none;
+        text-align: center;
+        font-size: 14px;
+        font-family: "Maitree", serif;
+        color: #d32f2f;
+        cursor: pointer;
+      }
 
-    .description {
-      max-width: 270px;
-      font-size: 16px;
-      font-family: "Maitree", serif;
-      font-weight: normal;
-      color: #171717;
-    }
+      .post-options-menu button:hover {
+        background-color: var(--gray-100);
+      }
 
-    .like button {
-      border: none;
-      outline: none;
-      background: none;
-      width: 25px;
-      height: 25px;
-    }
+      .post-img {
+        width: 100%;
+        height: 300px;
+        border-radius: 16px;
+        object-fit: cover;
+        object-position: center;
+        margin-top: 10px;
+      }
 
-    .like img {
-      width: 100%;
-      height: 100%;
-    }
+      .info-post {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: space-between;
+        padding: 0 8px;
+        padding-top: 5px;
+      }
 
-    .like p {
-      font-size: 20px;
-      padding-top: 0px;
-    }
-  </style>
-</head>
+      .description {
+        max-width: 270px;
+        font-size: 16px;
+        font-family: "Maitree", serif;
+        font-weight: normal;
+        color: #171717;
+      }
 
-<body>
-  <header>
-    <div class="cabecalho">
-      <button>
-        <img src="../assets/Seta Select.svg" class="voltar" alt="">
-      </button>
-      <h1 class="titulo">Publicação</h1>
-    </div>
-  </header>
+      .like button {
+        border: none;
+        outline: none;
+        background: none;
+        width: 25px;
+        height: 25px;
+      }
 
-  <main>
-    <div class="post-detail">
-      <div class="info-user">
-        <img src="../assets/profilePic.svg" alt="">
-        <div class="text-info">
-          <p>Natan França</p>
-          <p>@natan8643</p>
-        </div>
+      .like img {
+        width: 100%;
+        height: 100%;
+      }
+
+      .like p {
+        font-size: 20px;
+        padding-top: 0px;
+      }
+
+      .delete-modal-backdrop {
+        position: fixed;
+        inset: 0;
+        background: rgba(0, 0, 0, 0.5);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        z-index: 50;
+      }
+
+      .delete-modal-backdrop.hidden {
+        display: none;
+      }
+
+      .delete-modal {
+        background: #ffffff;
+        padding: 20px;
+        border-radius: 16px;
+        box-shadow: var(--shadow-lg);
+        max-width: 320px;
+        width: 90%;
+        text-align: center;
+        font-family: "Maitree", serif;
+      }
+
+      .delete-modal h2 {
+        font-size: 18px;
+        margin-bottom: 8px;
+        color: #592e83;
+      }
+
+      .delete-modal p {
+        font-size: 14px;
+        color: var(--gray-600);
+        margin-bottom: 16px;
+      }
+
+      .delete-modal-actions {
+        display: flex;
+        gap: 12px;
+        justify-content: center;
+      }
+
+      .delete-modal-actions button {
+        flex: 1;
+        padding: 8px 12px;
+        border-radius: 9999px;
+        border: none;
+        font-size: 14px;
+        cursor: pointer;
+        font-family: "Maitree", serif;
+      }
+
+      .delete-modal-cancel {
+        background: var(--gray-100);
+        color: var(--gray-600);
+      }
+
+      .delete-modal-confirm {
+        background: #d32f2f;
+        color: #ffffff;
+      }
+    </style>
+  </head>
+
+  <body>
+    <header>
+      <div class="cabecalho">
+        <button>
+          <img src="../assets/Seta Select.svg" class="voltar" alt="" />
+        </button>
+        <h1 class="titulo">Publicação</h1>
       </div>
-      <img src="" class="post-img" alt="">
-      <div class="info-post">
-        <p class="description"></p>
-        <div class="like">
-          <button>
-            <img src="../assets/img_Like1.svg" alt="">
+    </header>
+
+    <main>
+      <div class="post-detail">
+        <div class="info-user">
+          <img src="../assets/profilePic.svg" alt="" />
+          <div class="text-info">
+            <p>Natan França</p>
+            <p>@natan8643</p>
+          </div>
+          <button class="btn-delete">
+            <img src="../assets/3points.svg" alt="" />
           </button>
-          <p class="like-count"></p>
+          <div class="post-options-menu hidden">
+            <button type="button" class="post-delete-option">
+              Excluir publicação
+            </button>
+          </div>
+        </div>
+        <img src="" class="post-img" alt="" />
+        <div class="info-post">
+          <p class="description"></p>
+          <div class="like">
+            <button>
+              <img src="../assets/img_Like1.svg" alt="" />
+            </button>
+            <p class="like-count"></p>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <div class="delete-modal-backdrop hidden" id="deleteModal">
+      <div class="delete-modal">
+        <h2>Excluir publicação?</h2>
+        <p>Essa ação não pode ser desfeita.</p>
+        <div class="delete-modal-actions">
+          <button
+            type="button"
+            class="delete-modal-cancel"
+            id="deleteCancelBtn"
+          >
+            Cancelar
+          </button>
+          <button
+            type="button"
+            class="delete-modal-confirm"
+            id="deleteConfirmBtn"
+          >
+            Excluir
+          </button>
         </div>
       </div>
     </div>
-  </main>
 
-  <nav class="navbar">
-    <button class="nav-btn" aria-label="Home">
-      <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
-        <path
-          d="M3 9L12 2L21 9V20C21 20.5304 20.7893 21.0391 20.4142 21.4142C20.0391 21.7893 19.5304 22 19 22H5C4.46957 22 3.96086 21.7893 3.58579 21.4142C3.21071 21.0391 3 20.5304 3 20V9Z"
-          stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
-        <path d="M9 22V12H15V22" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-          stroke-linejoin="round" />
-      </svg>
-    </button>
-    <button class="nav-btn" aria-label="Explorar">
-      <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
-        <circle cx="11" cy="11" r="8" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-          stroke-linejoin="round" />
-        <path d="M21 21L16.65 16.65" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-          stroke-linejoin="round" />
-      </svg>
-    </button>
-    <button class="nav-btn nav-btn-add" aria-label="Adicionar">
-      <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
-        <line x1="12" y1="5" x2="12" y2="19" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
-        <line x1="5" y1="12" x2="19" y2="12" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
-      </svg>
-    </button>
-    <button class="nav-btn" aria-label="Calendário">
-      <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
-        <rect x="3" y="4" width="18" height="18" rx="2" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-          stroke-linejoin="round" />
-        <line x1="16" y1="2" x2="16" y2="6" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
-        <line x1="8" y1="2" x2="8" y2="6" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
-        <line x1="3" y1="10" x2="21" y2="10" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
-      </svg>
-    </button>
-    <button class="nav-btn active" aria-label="Perfil">
-      <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
-        <path
-          d="M20 21V19C20 17.9391 19.5786 16.9217 18.8284 16.1716C18.0783 15.4214 17.0609 15 16 15H8C6.93913 15 5.92172 15.4214 5.17157 16.1716C4.42143 16.9217 4 17.9391 4 19V21"
-          stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
-        <circle cx="12" cy="7" r="4" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-          stroke-linejoin="round" />
-      </svg>
-    </button>
-  </nav>
-  <script src="../js/config.js"></script>
-  <script src="../js/toast.js"></script>
-  <script src="../js/nav-handler.js"></script>
-  <script src="../js/post-detail.js"></script>
-</body>
-
+    <nav class="navbar">
+      <button class="nav-btn" aria-label="Home">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+          <path
+            d="M3 9L12 2L21 9V20C21 20.5304 20.7893 21.0391 20.4142 21.4142C20.0391 21.7893 19.5304 22 19 22H5C4.46957 22 3.96086 21.7893 3.58579 21.4142C3.21071 21.0391 3 20.5304 3 20V9Z"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          />
+          <path
+            d="M9 22V12H15V22"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          />
+        </svg>
+      </button>
+      <button class="nav-btn" aria-label="Explorar">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+          <circle
+            cx="11"
+            cy="11"
+            r="8"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          />
+          <path
+            d="M21 21L16.65 16.65"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          />
+        </svg>
+      </button>
+      <button class="nav-btn nav-btn-add" aria-label="Adicionar">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+          <line
+            x1="12"
+            y1="5"
+            x2="12"
+            y2="19"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+          />
+          <line
+            x1="5"
+            y1="12"
+            x2="19"
+            y2="12"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+          />
+        </svg>
+      </button>
+      <button class="nav-btn" aria-label="Calendário">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+          <rect
+            x="3"
+            y="4"
+            width="18"
+            height="18"
+            rx="2"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          />
+          <line
+            x1="16"
+            y1="2"
+            x2="16"
+            y2="6"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+          />
+          <line
+            x1="8"
+            y1="2"
+            x2="8"
+            y2="6"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+          />
+          <line
+            x1="3"
+            y1="10"
+            x2="21"
+            y2="10"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+          />
+        </svg>
+      </button>
+      <button class="nav-btn active" aria-label="Perfil">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+          <path
+            d="M20 21V19C20 17.9391 19.5786 16.9217 18.8284 16.1716C18.0783 15.4214 17.0609 15 16 15H8C6.93913 15 5.92172 15.4214 5.17157 16.1716C4.42143 16.9217 4 17.9391 4 19V21"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          />
+          <circle
+            cx="12"
+            cy="7"
+            r="4"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          />
+        </svg>
+      </button>
+    </nav>
+    <script src="../js/config.js"></script>
+    <script src="../js/toast.js"></script>
+    <script src="../js/nav-handler.js"></script>
+    <script src="../js/post-detail.js"></script>
+  </body>
 </html>

@@ -19,7 +19,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   if (!postId) {
     // Se o ID nao for fornecido
-    console.warn('No Post ID provided');
+    console.warn("No Post ID provided");
     // return;
     // Remova isso em PROD
     // loadPostDetails('test-id');
@@ -40,6 +40,62 @@ document.addEventListener("DOMContentLoaded", () => {
   const likeBtn = document.querySelector(".like button");
   if (likeBtn) {
     likeBtn.addEventListener("click", handleLikeClick);
+  }
+
+  const optionsBtn = document.querySelector(".btn-delete");
+  const optionsMenu = document.querySelector(".post-options-menu");
+  const deleteOption = document.querySelector(".post-delete-option");
+  const deleteModal = document.getElementById("deleteModal");
+  const deleteCancelBtn = document.getElementById("deleteCancelBtn");
+  const deleteConfirmBtn = document.getElementById("deleteConfirmBtn");
+
+  if (optionsBtn && optionsMenu) {
+    optionsBtn.addEventListener("click", (event) => {
+      event.stopPropagation();
+      optionsMenu.classList.toggle("hidden");
+    });
+    optionsMenu.addEventListener("click", (event) => {
+      event.stopPropagation();
+    });
+  }
+
+  document.addEventListener("click", () => {
+    if (optionsMenu) {
+      optionsMenu.classList.add("hidden");
+    }
+  });
+
+  if (deleteOption) {
+    deleteOption.addEventListener("click", (event) => {
+      event.preventDefault();
+      event.stopPropagation();
+
+      if (optionsMenu) {
+        optionsMenu.classList.add("hidden");
+      }
+
+      if (deleteModal) {
+        deleteModal.classList.remove("hidden");
+      }
+    });
+  }
+
+  if (deleteCancelBtn && deleteModal) {
+    deleteCancelBtn.addEventListener("click", () => {
+      deleteModal.classList.add("hidden");
+    });
+  }
+
+  if (deleteModal) {
+    deleteModal.addEventListener("click", (event) => {
+      if (event.target === deleteModal) {
+        deleteModal.classList.add("hidden");
+      }
+    });
+  }
+
+  if (deleteConfirmBtn) {
+    deleteConfirmBtn.addEventListener("click", handleDeletePostClick);
   }
 
   // Add event listener for back button
@@ -96,7 +152,8 @@ async function loadPostDetails(postId) {
     renderPost(post);
     // Store postId and username for like functionality
     document.querySelector(".post-detail").dataset.postId = postId;
-    document.querySelector(".post-detail").dataset.username = post.author.username;
+    document.querySelector(".post-detail").dataset.username =
+      post.author.username;
   } catch (error) {
     console.error("Error loading post:", error);
     const postDetail = document.querySelector(".post-detail");
@@ -120,33 +177,38 @@ function renderPost(post) {
   const likeCount = document.querySelector(".like-count");
   const likeBtn = document.querySelector(".like button img");
 
-    // Usar imagem padrão se não houver profilePictureUrl
-    if (post.author && post.author.profilePictureUrl) {
-      const fullProfileImageUrl = buildMediaUrl(post.author.profilePictureUrl);
-      if (fullProfileImageUrl) {
-        setBackgroundImageWithBearer(authorImg, fullProfileImageUrl, apiService.token);
-      } else {
-        authorImg.src = "../assets/profilePic.svg";
-      }
+  // Usar imagem padrão se não houver profilePictureUrl
+  if (post.author && post.author.profilePictureUrl) {
+    const fullProfileImageUrl = buildMediaUrl(post.author.profilePictureUrl);
+    if (fullProfileImageUrl) {
+      setBackgroundImageWithBearer(
+        authorImg,
+        fullProfileImageUrl,
+        apiService.token
+      );
+    } else {
+      authorImg.src = "../assets/profilePic.svg";
+    }
   } else {
     authorImg.src = "../assets/profilePic.svg"; // Imagem padrão
     authorImg.style.display = "block";
   }
 
   if (authorName)
-    authorName.textContent = (post.author && (post.author.name || post.author.username)) || "Usuário";
-  if (authorUsername) 
+    authorName.textContent =
+      (post.author && (post.author.name || post.author.username)) || "Usuário";
+  if (authorUsername)
     authorUsername.textContent = `@${(post.author && post.author.username) || "usuario"}`;
 
   // Atualizar conteudo do Post
-    if (post.imageUrl) {
-      const fullImageUrl = buildMediaUrl(post.imageUrl);
-      if (fullImageUrl) {
-        postImage.src = fullImageUrl;
-        postImage.style.display = "block";
-      } else {
-        postImage.style.display = "none";
-      }
+  if (post.imageUrl) {
+    const fullImageUrl = buildMediaUrl(post.imageUrl);
+    if (fullImageUrl) {
+      postImage.src = fullImageUrl;
+      postImage.style.display = "block";
+    } else {
+      postImage.style.display = "none";
+    }
   } else {
     postImage.style.display = "none";
   }
@@ -161,6 +223,40 @@ function renderPost(post) {
   } else {
     document.querySelector(".like button").classList.remove("liked");
     if (likeBtn) likeBtn.src = "../assets/img_Like1.svg";
+  }
+
+  try {
+    const stored = localStorage.getItem("userData");
+    const userData = stored ? JSON.parse(stored) : null;
+    const currentUsername = userData?.username?.toLowerCase();
+    const postUsername =
+      post.author && post.author.username ? post.author.username : null;
+
+    const optionsBtn = document.querySelector(".btn-delete");
+    const optionsMenu = document.querySelector(".post-options-menu");
+
+    if (
+      !currentUsername ||
+      !postUsername ||
+      currentUsername !== postUsername.toLowerCase()
+    ) {
+      if (optionsBtn) optionsBtn.style.display = "none";
+      if (optionsMenu) {
+        optionsMenu.classList.add("hidden");
+        optionsMenu.style.display = "";
+      }
+    } else {
+      if (optionsBtn) optionsBtn.style.display = "block";
+      if (optionsMenu) {
+        optionsMenu.classList.add("hidden");
+        optionsMenu.style.display = "";
+      }
+    }
+  } catch (e) {
+    console.warn(
+      "Não foi possível verificar o usuário logado para controle de exclusão.",
+      e
+    );
   }
 }
 
@@ -202,8 +298,11 @@ function buildMediaUrl(path) {
     return trimmedPath;
   }
 
-  const baseUrl = apiService?.baseURL || "https://20252-inti-production.up.railway.app";
-  const normalizedPath = trimmedPath.startsWith("/") ? trimmedPath : `/${trimmedPath}`;
+  const baseUrl =
+    apiService?.baseURL || "https://20252-inti-production.up.railway.app";
+  const normalizedPath = trimmedPath.startsWith("/")
+    ? trimmedPath
+    : `/${trimmedPath}`;
   const segments = normalizedPath.split("/").filter(Boolean);
   const isBareFilename = segments.length === 1;
   const finalPath = isBareFilename ? `/images/${segments[0]}` : normalizedPath;
@@ -233,16 +332,13 @@ async function handleLikeClick(event) {
 
     // Recarregar contagem de likes
     const likeCount = document.querySelector(".like-count");
-    const response = await fetch(
-      `${apiService.baseURL}/post/${postId}`,
-      {
-        method: "GET",
-        headers: {
-          Authorization: `Bearer ${apiService.token}`,
-          "Content-Type": "application/json",
-        },
-      }
-    );
+    const response = await fetch(`${apiService.baseURL}/post/${postId}`, {
+      method: "GET",
+      headers: {
+        Authorization: `Bearer ${apiService.token}`,
+        "Content-Type": "application/json",
+      },
+    });
     const post = await response.json();
     likeCount.textContent = `${post.likesCount || 0}`;
   } catch (error) {
@@ -253,10 +349,45 @@ async function handleLikeClick(event) {
   }
 }
 
+async function handleDeletePostClick(event) {
+  event.preventDefault();
+  event.stopPropagation();
+
+  const postDetailEl = document.querySelector(".post-detail");
+  const postId = postDetailEl?.dataset.postId;
+
+  if (!postId) {
+    console.error("Post ID não encontrado para exclusão.");
+    return;
+  }
+
+  try {
+    await apiService.deletePost(postId);
+
+    if (typeof toast !== "undefined") {
+      toast.success("Publicação excluída com sucesso.");
+    }
+
+    const deleteModal = document.getElementById("deleteModal");
+    if (deleteModal) {
+      deleteModal.classList.add("hidden");
+    }
+
+    window.history.back();
+  } catch (error) {
+    console.error("Erro ao excluir post:", error);
+    if (typeof toast !== "undefined") {
+      toast.error("Erro ao excluir publicação.");
+    } else {
+      alert("Erro ao excluir publicação.");
+    }
+  }
+}
+
 function handleProfileClick(event) {
   const postDetail = document.querySelector(".post-detail");
   const username = postDetail.dataset.username;
-  
+
   if (username) {
     window.location.href = `public-profile.html?username=${username}`;
   }

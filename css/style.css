@@ -15,10 +15,10 @@
   --accent: #a38bba;
 
   /*fontes */
-  --font-primary: 'Tilt Warp', sans-serif;
+  --font-primary: "Tilt Warp", sans-serif;
 
   /*fontes */
-  --font-primary: 'Tilt Warp', sans-serif;
+  --font-primary: "Tilt Warp", sans-serif;
 
   /* Tons neutros */
   --gray-50: #fafafa;
@@ -29,7 +29,6 @@
   --gray-500: #737373;
   --gray-600: #525252;
   --gray-900: #171717;
-
 
   /* Espaçamentos */
   --spacing-xs: 4px;
@@ -200,11 +199,9 @@ body.modal-open {
   position: relative;
 }
 
-
 .page-title p {
   padding-top: 5px;
 }
-
 
 .page-title img {
   width: 6vw;
@@ -213,7 +210,6 @@ body.modal-open {
   position: absolute;
   left: -8vw;
 }
-
 
 .dropdown {
   position: absolute;
@@ -558,7 +554,7 @@ body.modal-open {
   width: 100%;
   max-width: 320px;
   height: 100%;
-  margin: 0 auto 10%;
+  margin: 0 auto 20px;
   /* centraliza horizontalmente */
   display: flex;
   flex-direction: column;
@@ -571,6 +567,11 @@ body.modal-open {
   width: 100%;
   max-width: 100%;
   margin: 0;
+  padding-bottom: 70px;
+}
+
+.form-new-product button {
+  font-weight: bold;
 }
 
 /* Header simples com título centralizado */
@@ -597,16 +598,9 @@ body.modal-open {
   padding: 0;
 }
 
-.btn-voltar-header img {
-  width: 100%;
-  height: 100%;
-  object-fit: contain;
-}
-
-
 .header-new-product .page-title {
   font-family: "Libre Bodoni", serif;
-  font-weight: 700;
+  font-weight: bold;
   font-size: 32px;
   text-align: center;
 }
@@ -685,17 +679,40 @@ body.modal-open {
   flex: 1;
 }
 
+.input-with-icon {
+  position: relative;
+}
+
+.input-with-icon .input-field {
+  padding-right: 44px;
+}
+
 .input-field-icon {
   position: absolute;
   width: 20px;
   height: 20px;
-  top: 25%;
+  top: 50%;
   right: 19px;
+  transform: translateY(-50%);
   pointer-events: none;
 }
 
+.page-title-link {
+  text-decoration: none;
+}
 
+#date,
+#time {
+  font-size: 12px;
+}
 
+#date::placeholder,
+#time::placeholder {
+  font-size: 12px;
+  display: flex;
+  align-items: center;
+  padding-bottom: 20px;
+}
 
 /* ============================================
       NAVIGATION BAR
@@ -794,6 +811,10 @@ body.modal-open {
   align-items: flex-start;
   justify-content: center;
   padding: 0 5vw;
+  padding-top: 0;
+}
+
+.screen-container.auth-layout {
   padding-top: 12vh;
 }
 
@@ -994,6 +1015,24 @@ body.modal-open {
   width: 100%;
 }
 
+.input-with-icon {
+  position: relative;
+}
+
+.input-with-icon .input-field {
+  padding-right: 44px;
+}
+
+.input-field-icon {
+  position: absolute;
+  width: 20px;
+  height: 20px;
+  top: 50%;
+  right: 19px;
+  transform: translateY(-50%);
+  pointer-events: none;
+}
+
 .input-field {
   width: 100%;
   height: 7.5vh;
@@ -1052,7 +1091,6 @@ body.modal-open {
   justify-content: center;
   color: var(--primary);
 }
-
 
 .checkbox:checked {
   background-color: var(--primary);
@@ -1276,7 +1314,6 @@ body.modal-open {
       PRODUCTS DETAIL
       ============================================ */
 
-
 /* Header tweaks */
 .back-btn {
   background: none;
@@ -1418,8 +1455,6 @@ body.modal-open {
   background: white;
 }
 
-
-
 /* ============================================
    PÁGINA - NOVO PRODUTO / SERVIÇOS
    ============================================ */
@@ -1479,7 +1514,6 @@ body.modal-open {
   font-size: 32px;
   text-align: center;
 }
-
 
 /* área interna da tela de novo produto */
 .new-product-content {
@@ -1555,17 +1589,44 @@ body.modal-open {
   flex: 1;
 }
 
+.input-with-icon {
+  position: relative;
+}
+
+.input-with-icon .input-field {
+  padding-right: 44px;
+}
+
 .input-field-icon {
   position: absolute;
   width: 20px;
   height: 20px;
-  top: 25%;
+  top: 50%;
   right: 19px;
+  transform: translateY(-50%);
   pointer-events: none;
 }
 
+.page-title-link {
+  text-decoration: none;
+  font-weight: bold;
+}
 
+#description,
+#administrativeRegion,
+#referencePoint,
+#city,
+#state {
+  font-size: 16px;
+}
 
+#description::placeholder,
+#administrativeRegion::placeholder,
+#referencePoint::placeholder,
+#city::placeholder,
+#state::placeholder {
+  font-size: 16px;
+}
 
 /* ============================================
       RESPONSIVIDADE
@@ -1606,102 +1667,3 @@ body.modal-open {
 
 /*===========================
       LOGOUT
-=============================*/
-.screen-user {
-    position: relative; 
-}
-
-.logout-container {
-    position: absolute;
-    top: 0px;  
-    right: 20px;
-    z-index: 10;
-}
-
-.btn-icon-logout {
-    background: white;
-    border: none;
-    cursor: pointer;
-    padding: 8px;
-    transition: transform 0.2s ease;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-.btn-icon-logout img {
-    width:28px;
-    height: 28px;
-}
-
-.modal-logout-overlay {
-    display: none;
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(0, 0, 0, 0.6); 
-    z-index: 9999; 
-    justify-content: center;
-    align-items: center;
-}
-
-.modal-logout-overlay.active {
-    display: flex;
-}
-
-.modal-logout-content {
-    background: white;
-    padding: 24px;
-    border-radius: 16px;
-    width: 90%;
-    max-width: 320px;
-    text-align: center;
-    box-shadow: 0 4px 20px rgba(0,0,0,0.2);
-    font-family: "Tilt Warp", sans-serif;
-    animation: fadeIn 0.3s ease;
-}
-
-.modal-logout-content h3 {
-    color: #592e83;
-    margin-bottom: 10px;
-    font-family: "Tilt Warp", sans-serif;
-}
-
-.modal-logout-actions {
-    display: flex;
-    gap: 12px;
-    margin-top: 24px;
-    justify-content: center;
-}
-
-.btn-logout-cancel, 
-.btn-logout-confirm {
-    padding: 10px 20px;
-    border-radius: 8px;
-    border: none;
-    font-weight: bold;
-    cursor: pointer;
-    flex: 1;
-    font-family: "Tilt Warp", sans-serif;
-}
-
-.btn-logout-cancel {
-    background-color: #e5e5e5;
-    color: #333;
-}
-
-.btn-logout-confirm {
-    background-color: #592e83;
-    color: white;
-}
-
-.btn-logout-confirm:hover {
-    opacity: 0.9;
-}
-
-@keyframes fadeIn {
-    from { opacity: 0; transform: translateY(10px); }
-    to { opacity: 1; transform: translateY(0); }
-}
