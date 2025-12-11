@@ -1,15 +1,22 @@
 package br.mds.inti.controller;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.*;
 
 import br.mds.inti.model.dto.EventDetailResponse;
+import br.mds.inti.model.dto.EventListResponse;
+import br.mds.inti.model.dto.EventRequestDTO;
+import br.mds.inti.model.dto.EventResponseDTO;
 import br.mds.inti.model.dto.LocalAddress;
 import br.mds.inti.model.entity.Profile;
 import br.mds.inti.model.entity.pk.EventParticipantPK;
+import br.mds.inti.model.enums.ProfileType;
 import br.mds.inti.service.EventService;
 import java.math.BigDecimal;
 import java.time.Instant;
+import java.time.LocalDateTime;
+import java.util.List;
 import java.util.UUID;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
@@ -19,9 +26,11 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.web.server.ResponseStatusException;
 
 @ExtendWith(MockitoExtension.class)
 class EventControllerTest {
@@ -81,6 +90,47 @@ class EventControllerTest {
         verify(eventService).deleteInscription(expectedPk);
     }
 
+    @Test
+    void createEvent_withOrganizationProfile_shouldReturnCreatedResponse() throws Exception {
+        Profile organization = buildProfile(ProfileType.organization);
+        mockSecurityContext(organization);
+        EventRequestDTO request = buildEventRequest();
+        EventResponseDTO serviceResponse = new EventResponseDTO(UUID.randomUUID(), "Evento criado");
+        when(eventService.createEvent(organization, request)).thenReturn(serviceResponse);
+
+        ResponseEntity<EventResponseDTO> response = eventController.createEvent(request);
+
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.CREATED);
+        assertThat(response.getBody()).isEqualTo(serviceResponse);
+        verify(eventService).createEvent(organization, request);
+    }
+
+    @Test
+    void createEvent_withNonOrganizationProfile_shouldThrowForbidden() throws Exception {
+        Profile userProfile = buildProfile(ProfileType.user);
+        mockSecurityContext(userProfile);
+        EventRequestDTO request = buildEventRequest();
+
+        ResponseStatusException exception = assertThrows(ResponseStatusException.class,
+                () -> eventController.createEvent(request));
+
+        assertThat(exception.getStatusCode()).isEqualTo(HttpStatus.FORBIDDEN);
+        verify(eventService, never()).createEvent(any(Profile.class), any(EventRequestDTO.class));
+    }
+
+    @Test
+    void listEvents_shouldReturnServiceResponse() {
+        List<EventListResponse> serviceResponse = List.of(
+                new EventListResponse("Show", "/images/show.png", LocalDateTime.now(), UUID.randomUUID()));
+        when(eventService.getListEvent()).thenReturn(serviceResponse);
+
+        ResponseEntity<List<EventListResponse>> response = eventController.listEvents();
+
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+        assertThat(response.getBody()).isEqualTo(serviceResponse);
+        verify(eventService).getListEvent();
+    }
+
     private void mockSecurityContext(Object principal) {
         Authentication authentication = mock(Authentication.class);
         when(authentication.getPrincipal()).thenReturn(principal);
@@ -92,10 +142,31 @@ class EventControllerTest {
     }
 
     private Profile buildProfile() {
+        return buildProfile(ProfileType.user);
+    }
+
+    private Profile buildProfile(ProfileType type) {
         Profile profile = new Profile();
         profile.setId(UUID.randomUUID());
         profile.setUsername("testuser");
+        profile.setType(type);
         return profile;
+    }
+
+    private EventRequestDTO buildEventRequest() {
+        MockMultipartFile image = new MockMultipartFile("image", "banner.png", "image/png", "data".getBytes());
+        return new EventRequestDTO(
+                "Titulo",
+                Instant.now().plusSeconds(3600),
+                "Descricao",
+                image,
+                "Rua 1",
+                "Centro",
+                "Brasilia",
+                "DF",
+                "Perto",
+                BigDecimal.ONE,
+                BigDecimal.TEN);
     }
 
     private EventDetailResponse buildEventDetailResponse(UUID eventId, boolean registered) {

@@ -8,6 +8,9 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import br.mds.inti.model.dto.EventDetailResponse;
+import br.mds.inti.model.dto.EventListResponse;
+import br.mds.inti.model.dto.EventRequestDTO;
+import br.mds.inti.model.dto.EventResponseDTO;
 import br.mds.inti.model.dto.MyEvent;
 import br.mds.inti.model.entity.Event;
 import br.mds.inti.model.entity.Profile;
@@ -24,9 +27,11 @@ import java.util.Optional;
 import java.util.UUID;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.web.server.ResponseStatusException;
 
 @ExtendWith(MockitoExtension.class)
@@ -165,6 +170,54 @@ class EventServiceTest {
         verify(eventParticipantsRepository, never()).existsByEventIdAndProfileId(any(), any());
     }
 
+    @Test
+    void createEvent_withImage_shouldUploadAndPersist() throws Exception {
+        Profile profile = buildProfile();
+        EventRequestDTO request = buildEventRequest();
+        String blobName = "event-banner.png";
+        UUID generatedId = UUID.randomUUID();
+
+        when(blobService.uploadImage(profile.getId(), request.image())).thenReturn(blobName);
+        when(eventRepository.save(any(Event.class))).thenAnswer(invocation -> {
+            Event saved = invocation.getArgument(0);
+            saved.setId(generatedId);
+            return saved;
+        });
+
+        EventResponseDTO response = eventService.createEvent(profile, request);
+
+        assertThat(response.id()).isEqualTo(generatedId);
+        assertThat(response.message()).isEqualTo("Evento criado com sucesso");
+        verify(blobService).uploadImage(profile.getId(), request.image());
+
+        ArgumentCaptor<Event> captor = ArgumentCaptor.forClass(Event.class);
+        verify(eventRepository).save(captor.capture());
+        Event persisted = captor.getValue();
+        assertThat(persisted.getTitle()).isEqualTo(request.title());
+        assertThat(persisted.getDescription()).isEqualTo(request.description());
+        assertThat(persisted.getBlobName()).isEqualTo(blobName);
+        assertThat(persisted.getProfile()).isEqualTo(profile);
+        assertThat(persisted.getEventTime()).isEqualTo(request.eventTime());
+        assertThat(persisted.getFinishedAt()).isNotNull();
+    }
+
+    @Test
+    void getListEvent_shouldReturnOnlyActiveEventsWithMappedFields() {
+        Event active = buildEvent("Ativo", "banner.png", Instant.now().plus(1, ChronoUnit.DAYS));
+        Event inactive = buildEvent("Inativo", null, Instant.now().minus(2, ChronoUnit.DAYS));
+        inactive.setFinishedAt(Instant.now().minus(1, ChronoUnit.MINUTES));
+
+        when(eventRepository.findAll()).thenReturn(List.of(active, inactive));
+
+        List<EventListResponse> responses = eventService.getListEvent();
+
+        assertThat(responses).hasSize(1);
+        EventListResponse response = responses.get(0);
+        assertThat(response.title()).isEqualTo("Ativo");
+        assertThat(response.imageUrl()).isEqualTo("/images/banner.png");
+        assertThat(response.id()).isEqualTo(active.getId());
+    }
+
     private Profile buildProfile() {
         Profile profile = new Profile();
         profile.setId(UUID.randomUUID());
@@ -203,5 +256,21 @@ class EventServiceTest {
                 : eventTime.plus(15, ChronoUnit.MINUTES);
         event.setFinishedAt(finishedAt);
         return event;
+    }
+
+    private EventRequestDTO buildEventRequest() {
+        MockMultipartFile image = new MockMultipartFile("image", "banner.png", "image/png", "data".getBytes());
+        return new EventRequestDTO(
+                "Show",
+                Instant.now().plus(1, ChronoUnit.DAYS),
+                "Descricao",
+                image,
+                "Rua 1",
+                "Centro",
+                "Brasilia",
+                "DF",
+                "Perto",
+                BigDecimal.ONE,
+                BigDecimal.TEN);
     }
 }

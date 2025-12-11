@@ -145,6 +145,18 @@ class JwtServiceTest {
     }
 
     @Test
+    void generateToken_WithBlankEmail_ShouldThrowException() {
+        // Arrange
+        Profile profileWithBlankEmail = new Profile();
+        profileWithBlankEmail.setEmail("   ");
+
+        // Act & Assert
+        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class,
+                () -> jwtService.generateToken(profileWithBlankEmail));
+        assertEquals("Profile email must be defined to generate a JWT token", exception.getMessage());
+    }
+
+    @Test
     void validateToken_WithEmptyToken_ShouldThrowException() {
         // Arrange
         String emptyToken = "";
