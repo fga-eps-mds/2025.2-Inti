@@ -35,13 +35,13 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         }
 
         String token = header.substring(7);// pega token
-        String username = jwtService.validateToken(token);
+        String email = jwtService.validateToken(token);
 
-        if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {// se for email e n
-                                                                                                 // tiver
-                                                                                                 // autenticação em
-                                                                                                 // curso
-            var userdetails = userDetailsService.loadUserByUsername(username);// carrega user
+        if (email != null && SecurityContextHolder.getContext().getAuthentication() == null) {// se for email e n
+                                                                                              // tiver
+                                                                                              // autenticação em
+                                                                                              // curso
+            var userdetails = userDetailsService.loadUserByUsername(email);// carrega user
             var authToken = new UsernamePasswordAuthenticationToken(userdetails, null, userdetails.getAuthorities());// usuario
                                                                                                                      // autenticado
             SecurityContextHolder.getContext().setAuthentication(authToken);// informa qual o user autenticado na req
