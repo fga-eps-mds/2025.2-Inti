@@ -12,64 +12,134 @@
 - **PostgreSQL**: banco relacional para perfis, posts e eventos.
 - **Docker Compose**: orquestra os containers e garante rede interna compartilhada.
 
-### Pré-requisitos
+## 🎟️ Eventos (`/event`)
 
-- [Docker](https://www.docker.com/)
-- [Docker Compose](https://docs.docker.com/compose/)
+### POST `/event`
 
-### Passo a passo
+- **Autenticação:** JWT obrigatório; apenas perfis com `ProfileType.organization` podem criar.
+- **Content-Type:** `multipart/form-data` em `EventRequestDTO`.
+- **Campos principais:**
+  - `title` (string)
+  - `eventTime` (Instant ISO-8601)
+  - `description` (string)
+  - `image` (arquivo opcional)
+  - `streetAddress`, `administrativeRegion`, `city`, `state`, `referencePoint`
+  - `latitude`, `longitude` (BigDecimal)
+- **Resposta 201** (`EventResponseDTO`): inclui `id` do evento recém-criado.
 
-```bash
-git clone <URL_DO_REPOSITORIO>
-cd 2025.2-Inti
-docker compose up --build
+```json
+{
+  "id": "a0c33f9f-0f9e-4d9d-b111-2b13997f6a63",
+  "message": "Evento criado com sucesso"
+}
 ```
 
-- API disponível em `http://localhost:8080`
-- PostgreSQL disponível em `localhost:5432`
+### GET `/event/{eventid}`
 
-Para desligar os containers:
+- **Path params:** `eventid` (UUID).
+- **Autenticação:** opcional; quando informada, o backend indica se o usuário já está inscrito.
+- **Resposta 200** (`EventDetailResponse`): título, descrição, localização, horários e participantes.
 
-```bash
-docker compose down
+### GET `/event/my`
+
+- **Autenticação:** JWT obrigatório.
+- **Resposta 200** (`List<MyEvent>`): eventos criados pelo perfil autenticado.
+
+### POST `/event/{eventid}/attendees`
+
+- **Path params:** `eventid` (UUID).
+- **Autenticação:** JWT obrigatório.
+- **Resposta 200** (`EventParticipantResponse`): confirma a inscrição e devolve identificadores da relação.
+
+### DELETE `/event/{eventid}/attendees`
+
+- **Path params:** `eventid` (UUID).
+- **Autenticação:** JWT obrigatório.
+- **Resposta 204**: cancela a inscrição do usuário no evento.
+
+### GET `/event/lists`
+
+- **Autenticação:** não requer JWT (público).
+- **Resposta 200** (`List<EventListResponse>`): cartões com `title`, `imageUrl`, `data` e `id`.
+
+```json
+[
+  {
+    "title": "Feira da Engenharia",
+    "imageUrl": "/images/evento.png",
+    "data": "2025-12-01T18:00:00",
+    "id": "b3e8f6b5-3c18-4874-86be-16a6d2d58b35"
+  }
+]
 ```
 
-### Arquivos importantes
+### GET `/event/following`
 
-| Arquivo                | Função                                                |
-| ---------------------- | ----------------------------------------------------- |
-| `docker-compose.yml`   | Define serviços, volumes e variáveis de ambiente.     |
-| `Dockerfile`           | Build da imagem do backend (mvn clean package + JAR). |
-| `docker-entrypoint.sh` | Script de inicialização customizado.                  |
-| `src/`                 | Código-fonte (controllers, services, DTOs etc.).      |
-
-### Variáveis de ambiente úteis
-
-```ini
-JWT_SECRET=algum-segredo-muito-secreto
-AZURE_BLOB_CONNECTION_STRING=DefaultEndpointsProtocol=...;AccountKey=...
-AZURE_BLOB_CONTAINER=musa-container
-```
-
-Carregue-as antes de rodar localmente para que o Spring reconheça:
-
-```bash
-set -a
-. ./.env
-set +a
-mvn spring-boot:run
-```
+- **Autenticação:** JWT obrigatório; utiliza o grafo de follows para montar a lista.
+- **Resposta 200** (`List<EventFollowingDTO>`): eventos promovidos por perfis que o usuário segue.
 
 ---
 
-## 📘 Visão geral da API
+## 🏢 Organizações (`/org`)
 
-| Item                 | Valor                                               |
-| -------------------- | --------------------------------------------------- |
-| **Base URL (local)** | `http://localhost:8080`                             |
-| **Formatos aceitos** | JSON (default) e `multipart/form-data` para uploads |
-| **Autenticação**     | JWT (`Authorization: Bearer <token>`)               |
-| **Versionamento**    | Não há prefixo de versão; utilize a raiz `/`        |
+### GET `/org`
+
+- **Autenticação:** JWT obrigatório; o usuário logado precisa representar uma organização.
+- **Query params:** `page` e `size` controlam os posts paginados anexados à resposta.
+- **Resposta 200** (`ProfileResponse`): dados completos da organização autenticada.
+
+### GET `/org/{username}`
+
+- **Path params:** `username` (identificador público).
+- **Query params:** `page` e `size` (inteiros).
+- **Resposta 200** (`ProfileResponse`): visão pública de outra organização.
+
+### POST `/org`
+
+- **Autenticação:** JWT obrigatório.
+- **Content-Type:** `multipart/form-data` com campo `myImage` (arquivo obrigatório).
+- **Resposta 201**: confirma atualização da foto institucional.
+
+### PATCH `/org`
+
+- **Autenticação:** JWT obrigatório.
+- **Content-Type:** `multipart/form-data` mapeado para `UpdateUserRequest` (`name`, `username`, `phone`, `publicemail`, `userBio`, `profilePicture`).
+- **Resposta 201**: dados atualizados da organização.
+
+### POST `/org/{username}/follow`
+
+- **Path params:** `username` (organização a seguir).
+- **Autenticação:** JWT obrigatório.
+- **Resposta 200** (`FollowResponse`): confirma follow.
+
+### DELETE `/org/{username}/unfollow`
+
+- **Path params:** `username`.
+- **Autenticação:** JWT obrigatório.
+- **Resposta 200** (`FollowResponse`): confirma remoção do follow.
+
+---
+
+## 🔎 Busca (`/search`)
+
+### GET `/search/{username}`
+
+- **Path params:** `username` (string completa a ser buscada).
+- **Autenticação:** não requer JWT.
+- **Resposta 200** (`SearchProfile`): resumo com `id`, `username`, `name`, `profilePictureUrl` e indicador `isOrganization`.
+
+---
+
+## 🌐 Geocoding (`/geo`)
+
+### GET `/geo/reverse`
+
+- **Query params obrigatórios:** `lat` (double), `lng` (double).
+- **Query param opcional:** `lang` (locale, ex.: `pt-BR`). Se omitido, o backend usa o valor padrão configurado.
+- **Autenticação:** não requer JWT.
+- **Resposta 200**: JSON bruto do Nominatim (`format=jsonv2`), incluindo endereço e componentes derivados.
+
+---
 
 ### Convenções
 
@@ -94,27 +164,48 @@ mvn spring-boot:run
 
 ### Sumário rápido de endpoints
 
-| Domínio      | Método | Caminho                        | Resumo                                         |
-| ------------ | ------ | ------------------------------ | ---------------------------------------------- |
-| Autenticação | POST   | `/auth/register`               | Cria usuário e retorna JWT + dados do perfil.  |
-| Autenticação | POST   | `/auth/login`                  | Valida credenciais e retorna JWT.              |
-| Autenticação | GET    | `/auth`                        | Endpoint simples para testes (retorna string). |
-| Perfil       | GET    | `/profile/me`                  | Perfil do usuário autenticado (paginado).      |
-| Perfil       | GET    | `/profile/{username}`          | Perfil público com posts paginados.            |
-| Perfil       | POST   | `/profile/upload-me`           | Atualiza foto de perfil (multipart).           |
-| Perfil       | PATCH  | `/profile/update`              | Atualiza dados cadastrais (multipart).         |
-| Perfil       | POST   | `/profile/{username}/follow`   | Segue usuário.                                 |
-| Perfil       | DELETE | `/profile/{username}/unfollow` | Deixa de seguir usuário.                       |
-| Post         | POST   | `/post`                        | Cria post com imagem.                          |
-| Post         | DELETE | `/post/{postId}`               | Remove post (owner).                           |
-| Post         | GET    | `/post/{postId}`               | Detalhes completos do post.                    |
-| Post         | POST   | `/post/{postId}/like`          | Curte post.                                    |
-| Post         | DELETE | `/post/{postId}/like`          | Remove like.                                   |
-| Feed         | GET    | `/feed`                        | Feed personalizado paginado.                   |
-| Feed         | GET    | `/feed/organization`           | Mensagem de boas-vindas para organizações.     |
-| Imagens      | GET    | `/images/{blobName}`           | Baixa imagem direto do Blob Storage.           |
-| Eventos      | POST   | `/event`                       | Cria evento (apenas organizações).             |
-| Eventos      | GET    | `/event/lists`                 | Lista eventos publicados.                      |
+| Domínio      | Método | Caminho                              | Resumo                                                         |
+| ------------ | ------ | ------------------------------------ | -------------------------------------------------------------- |
+| Autenticação | POST   | `/auth/register`                     | Cria usuário e retorna `ProfileCreationResponse` + JWT.        |
+| Autenticação | POST   | `/auth/login`                        | Valida credenciais e retorna `LoginResponse` com token.        |
+| Autenticação | GET    | `/auth`                              | Endpoint simples para verificar se a API está de pé.           |
+| Perfil       | GET    | `/profile/me`                        | Perfil do usuário autenticado (query `page`/`size`).           |
+| Perfil       | GET    | `/profile/{username}`                | Perfil público incluindo posts (query `page`/`size`).          |
+| Perfil       | POST   | `/profile/upload-me`                 | Atualiza foto do perfil via multipart (`myImage`).             |
+| Perfil       | PATCH  | `/profile/update`                    | Atualiza dados cadastrais via multipart (`UpdateUserRequest`). |
+| Perfil       | POST   | `/profile/{username}/follow`         | Segue o perfil indicado.                                       |
+| Perfil       | DELETE | `/profile/{username}/unfollow`       | Remove follow do perfil indicado.                              |
+| Perfil       | GET    | `/profile/string/teste/organization` | Endpoint protegido para validar ROLE_ORGANIZATION.             |
+| Perfil       | GET    | `/profile/{profileId}/products`      | Lista produtos de um perfil (query `page`/`size`).             |
+| Organização  | GET    | `/org`                               | Perfil da organização autenticada (query `page`/`size`).       |
+| Organização  | GET    | `/org/{username}`                    | Perfil público de organização (query `page`/`size`).           |
+| Organização  | POST   | `/org`                               | Atualiza foto da organização (multipart `myImage`).            |
+| Organização  | PATCH  | `/org`                               | Atualiza dados via `UpdateUserRequest`.                        |
+| Organização  | POST   | `/org/{username}/follow`             | Segue organização.                                             |
+| Organização  | DELETE | `/org/{username}/unfollow`           | Remove follow de organização.                                  |
+| Post         | POST   | `/post`                              | Cria post com imagem + descrição.                              |
+| Post         | DELETE | `/post/{postId}`                     | Remove post do usuário logado.                                 |
+| Post         | GET    | `/post/{postId}`                     | Detalhes completos do post, incluindo curtidas.                |
+| Post         | POST   | `/post/{postId}/like`                | Cria like para o post.                                         |
+| Post         | DELETE | `/post/{postId}/like`                | Remove like existente.                                         |
+| Eventos      | POST   | `/event`                             | Cria evento (somente perfis organization).                     |
+| Eventos      | GET    | `/event/{eventid}`                   | Retorna detalhes completos do evento.                          |
+| Eventos      | GET    | `/event/my`                          | Lista eventos criados pelo usuário autenticado.                |
+| Eventos      | POST   | `/event/{eventid}/attendees`         | Inscreve o usuário em um evento.                               |
+| Eventos      | DELETE | `/event/{eventid}/attendees`         | Cancela a inscrição no evento.                                 |
+| Eventos      | GET    | `/event/lists`                       | Lista pública de eventos.                                      |
+| Eventos      | GET    | `/event/following`                   | Eventos promovidos por perfis que você segue.                  |
+| Feed         | GET    | `/feed`                              | Feed personalizado paginado para o usuário autenticado.        |
+| Feed         | GET    | `/feed/organization`                 | Mensagem/landing para organizações.                            |
+| Produtos     | POST   | `/products`                          | Cria produto (multipart + JWT).                                |
+| Produtos     | GET    | `/products`                          | Lista pública paginada de produtos.                            |
+| Produtos     | GET    | `/products/{id}`                     | Detalhes públicos de um produto.                               |
+| Produtos     | GET    | `/products/profile/{profileId}`      | Produtos públicos vinculados a um perfil.                      |
+| Produtos     | PUT    | `/products/{id}`                     | Atualiza produto do usuário autenticado.                       |
+| Produtos     | DELETE | `/products/{id}`                     | Remove produto do usuário autenticado.                         |
+| Imagens      | GET    | `/images/{blobName}`                 | Baixa a imagem original a partir do Blob Storage.              |
+| Busca        | GET    | `/search/{username}`                 | Busca perfil por username (público).                           |
+| Geocoding    | GET    | `/geo/reverse`                       | Proxy para Nominatim (lat/lng e idioma).                       |
 
 ---
 
@@ -169,10 +260,11 @@ mvn spring-boot:run
 
 ## 👤 Perfis & Social (`/profile`)
 
-Todos os endpoints abaixo **exigem JWT**.
+Cada endpoint abaixo indica se exige **JWT** ou se é público.
 
 ### GET `/profile/me`
 
+- **Autenticação:** JWT obrigatório.
 - **Query params obrigatórios**: `page`, `size` (inteiros).
 - **Resposta 200** (`ProfileResponse`):
 
@@ -200,23 +292,29 @@ Todos os endpoints abaixo **exigem JWT**.
 
 ### GET `/profile/{username}`
 
-- Mesmo payload acima, porém para o usuário solicitado.
+- **Autenticação:** público.
+- **Mesmos query params**: `page`, `size`.
+- **Resposta**: `ProfileResponse` para o usuário solicitado.
 
 ### POST `/profile/upload-me`
 
+- **Autenticação:** JWT obrigatório.
 - **Content-Type**: `multipart/form-data`
 - **Campo obrigatório**: `myImage` (arquivo).
 - **Resposta**: `201 Created` sem corpo.
 
 ### PATCH `/profile/update`
 
+- **Autenticação:** JWT obrigatório.
 - **Content-Type**: `multipart/form-data`
 - **Campos aceitos** (`UpdateUserRequest`): `name`, `username`, `phone`, `publicemail`, `userBio`, `profilePicture`.
 - **Resposta**: `201 Created` sem corpo.
 
 ### POST `/profile/{username}/follow`
 
-- Segue o usuário indicado.
+- **Path params**: `username` (string).
+- **Requer JWT**: usa o perfil autenticado do token.
+- Ação: segue o usuário indicado, atualizando a contagem de seguidores/seguidos.
 - **Resposta 200** (`FollowResponse`):
 
 ```json
@@ -225,13 +323,23 @@ Todos os endpoints abaixo **exigem JWT**.
 
 ### DELETE `/profile/{username}/unfollow`
 
-- Cancela o follow.
-- Resposta igual ao follow (mensagem).
+- **Path params**: `username` (string).
+- **Requer JWT**.
+- Remove o follow previamente criado.
+- **Resposta 200** (`FollowResponse`): retorna mensagem informando que o follow foi removido.
 
 ### GET `/profile/string/teste/organization`
 
-- Protegido com `@PreAuthorize("hasRole('ORGANIZATION')")`.
-- Retorna apenas `"teste"` (endpoint de diagnóstico).
+- **Autenticação**: exige JWT cujo perfil possua `ROLE_ORGANIZATION`.
+- Sem parâmetros.
+- **Resposta 200**: corpo de texto simples `"teste"`.
+
+### GET `/profile/{profileId}/products`
+
+- **Path params**: `profileId` (UUID do perfil desejado).
+- **Query params** (opcionais, default `page=0`, `size=10`): controlam a paginação.
+- **Resposta 200**: `Page<ProductSummaryDTO>` contendo lista paginada de produtos do perfil.
+- **Observações**: endpoint público; pode ser usado por perfis ou visitantes para listar produtos de artistas específicos.
 
 ---
 
@@ -348,6 +456,13 @@ Exemplo:
 curl http://localhost:8080/products/<PRODUCT_ID>
 ```
 
+### GET `/products/profile/{profileId}`
+
+- **Requer:** nenhum (público).
+- **Path params:** `profileId` (UUID do dono dos produtos).
+- **Resposta 200**: lista de `ProductResponseDTO` pertencentes ao perfil.
+- **Uso típico:** montar a vitrine de um artista específico em outra tela.
+
 ### PUT `/products/{id}`
 
 - **Requer:** JWT (somente o dono do produto pode editar).
@@ -405,6 +520,7 @@ Observações:
 
 ### GET `/feed`
 
+- **Autenticação**: JWT obrigatório; sem token a API responde `401`.
 - **Query params**: `page` (default 0), `size` (default 20).
 - **Resposta 200**: lista de itens do feed, cada um contendo metadados de classificação calculados no serviço.
 
@@ -427,7 +543,8 @@ Observações:
 
 ### GET `/feed/organization`
 
-- Retorna texto fixo: `"Bem-vindo à área exclusiva de organizações!"`.
+- **Autenticação**: não requer JWT.
+- **Resposta 200**: texto fixo `"Bem-vindo à área exclusiva de organizações!"`.
 
 ---
 
@@ -439,6 +556,29 @@ Observações:
 - **Content-Type:** `multipart/form-data` usando `EventRequestDTO`.
 - **Campos principais**: `title`, `eventTime` (ISO-8601), `description`, `image`, `streetAddress`, `administrativeRegion`, `city`, `state`, `referencePoint`, `latitude`, `longitude`.
 - **Resposta 201**:
+
+### GET `/event/{eventid}`
+
+- **Path params:** `eventid` (UUID do evento).
+- **Autenticação:** opcional; caso fornecida, o serviço adapta a resposta com informações específicas do usuário.
+- **Resposta 200** (`EventDetailResponse`): detalhes completos, participantes e status de inscrição.
+
+### GET `/event/my`
+
+- **Autenticação:** JWT obrigatório (usa o perfil autenticado para filtrar eventos criados por ele).
+- **Resposta 200** (`List<MyEvent>`): eventos de autoria do usuário, com metadados básicos (id, título, status).
+
+### POST `/event/{eventid}/attendees`
+
+- **Path params:** `eventid` (UUID).
+- **Autenticação:** JWT obrigatório.
+- **Resposta 200** (`EventParticipantResponse`): confirma a inscrição do perfil no evento.
+
+### DELETE `/event/{eventid}/attendees`
+
+- **Path params:** `eventid` (UUID).
+- **Autenticação:** JWT obrigatório.
+- **Resposta 204**: remove a inscrição do usuário naquele evento.
 
 ```json
 {
@@ -460,6 +600,11 @@ Observações:
     "id": "b3e8f6b5-3c18-4874-86be-16a6d2d58b35"
   }
 ]
+
+### GET `/event/following`
+
+- **Autenticação:** JWT obrigatório; utiliza o grafo de follow do usuário.
+- **Resposta 200** (`List<EventFollowingDTO>`): eventos promovidos por perfis que o usuário segue.
 ```
 
 ---
