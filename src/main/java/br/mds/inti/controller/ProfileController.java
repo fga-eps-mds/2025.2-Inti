@@ -1,9 +1,11 @@
 package br.mds.inti.controller;
 
 import java.io.IOException;
+import java.util.List;
 import java.util.UUID;
 
 import br.mds.inti.model.dto.ProductSummaryDTO;
+import br.mds.inti.model.dto.ProfileSearchResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -98,6 +100,14 @@ public class ProfileController {
 
         Page<ProductSummaryDTO> products = productService.getProfileProducts(profileId, pageable);
         return ResponseEntity.ok(products);
+    }
+
+    @GetMapping("/search")
+    public ResponseEntity<List<ProfileSearchResponse>> searchProfiles(
+            @RequestParam("query") String query,
+            @RequestParam(name = "limit", defaultValue = "5") Integer limit) {
+
+        return ResponseEntity.ok(profileService.searchProfiles(query, limit));
     }
 
 }

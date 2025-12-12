@@ -2,6 +2,7 @@ package br.mds.inti.service;
 
 import br.mds.inti.model.dto.PostResponse;
 import br.mds.inti.model.dto.ProfileResponse;
+import br.mds.inti.model.dto.ProfileSearchResponse;
 import br.mds.inti.model.dto.UpdateUserRequest;
 import br.mds.inti.model.entity.Follow;
 import br.mds.inti.model.entity.Profile;
@@ -20,6 +21,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.security.core.Authentication;
@@ -412,7 +414,6 @@ class ProfileServiceTest {
         when(securityContext.getAuthentication()).thenReturn(authentication);
         when(authentication.getPrincipal()).thenReturn(mockProfile);
         SecurityContextHolder.setContext(securityContext);
-
         UpdateUserRequest request = new UpdateUserRequest(null, "existingusername", null, null, null, null);
         when(profileRepository.findIfUsernameIsUsed("existingusername")).thenReturn(true);
 
@@ -420,6 +421,41 @@ class ProfileServiceTest {
         assertThrows(UsernameAlreadyExistsException.class, () -> profileService.updateUser(request));
         verify(profileRepository).findIfUsernameIsUsed("existingusername");
         verify(profileRepository, never()).save(any());
+    }
+
+    @Test
+    void searchProfiles_WhenQueryIsBlank_ShouldReturnEmptyList() {
+        List<ProfileSearchResponse> result = profileService.searchProfiles("   ", 5);
+
+        assertTrue(result.isEmpty());
+        verify(profileRepository, never()).findByUsernameContainingIgnoreCaseOrderByUsernameAsc(anyString(), any());
+    }
+
+    @Test
+    void searchProfiles_ShouldClampLimitAndMapProfiles() {
+        Profile first = new Profile();
+        first.setId(UUID.randomUUID());
+        first.setUsername("alice");
+        first.setProfilePictureUrl("alice.png");
+
+        Profile second = new Profile();
+        second.setId(UUID.randomUUID());
+        second.setUsername("alicia");
+        second.setProfilePictureUrl("alicia.png");
+
+        when(profileRepository.findByUsernameContainingIgnoreCaseOrderByUsernameAsc(eq("al"), any(Pageable.class)))
+                .thenReturn(List.of(first, second));
+        when(postService.generateImageUrl("alice.png")).thenReturn("/images/alice.png");
+        when(postService.generateImageUrl("alicia.png")).thenReturn("/images/alicia.png");
+
+        List<ProfileSearchResponse> result = profileService.searchProfiles("al", 50);
+
+        assertEquals(2, result.size());
+        assertEquals(first.getId(), result.get(0).id());
+        assertEquals("alice", result.get(0).username());
+        assertEquals("/images/alice.png", result.get(0).profilePictureUrl());
+        verify(profileRepository).findByUsernameContainingIgnoreCaseOrderByUsernameAsc(eq("al"),
+                argThat(pageable -> pageable.getPageSize() == 20 && pageable.getPageNumber() == 0));
     }
 
     @Test
