@@ -125,7 +125,7 @@ async function carregarFeed(page = 0, append = false) {
       post.dataset.postId = item.id; // Store post ID for like functionality
       const username = item.username || "Usuário";
 
-      // CRITICAL FIX: Use the liked status from backend
+      // Usa o status de curtida vindo do backend
       const isLiked = item.liked || false;
 
       post.innerHTML = `
@@ -138,7 +138,11 @@ async function carregarFeed(page = 0, append = false) {
           <p class="description">${item.description}</p>
           <div class="like">
             <button class="like-button" data-post-id="${item.id}" data-liked="${isLiked}">
-              <img src="../assets/img_Like1.svg" alt="">
+              <img src="${
+                isLiked
+                  ? "../assets/img_Like2.svg"
+                  : "../assets/img_Like1.svg"
+              }" alt="">
             </button>
             <p class="likes-count" data-post-id="${item.id}">${item.likes}</p>
           </div>
@@ -433,6 +437,13 @@ function updateLikeUI(postId, isLiked) {
 
   likeButtons.forEach((button) => {
     button.dataset.liked = isLiked ? "true" : "false";
+
+    const img = button.querySelector("img");
+    if (img) {
+      img.src = isLiked
+        ? "../assets/img_Like2.svg"
+        : "../assets/img_Like1.svg";
+    }
   });
 
   // Optimistically update count (optional, but good UX)
