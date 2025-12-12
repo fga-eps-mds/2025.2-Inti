@@ -1672,15 +1672,15 @@ body.modal-open {
 .logout-container {
   position: absolute;
   top: 0px;
-  right: 20px;
+  right: 0;
   z-index: 10;
 }
 
 .btn-icon-logout {
-  background: white;
+  background: none;
   border: none;
   cursor: pointer;
-  padding: 8px;
+  padding: 8px 0;
   transition: transform 0.2s ease;
   display: flex;
   align-items: center;
