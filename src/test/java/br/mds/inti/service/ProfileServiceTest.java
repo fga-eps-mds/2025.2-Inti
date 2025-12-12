@@ -125,6 +125,7 @@ class ProfileServiceTest {
         assertEquals(mockProfile.getBio(), result.bio());
         assertEquals(mockProfile.getFollowersCount(), result.followersCount());
         assertEquals(mockProfile.getFollowingCount(), result.followingCount());
+        assertEquals(mockPosts.getTotalElements(), result.totalPosts());
         assertEquals(2, result.posts().size());
     }
 
@@ -157,6 +158,7 @@ class ProfileServiceTest {
         assertEquals(mockProfile.getName(), result.name());
         assertEquals(mockProfile.getUsername(), result.username());
         assertEquals(Boolean.FALSE, result.isFollowing());
+        assertEquals(0L, result.totalPosts());
         verify(profileRepository).findByUsername(username);
     }
 
@@ -185,6 +187,7 @@ class ProfileServiceTest {
 
         // Assert
         assertTrue(result.isFollowing());
+        assertEquals(0L, result.totalPosts());
         verify(followRepository).findFollowRelationship(requester, mockProfile);
     }
 

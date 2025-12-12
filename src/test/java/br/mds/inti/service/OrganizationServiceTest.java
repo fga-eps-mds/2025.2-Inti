@@ -89,6 +89,7 @@ class OrganizationServiceTest {
         assertEquals("/images/http://example.com/logo.jpg", result.profile_picture_url());
         assertEquals(mockOrganization.getBio(), result.bio());
         assertEquals(mockOrganization.getFollowersCount(), result.followersCount());
+        assertEquals(mockPosts.getTotalElements(), result.totalPosts());
         assertEquals(1, result.posts().size());
     }
 
@@ -105,6 +106,7 @@ class OrganizationServiceTest {
         assertNotNull(result);
         assertEquals(mockOrganization.getName(), result.name());
         assertEquals(mockOrganization.getUsername(), result.username());
+        assertEquals(0L, result.totalPosts());
         verify(profileRepository).findByUsername(username);
     }
 

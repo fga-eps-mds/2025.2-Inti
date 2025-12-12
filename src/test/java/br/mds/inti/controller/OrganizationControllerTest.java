@@ -80,6 +80,7 @@ class OrganizationControllerTest {
                 "Org description",
                 100,
                 50,
+            0L,
                 Boolean.FALSE,
                 List.of());
 

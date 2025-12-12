@@ -54,6 +54,7 @@ class ProfileControllerTest {
                 "Test bio",
                 10,
                 5,
+            0L,
                 Boolean.FALSE,
                 List.of());
 
