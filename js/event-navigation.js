@@ -4,7 +4,9 @@
       return null;
     }
     const isInPagesDir = window.location.pathname.includes("/pages/");
-    const basePath = isInPagesDir ? "./event-detail.html" : "pages/event-detail.html";
+    const basePath = isInPagesDir
+      ? "./event-detail.html"
+      : "pages/event-detail.html";
     return `${basePath}?id=${encodeURIComponent(eventId)}`;
   }
 

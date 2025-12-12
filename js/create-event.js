@@ -8,7 +8,9 @@ document.addEventListener("DOMContentLoaded", () => {
   const timeInput = document.getElementById("time");
   const locationInput = document.getElementById("localizacao_autocomplete");
   const streetInput = document.getElementById("street_address");
-  const administrativeRegionInput = document.getElementById("administrativeRegion");
+  const administrativeRegionInput = document.getElementById(
+    "administrativeRegion"
+  );
   const referencePointInput = document.getElementById("referencePoint");
   const cityInput = document.getElementById("city");
   const stateInput = document.getElementById("state");
@@ -95,12 +97,17 @@ document.addEventListener("DOMContentLoaded", () => {
 
     const parsed = parseBrazilianDate(value);
     if (!parsed) {
-      if (showFeedback) notify("error", "Use o formato DD/MM/AAAA para a data.");
+      if (showFeedback)
+        notify("error", "Use o formato DD/MM/AAAA para a data.");
       return null;
     }
 
     if (isDateBeforeToday(parsed)) {
-      if (showFeedback) notify("error", "A data do evento não pode ser anterior à data de hoje.");
+      if (showFeedback)
+        notify(
+          "error",
+          "A data do evento não pode ser anterior à data de hoje."
+        );
       return null;
     }
 
@@ -195,7 +202,9 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 
     try {
-      const data = await apiService.request(`/geo/reverse?${params.toString()}`);
+      const data = await apiService.request(
+        `/geo/reverse?${params.toString()}`
+      );
       if (!data) return null;
       const address = data.address || {};
       const displayAddress = data.display_name;
@@ -321,17 +330,22 @@ document.addEventListener("DOMContentLoaded", () => {
     const state = stateInput.value.trim();
     const latitude = latitudeInput.value.trim();
     const longitude = longitudeInput.value.trim();
-    const streetAddress = streetInput.value.trim() || locationInput?.value.trim() || "";
+    const streetAddress =
+      streetInput.value.trim() || locationInput?.value.trim() || "";
     const dateValue = dateInput.value.trim();
     const parsedDate = parseBrazilianDate(dateValue);
     const validTimeValue = validateTimeField(false);
-    const eventTime = parsedDate && validTimeValue ? buildEventInstant(parsedDate, validTimeValue) : null;
+    const eventTime =
+      parsedDate && validTimeValue
+        ? buildEventInstant(parsedDate, validTimeValue)
+        : null;
 
     const missingFields = [];
     if (!title) missingFields.push("título");
     if (!description) missingFields.push("descrição");
     if (!parsedDate) missingFields.push("data no formato DD/MM/AAAA");
-    else if (isDateBeforeToday(parsedDate)) missingFields.push("data igual ou posterior a hoje");
+    else if (isDateBeforeToday(parsedDate))
+      missingFields.push("data igual ou posterior a hoje");
     if (!validTimeValue) missingFields.push("horário no formato HH:MM");
     if (!latitude || !longitude) missingFields.push("localização no mapa");
     if (!streetAddress) missingFields.push("endereço do evento");
