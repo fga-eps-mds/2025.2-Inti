@@ -48,12 +48,14 @@ public class ProfileService {
         if (auth != null && auth.getPrincipal() instanceof Profile) {
             Profile profile = (Profile) auth.getPrincipal();
 
-            Page<PostResponse> post = postService.getPostByIdProfile(profile.getId(), PageRequest.of(page, size));
+                Page<PostResponse> post = postService.getPostByIdProfile(profile.getId(), PageRequest.of(page, size));
+                long totalPosts = post.getTotalElements();
 
             return new ProfileResponse(profile.getId(), profile.getName(), profile.getUsername(),
                     profile.getPublicEmail(), profile.getPhone(),
                     postService.generateImageUrl(profile.getProfilePictureUrl()), profile.getBio(),
-                    profile.getFollowersCount(), profile.getFollowingCount(), Boolean.FALSE, post.getContent());
+                    profile.getFollowersCount(), profile.getFollowingCount(), totalPosts, Boolean.FALSE,
+                    post.getContent());
         }
         throw new RuntimeException("profile nao autenticado");
     }
@@ -63,6 +65,7 @@ public class ProfileService {
                 .orElseThrow(() -> new ProfileNotFoundException(username));
 
         Page<PostResponse> post = postService.getPostByIdProfile(publicProfile.getId(), PageRequest.of(page, size));
+        long totalPosts = post.getTotalElements();
 
         Boolean isFollowing = Boolean.FALSE;
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
@@ -74,9 +77,10 @@ public class ProfileService {
         }
 
         return new ProfileResponse(publicProfile.getId(), publicProfile.getName(), publicProfile.getUsername(),
-                publicProfile.getPublicEmail(), publicProfile.getPhone(),
-                postService.generateImageUrl(publicProfile.getProfilePictureUrl()), publicProfile.getBio(),
-                publicProfile.getFollowersCount(), publicProfile.getFollowingCount(), isFollowing, post.getContent());
+            publicProfile.getPublicEmail(), publicProfile.getPhone(),
+            postService.generateImageUrl(publicProfile.getProfilePictureUrl()), publicProfile.getBio(),
+            publicProfile.getFollowersCount(), publicProfile.getFollowingCount(), totalPosts, isFollowing,
+            post.getContent());
     }
 
     public Profile getProfile(String username) {
