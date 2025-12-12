@@ -110,7 +110,7 @@ function updateProfileUI(data) {
   const followersCount = document.querySelector(".followers-count");
   const followingCount = document.querySelector(".following-count");
 
-  if (postsCount) postsCount.textContent = data.posts ? data.posts.length : 0;
+  if (postsCount) postsCount.textContent = resolveTotalPosts(data);
   if (followersCount) followersCount.textContent = data.followersCount || 0;
   if (followingCount) followingCount.textContent = data.followingCount || 0;
 
@@ -207,6 +207,16 @@ async function setBackgroundImageWithBearer(element, imageUrl, token) {
 function getRandomColor() {
   const colors = ["#FF6B6B", "#4ECDC4", "#45B7D1", "#96CEB4", "#FFEAA7"];
   return colors[Math.floor(Math.random() * colors.length)];
+}
+
+function resolveTotalPosts(profile = {}) {
+  if (profile.totalPosts !== undefined && profile.totalPosts !== null) {
+    const total = Number(profile.totalPosts);
+    if (Number.isFinite(total) && total >= 0) {
+      return total;
+    }
+  }
+  return Array.isArray(profile.posts) ? profile.posts.length : 0;
 }
 
 // Logout function

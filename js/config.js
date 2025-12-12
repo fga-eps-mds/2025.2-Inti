@@ -124,6 +124,25 @@ class ApiService {
     return this.request(`/search/${username}`);
   }
 
+  async searchProfiles(query, limit = 5, signal) {
+    if (!query || typeof query !== "string") {
+      throw new Error("Termo de busca é obrigatório.");
+    }
+
+    const safeLimit = Number.isFinite(limit)
+      ? Math.min(Math.max(Math.floor(limit), 1), 20)
+      : 5;
+
+    const params = new URLSearchParams({
+      query: query.trim(),
+      limit: String(safeLimit),
+    });
+
+    return this.request(`/profile/search?${params.toString()}`, {
+      signal,
+    });
+  }
+
   async updateProfile(formData) {
     // For multipart/form-data, we don't set Content-Type header
     // Browser will set it with boundary automatically
