@@ -264,9 +264,7 @@ function updateProfileCounters(data) {
     } else if (label.classList.contains("profile-seguindo")) {
       numberElement.textContent = formatNumber(data.followingCount);
     } else if (label.classList.contains("profile-post")) {
-      numberElement.textContent = formatNumber(
-        data.posts ? data.posts.length : 0
-      );
+      numberElement.textContent = formatNumber(resolveTotalPosts(data));
     }
   });
 }
@@ -811,6 +809,16 @@ function getRandomColor() {
     "#98D8C8",
   ];
   return colors[Math.floor(Math.random() * colors.length)];
+}
+
+function resolveTotalPosts(profile = {}) {
+  if (profile.totalPosts !== undefined && profile.totalPosts !== null) {
+    const total = Number(profile.totalPosts);
+    if (Number.isFinite(total) && total >= 0) {
+      return total;
+    }
+  }
+  return Array.isArray(profile.posts) ? profile.posts.length : 0;
 }
 
 function formatNumber(num) {
