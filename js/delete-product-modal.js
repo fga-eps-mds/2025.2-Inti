@@ -202,37 +202,59 @@
       let currentUserId = null;
       let currentUsername = null;
 
-      // Tentar /auth/me
-      console.log("[DeleteModal] Tentando buscar usuário via /auth/me...");
-      let profileResponse = await fetch(`${baseUrl}/auth/me`, {
-        method: "GET",
-        headers: {
-          Authorization: `Bearer ${token}`,
-          "Content-Type": "application/json",
-        },
-      }).catch((e) => {
-        console.log("[DeleteModal] Erro na requisição /auth/me:", e);
-        return null;
-      });
+      const storedUser = getStoredUserData();
+      if (storedUser) {
+        currentUserId =
+          storedUser.id ||
+          storedUser.profileId ||
+          storedUser.userId ||
+          storedUser.profile_id ||
+          currentUserId;
+        currentUsername =
+          storedUser.username ||
+          storedUser.userName ||
+          storedUser.user ||
+          currentUsername;
+        console.log("[DeleteModal] Usuário local:", {
+          storedId: currentUserId,
+          storedUsername: currentUsername,
+        });
+      }
 
-      if (profileResponse && profileResponse.ok) {
-        try {
-          const currentUser = await profileResponse.json();
-          currentUserId = currentUser.id || currentUser.profileId;
-          currentUsername = currentUser.username;
-          console.log(
-            "[DeleteModal] Usuário encontrado via /auth/me, ID:",
-            currentUserId,
-            "Username:",
-            currentUsername
-          );
-        } catch (e) {
-          console.log("[DeleteModal] Erro ao parsear /auth/me:", e);
+      // Tentar /auth/me
+      let profileResponse = null;
+      if (!currentUserId || !currentUsername) {
+        console.log("[DeleteModal] Tentando buscar usuário via /auth/me...");
+        profileResponse = await fetch(`${baseUrl}/auth/me`, {
+          method: "GET",
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+        }).catch((e) => {
+          console.log("[DeleteModal] Erro na requisição /auth/me:", e);
+          return null;
+        });
+
+        if (profileResponse && profileResponse.ok) {
+          try {
+            const currentUser = await profileResponse.json();
+            currentUserId = currentUser.id || currentUser.profileId;
+            currentUsername = currentUser.username;
+            console.log(
+              "[DeleteModal] Usuário encontrado via /auth/me, ID:",
+              currentUserId,
+              "Username:",
+              currentUsername
+            );
+          } catch (e) {
+            console.log("[DeleteModal] Erro ao parsear /auth/me:", e);
+          }
         }
       }
 
       // Se não encontrou via /auth/me, tenta /profile
-      if (!currentUserId) {
+      if (!currentUserId || !currentUsername) {
         console.log("[DeleteModal] Tentando buscar usuário via /profile...");
         profileResponse = await fetch(`${baseUrl}/profile`, {
           method: "GET",
@@ -406,6 +428,16 @@
       return JSON.parse(jsonPayload);
     } catch (error) {
       throw new Error("Erro ao decodificar JWT: " + error.message);
+    }
+  }
+
+  function getStoredUserData() {
+    try {
+      const raw = localStorage.getItem("userData");
+      return raw ? JSON.parse(raw) : null;
+    } catch (error) {
+      console.warn("[DeleteModal] Erro ao ler userData local:", error);
+      return null;
     }
   }
 
