@@ -3,6 +3,7 @@ package br.mds.inti.service;
 import java.io.IOException;
 import java.time.Instant;
 import java.util.Arrays;
+import java.util.List;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,13 +18,14 @@ import org.springframework.web.server.ResponseStatusException;
 
 import br.mds.inti.model.dto.PostResponse;
 import br.mds.inti.model.dto.ProfileResponse;
+import br.mds.inti.model.dto.ProfileSearchResponse;
 import br.mds.inti.model.dto.UpdateUserRequest;
 import br.mds.inti.model.entity.Profile;
 import br.mds.inti.repositories.FollowRepository;
 import br.mds.inti.repositories.ProfileRepository;
-import br.mds.inti.service.exception.UsernameAlreadyExistsException;
 import br.mds.inti.service.exception.ImageNotFoundException;
 import br.mds.inti.service.exception.ProfileNotFoundException;
+import br.mds.inti.service.exception.UsernameAlreadyExistsException;
 
 @Service
 public class ProfileService {
@@ -169,5 +171,22 @@ public class ProfileService {
         String blobName = blobService.uploadImage(profile.getId(), img);
         profile.setProfilePictureUrl(blobName);
         profileRepository.save(profile);
+    }
+
+    public List<ProfileSearchResponse> searchProfiles(String query, int limit) {
+        if (query == null || query.isBlank()) {
+            return List.of();
+        }
+
+        int sanitizedLimit = Math.min(Math.max(limit, 1), 20);
+        List<Profile> profiles = profileRepository
+                .findByUsernameContainingIgnoreCaseOrderByUsernameAsc(query, PageRequest.of(0, sanitizedLimit));
+
+        return profiles.stream()
+                .map(profile -> new ProfileSearchResponse(
+                        profile.getId(),
+                        profile.getUsername(),
+                        postService.generateImageUrl(profile.getProfilePictureUrl())))
+                .toList();
     }
 }

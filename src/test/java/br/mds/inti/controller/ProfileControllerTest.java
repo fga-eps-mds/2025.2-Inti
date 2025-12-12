@@ -2,6 +2,7 @@ package br.mds.inti.controller;
 
 import br.mds.inti.model.dto.FollowResponse;
 import br.mds.inti.model.dto.ProfileResponse;
+import br.mds.inti.model.dto.ProfileSearchResponse;
 import br.mds.inti.model.dto.UpdateUserRequest;
 import br.mds.inti.service.FollowService;
 import br.mds.inti.service.ProfileService;
@@ -253,5 +254,18 @@ class ProfileControllerTest {
         assertNotNull(response);
         assertEquals(HttpStatus.CREATED, response.getStatusCode());
         verify(profileService).updateUser(updateRequest);
+    }
+
+    @Test
+    void searchProfiles_ShouldReturnServiceResult() {
+        List<ProfileSearchResponse> suggestions = List.of(
+                new ProfileSearchResponse(UUID.randomUUID(), "alice", "/images/alice.png"));
+        when(profileService.searchProfiles("al", 5)).thenReturn(suggestions);
+
+        ResponseEntity<List<ProfileSearchResponse>> response = profileController.searchProfiles("al", 5);
+
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        assertEquals(suggestions, response.getBody());
+        verify(profileService).searchProfiles("al", 5);
     }
 }
