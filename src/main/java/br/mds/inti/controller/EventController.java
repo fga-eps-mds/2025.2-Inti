@@ -88,13 +88,25 @@ public class EventController {
         return ResponseEntity.ok().body(list);
     }
 
-   @GetMapping("/following")
-   public ResponseEntity<EventFollowingAttendeesDTO> getEventsFromFollowing(@RequestParam("eventId") UUID eventId) {
-       Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-       Profile profile = (Profile) authentication.getPrincipal();
+    @GetMapping("/following")
+    public ResponseEntity<EventFollowingAttendeesDTO> getEventsFromFollowing(@RequestParam("eventId") UUID eventId) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        Profile profile = (Profile) authentication.getPrincipal();
 
-       List<FollowingAttendeeDTO> events = eventService.getEventsFromFollowing(profile, eventId);
-       return ResponseEntity.ok(new EventFollowingAttendeesDTO(events));
-   }
+        List<FollowingAttendeeDTO> events = eventService.getEventsFromFollowing(profile, eventId);
+        return ResponseEntity.ok(new EventFollowingAttendeesDTO(events));
+    }
+
+    @DeleteMapping
+    public ResponseEntity<Void> deleteAllEvents() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        Profile profile = (Profile) authentication.getPrincipal();
+
+        if (profile.getType() != ProfileType.organization)
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "User type is not an organization");
+
+        eventService.deleteAllEvents();
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+    }
 
 }

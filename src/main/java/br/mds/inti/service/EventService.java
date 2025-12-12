@@ -15,6 +15,7 @@ import jakarta.validation.constraints.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.io.IOException;
@@ -97,6 +98,7 @@ public class EventService {
     }
 
     private EventDetailResponse convertToDetailResponse(Event event, boolean registered) {
+        Profile organizer = event.getProfile();
         return new EventDetailResponse(
                 event.getId(),
                 event.getTitle(),
@@ -108,7 +110,10 @@ public class EventService {
                 event.getLatitude(),
                 event.getLongitude(),
                 event.getFinishedAt(),
-                registered);
+                registered,
+                organizer != null ? organizer.getId() : null,
+                organizer != null ? organizer.getUsername() : null,
+                organizer != null ? organizer.getProfilePictureUrl() : null);
     }
 
     public EventParticipantResponse eventInscription(UUID eventid, Profile profile) {
@@ -163,12 +168,39 @@ public class EventService {
     }
 
     public List<FollowingAttendeeDTO> getEventsFromFollowing(Profile profile, UUID eventId) {
-        Optional<List<FollowingAttendeeDTO>> followedByProfile = profileRepository.findFriendsGoingToEvent(eventId, profile.getId());
+        Optional<List<FollowingAttendeeDTO>> followedByProfile = profileRepository.findFriendsGoingToEvent(eventId,
+                profile.getId());
         if (followedByProfile.isEmpty() || followedByProfile.get().isEmpty()) {
             return List.of();
         }
 
         return followedByProfile.get();
+    }
+
+    @Transactional
+    public void deleteAllEvents() {
+        List<Event> events = eventRepository.findAll();
+        if (events.isEmpty()) {
+            return;
+        }
+
+        events.stream()
+                .map(Event::getBlobName)
+                .filter(blobName -> blobName != null && !blobName.isBlank())
+                .forEach(this::deleteBlobSafely);
+
+        eventParticipantsRepository.deleteAllInBatch();
+        eventRepository.deleteAllInBatch();
+    }
+
+    private void deleteBlobSafely(String blobName) {
+        try {
+            blobService.deleteImage(blobName);
+        } catch (ResponseStatusException ex) {
+            if (!HttpStatus.NOT_FOUND.equals(ex.getStatusCode())) {
+                throw ex;
+            }
+        }
     }
 
     private boolean isEventActive(Event event) {
