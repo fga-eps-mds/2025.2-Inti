@@ -538,7 +538,12 @@ function extractProfileIdFromObject(entity) {
     return candidates;
   }
 
-  const relationships = [entity.profile, entity.user, entity.owner, entity.author];
+  const relationships = [
+    entity.profile,
+    entity.user,
+    entity.owner,
+    entity.author,
+  ];
   for (const relation of relationships) {
     const relationCandidate = extractExplicitProfileId(relation);
     if (relationCandidate) {
