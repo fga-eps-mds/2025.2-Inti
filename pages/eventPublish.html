@@ -81,7 +81,7 @@
         padding: var(--spacing-md) var(--spacing-lg);
         display: flex;
         align-items: center;
-        justify-content: center; /* <- centraliza o conteúdo */
+        justify-content: space-between;
         gap: var(--spacing-md);
       }
 
@@ -97,21 +97,18 @@
         font-weight: 700;
         color: var(--primary);
         letter-spacing: 0.5px;
-        padding-top: 2px;
       }
 
       .back-btn {
         border: none;
         background-color: transparent;
         cursor: pointer;
+        padding: var(--spacing-sm);
         display: flex;
         align-items: center;
         justify-content: center;
         transition: opacity 0.2s;
-        min-width: 20px;
-        padding-left: 0;       
-        position: absolute;    
-        left: 20px;             
+        min-width: 40px;
       }
 
       .back-btn img {
@@ -122,8 +119,10 @@
 
       .header-content {
         display: flex;
-        justify-content: center;
-        flex: 1;
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: center;
+        gap: 49px;
       }
 
       .event-content {
@@ -357,6 +356,10 @@
           padding: var(--spacing-sm);
         }
 
+        .page-title {
+          font-size: 20px;
+        }
+
         .logo-icon {
           width: 32px;
           height: 32px;
@@ -479,8 +482,10 @@
           <img src="../assets/Seta Select.svg" alt="Voltar" />
         </a>
         <div class="header-content">
+          <img class="logo-icon" src="../assets/MUSA-M.svg" alt="Logo MUSA" />
           <h1 class="page-title">Publicação</h1>
         </div>
+        <div class="header-spacer"></div>
       </header>
 
       <div class="event-content">
@@ -490,11 +495,12 @@
         </div>
 
         <div class="event-img-description">
-          <img src="" alt="Imagem do evento" />
+          <img src="../assets/event-img.png" alt="Imagem do evento" />
         </div>
 
         <p class="description">
-          
+          Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
+          eiusmod tempor incididunt ut labore et dolore magna aliqua.
         </p>
 
         <div class="event-description">
@@ -505,10 +511,10 @@
             <p>Local</p>
           </div>
           <div class="info-complement">
-            <p></p>
-            <p></p>
-            <p></p>
-            <p></p>
+            <p>5 de out de 2025</p>
+            <p>06:12 pm</p>
+            <p>R$ 0</p>
+            <p>Teatro ICC Sul</p>
           </div>
         </div>
 

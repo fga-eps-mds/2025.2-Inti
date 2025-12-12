@@ -1,638 +1,702 @@
 <!doctype html>
 <html lang="pt-BR">
-
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <link
-    href="https://fonts.googleapis.com/css2?family=Maitree:wght@300;400;500;600&family=Libre+Bodoni:wght@400;700&display=swap"
-    rel="stylesheet" />
-  <link rel="stylesheet" href="../css/style.css" />
-  <link rel="icon" type="image/png" href="../assets/MUSA-M.svg" />
-  <title>HH UnB - Evento</title>
-  <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
-
-    :root {
-      /* Cores principais */
-      --primary: #592e83;
-      --primary-light: #7a4fa3;
-      --primary-lighter: #f2ebfb;
-      --accent: #a38bba;
-
-      /* Tons neutros */
-      --gray-50: #fafafa;
-      --gray-100: #f5f5f5;
-      --gray-200: #e5e5e5;
-      --gray-300: #d4d4d4;
-      --gray-400: #a3a3a3;
-      --gray-500: #737373;
-      --gray-600: #525252;
-      --gray-900: #171717;
-
-      /* Espaçamentos */
-      --spacing-xs: 4px;
-      --spacing-sm: 8px;
-      --spacing-md: 16px;
-      --spacing-lg: 24px;
-      --spacing-xl: 32px;
-
-      /* Bordas */
-      --radius-sm: 8px;
-      --radius-md: 12px;
-      --radius-lg: 16px;
-      --radius-full: 9999px;
-
-      /* Sombras */
-      --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
-      --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
-      --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
-    }
-
-    body {
-      font-family: "Maitree", serif;
-      background: var(--gray-50);
-      color: var(--gray-900);
-      line-height: 1.6;
-      -webkit-font-smoothing: antialiased;
-      -moz-osx-font-smoothing: grayscale;
-    }
-
-    body.modal-open {
-      overflow: hidden;
-    }
-
-    .action-modal {
-      position: fixed;
-      inset: 0;
-      display: none;
-      align-items: flex-end;
-      justify-content: center;
-      background: rgba(0, 0, 0, 0.45);
-      backdrop-filter: blur(4px);
-      z-index: 2000;
-    }
-
-    .action-modal[aria-hidden="false"] {
-      display: flex;
-    }
-
-    .action-modal .modal-content {
-      width: 92%;
-      max-width: 400px;
-      background: #fff;
-      border-radius: 20px 20px 0 0;
-      padding: 25px;
-      margin: 0 auto;
-      box-shadow: 0 -3px 20px rgba(0, 0, 0, 0.22);
-      animation: modal-slide-up 0.28s ease-out;
-    }
-
-    .action-modal .close-modal {
-      background: none;
-      border: none;
-      font-size: 30px;
-      cursor: pointer;
-      float: right;
-      color: #6b6b6b;
-    }
-
-    .action-modal .modal-title {
-      margin: 10px 0 20px;
-      font-size: 20px;
-      text-align: center;
-      font-weight: 600;
-      font-family: "Quicksand", sans-serif;
-    }
-
-    .action-modal .modal-item {
-      width: 100%;
-      padding: 13px;
-      margin: 10px 0;
-      border: none;
-      background: #f1f1f1;
-      border-radius: 14px;
-      font-size: 16px;
-      cursor: pointer;
-      transition: background 0.2s ease;
-      font-family: "Quicksand", sans-serif;
-    }
-
-    .action-modal .modal-item:hover,
-    .action-modal .modal-item:focus-visible {
-      background: #e2e2e2;
-      outline: none;
-    }
-
-    @keyframes modal-slide-up {
-      from {
-        transform: translateY(80px);
-        opacity: 0;
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Maitree:wght@300;400;500;600&family=Libre+Bodoni:wght@400;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="../css/style.css" />
+    <link rel="icon" type="image/png" href="../assets/MUSA-M.svg" />
+    <title>HH UnB - Evento</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
       }
 
-      to {
-        transform: translateY(0);
-        opacity: 1;
-      }
-    }
+      :root {
+        /* Cores principais */
+        --primary: #592e83;
+        --primary-light: #7a4fa3;
+        --primary-lighter: #f2ebfb;
+        --accent: #a38bba;
 
-    .event-publish-screen {
-      width: 100%;
-      max-width: 100%;
-      min-height: 100vh;
-      background: white;
-      margin: 0 auto;
-      padding-bottom: 80px;
-      box-shadow: var(--shadow-lg);
-    }
+        /* Tons neutros */
+        --gray-50: #fafafa;
+        --gray-100: #f5f5f5;
+        --gray-200: #e5e5e5;
+        --gray-300: #d4d4d4;
+        --gray-400: #a3a3a3;
+        --gray-500: #737373;
+        --gray-600: #525252;
+        --gray-900: #171717;
 
-    .header-event-publish {
-      position: sticky;
-      top: 0;
-      z-index: 100;
-      background: white;
-      border-bottom: 1px solid var(--gray-200);
-      padding: var(--spacing-md) var(--spacing-lg);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: var(--spacing-md);
-      position: relative;
-    }
+        /* Espaçamentos */
+        --spacing-xs: 4px;
+        --spacing-sm: 8px;
+        --spacing-md: 16px;
+        --spacing-lg: 24px;
+        --spacing-xl: 32px;
 
-    .logo-icon {
-      width: 60px;
-      height: 60px;
-      object-fit: contain;
-    }
+        /* Bordas */
+        --radius-sm: 8px;
+        --radius-md: 12px;
+        --radius-lg: 16px;
+        --radius-full: 9999px;
 
-    .page-title {
-      font-family: "Libre Bodoni", serif;
-      font-size: clamp(28px, 5vw, 36px);
-      font-weight: bold;
-      color: var(--primary);
-      letter-spacing: 0.5px;
-      padding-top: 8px;
-    }
-
-    .back-btn {
-      border: none;
-      background-color: transparent;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      transition: opacity 0.2s;
-      min-width: 20px;
-      position: absolute;
-      left: 20px;
-      top: 50%;
-      transform: translateY(-50%);
-    }
-
-    .back-btn img {
-      width: 20px;
-      height: 20px;
-      object-fit: contain;
-    }
-
-    .header-content {
-      display: flex;
-      flex-direction: row;
-      justify-content: space-between;
-      align-items: center;
-      gap: 49px;
-    }
-
-    .event-content {
-      padding: var(--spacing-lg);
-      max-width: 1200px;
-      margin: 0 auto;
-    }
-
-    /*-----body-----*/
-
-    .event-name {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      margin-bottom: var(--spacing-md);
-      flex-wrap: wrap;
-      padding: 10px 15px 0;
-    }
-
-    .name-event {
-      font-family: "Libre Bodoni", serif;
-      font-size: clamp(20px, 4vw, 24px);
-      color: var(--primary);
-      font-weight: 600;
-    }
-
-    .org-info {
-      display: flex;
-      align-items: center;
-      gap: var(--spacing-sm);
-    }
-
-    .org-avatar {
-      width: 48px;
-      height: 48px;
-      border-radius: 50%;
-      background: var(--gray-200);
-      background-size: cover;
-      background-position: center;
-      flex-shrink: 0;
-    }
-
-    .org-details {
-      display: flex;
-      flex-direction: column;
-      gap: 2px;
-      min-width: 0;
-    }
-
-    .org-name {
-      font-weight: 600;
-      color: var(--gray-900);
-      line-height: 1.2;
-    }
-
-    .org-username {
-      font-size: 0.85rem;
-      color: var(--gray-600);
-      line-height: 1.2;
-    }
-
-    .org-username:empty {
-      display: none;
-    }
-
-    .org-link {
-      cursor: pointer;
-    }
-
-    .org-link:focus-visible {
-      outline: 2px solid var(--primary);
-      outline-offset: 2px;
-    }
-
-    .event-img-description {
-      margin-bottom: var(--spacing-lg);
-      display: flex;
-      justify-content: center;
-    }
-
-    .event-img-description img {
-      width: 350px;
-      height: 175px;
-      object-fit: cover;
-      border-radius: 16px;
-    }
-
-    .description {
-      text-align: left;
-      font-size: 16px;
-      padding: 0px 20px;
-    }
-
-    .event-description {
-      display: grid;
-      grid-template-columns: auto 1fr;
-      padding: 0px 20px;
-    }
-
-    .info p,
-    .info-complement p {
-      padding: var(--spacing-xs) 0;
-    }
-
-    .info {
-      color: var(--primary);
-      font-weight: 600;
-    }
-
-    .info-complement {
-      color: var(--gray-900);
-      text-align: right;
-    }
-
-    .map {
-      width: 100%;
-      height: 150px;
-      border-radius: var(--radius-md);
-      background: var(--gray-200);
-      overflow: hidden;
-      position: relative;
-    }
-
-    .map iframe {
-      border: 0;
-      width: 100%;
-      height: 100%;
-      position: absolute;
-      top: 0;
-      left: 0;
-      display: none;
-    }
-
-    .map-placeholder {
-      position: absolute;
-      inset: 0;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      color: var(--gray-600);
-      font-size: 0.95rem;
-      text-align: center;
-      padding: var(--spacing-sm);
-      pointer-events: none;
-    }
-
-    .friends-going {
-      margin-bottom: var(--spacing-xl);
-    }
-
-    .friends {
-      font-weight: 600;
-      color: var(--primary);
-      padding: 10px 20px 0;
-    }
-
-    .friends-icons {
-      display: flex;
-      gap: var(--spacing-sm);
-      margin-bottom: var(--spacing-sm);
-    }
-
-    /*-----botão-de-confirmação------*/
-
-    .button {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      padding: 0 var(--spacing-lg);
-    }
-
-    .cancelar {
-      background-color: #da525f;
-      color: var(--primary-lighter);
-      border: none;
-      border-radius: 16px;
-      height: 40px;
-      text-align: center;
-      padding: 10px 30px;
-      cursor: pointer;
-      transition: background-color 0.3s;
-    }
-
-    .confirm-attendance {
-      background-color: var(--primary-lighter);
-      color: var(--primary);
-      border: none;
-      border-radius: 16px;
-      height: 40px;
-      text-align: center;
-      padding: 10px 30px;
-      cursor: pointer;
-      transition: background-color 0.3s;
-      font-family: "Maitree", serif;
-      font-weight: bold;
-    }
-
-    @media (max-width: 768px) {
-      .header-event-publish {
-        padding: var(--spacing-sm) var(--spacing-md);
+        /* Sombras */
+        --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+        --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
       }
 
-      .logo-icon {
-        width: 36px;
-        height: 36px;
+      body {
+        font-family: "Maitree", serif;
+        background: var(--gray-50);
+        color: var(--gray-900);
+        line-height: 1.6;
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
       }
 
-      .event-content {
-        padding: var(--spacing-md);
+      body.modal-open {
+        overflow: hidden;
       }
 
-      .event-description {
-        gap: var(--spacing-sm) var(--spacing-md);
+      .action-modal {
+        position: fixed;
+        inset: 0;
+        display: none;
+        align-items: flex-end;
+        justify-content: center;
+        background: rgba(0, 0, 0, 0.45);
+        backdrop-filter: blur(4px);
+        z-index: 2000;
       }
 
-      .map {
-        height: 180px;
-      }
-    }
-
-    @media (max-width: 480px) {
-      .header-event-publish {
-        padding: var(--spacing-sm);
+      .action-modal[aria-hidden="false"] {
+        display: flex;
       }
 
-      .logo-icon {
-        width: 32px;
-        height: 32px;
+      .action-modal .modal-content {
+        width: 92%;
+        max-width: 400px;
+        background: #fff;
+        border-radius: 20px 20px 0 0;
+        padding: 25px;
+        margin: 0 auto;
+        box-shadow: 0 -3px 20px rgba(0, 0, 0, 0.22);
+        animation: modal-slide-up 0.28s ease-out;
       }
 
-      .event-content {
-        padding: var(--spacing-sm);
+      .action-modal .close-modal {
+        background: none;
+        border: none;
+        font-size: 30px;
+        cursor: pointer;
+        float: right;
+        color: #6b6b6b;
       }
 
-      .event-name {
-        gap: var(--spacing-sm);
+      .action-modal .modal-title {
+        margin: 10px 0 20px;
+        font-size: 20px;
+        text-align: center;
+        font-weight: 600;
+        font-family: "Quicksand", sans-serif;
       }
 
-      .event-name img {
-        width: 50px;
-        height: 50px;
+      .action-modal .modal-item {
+        width: 100%;
+        padding: 13px;
+        margin: 10px 0;
+        border: none;
+        background: #f1f1f1;
+        border-radius: 14px;
+        font-size: 16px;
+        cursor: pointer;
+        transition: background 0.2s ease;
+        font-family: "Quicksand", sans-serif;
       }
 
-      .event-description {
-        gap: var(--spacing-md);
-        padding: var(--spacing-md);
+      .action-modal .modal-item:hover,
+      .action-modal .modal-item:focus-visible {
+        background: #e2e2e2;
+        outline: none;
       }
 
-      .info-complement {
-        padding-left: var(--spacing-md);
+      @keyframes modal-slide-up {
+        from {
+          transform: translateY(80px);
+          opacity: 0;
+        }
+
+        to {
+          transform: translateY(0);
+          opacity: 1;
+        }
       }
 
-      .map {
-        height: 250px;
-      }
-    }
-
-    @media (max-width: 360px) {
-      .event-description {
-        font-size: 14px;
-      }
-
-      .description {
-        font-size: 14px;
-        padding: 0px 20px;
-      }
-
-      .confirm-attendance {
-        font-size: 14px;
-        padding: var(--spacing-sm) var(--spacing-md);
-      }
-    }
-
-    @media (max-width: 1200px) {
       .event-publish-screen {
+        width: 100%;
+        max-width: 100%;
+        min-height: 100vh;
+        background: white;
+        margin: 0 auto;
+        padding-bottom: 80px;
+        box-shadow: var(--shadow-lg);
+      }
+
+      .header-event-publish {
+        position: sticky;
+        top: 0;
+        z-index: 100;
+        background: white;
+        border-bottom: 1px solid var(--gray-200);
+        padding: var(--spacing-md) var(--spacing-lg);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: var(--spacing-md);
+        position: relative;
+      }
+
+      .logo-icon {
+        width: 60px;
+        height: 60px;
+        object-fit: contain;
+      }
+
+      .page-title {
+        font-family: "Libre Bodoni", serif;
+        font-size: clamp(28px, 5vw, 36px);
+        font-weight: bold;
+        color: var(--primary);
+        letter-spacing: 0.5px;
+        padding-top: 8px;
+      }
+
+      .back-btn {
+        border: none;
+        background-color: transparent;
+        cursor: pointer;
+        padding: var(--spacing-sm);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: opacity 0.2s;
+        min-width: 40px;
+        position: absolute;
+        left: 3vw;
+        top: 50%;
+        transform: translateY(-50%);
+      }
+
+      .back-btn img {
+        width: 20px;
+        height: 20px;
+        object-fit: contain;
+      }
+
+      .header-content {
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: center;
+        gap: 49px;
+      }
+
+      .event-content {
+        padding: var(--spacing-lg);
         max-width: 1200px;
         margin: 0 auto;
       }
-    }
 
-    /* Animações de notificação */
-    @keyframes slideIn {
-      from {
-        transform: translateX(400px);
-        opacity: 0;
+      /*-----body-----*/
+
+      .event-name {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: var(--spacing-md);
+        flex-wrap: wrap;
+        padding: 10px 15px 0;
       }
 
-      to {
-        transform: translateX(0);
-        opacity: 1;
-      }
-    }
-
-    @keyframes slideOut {
-      from {
-        transform: translateX(0);
-        opacity: 1;
+      .name-event {
+        font-family: "Libre Bodoni", serif;
+        font-size: clamp(20px, 4vw, 24px);
+        color: var(--primary);
+        font-weight: 600;
       }
 
-      to {
-        transform: translateX(400px);
-        opacity: 0;
+      .org-info {
+        display: flex;
+        align-items: center;
+        gap: var(--spacing-sm);
       }
-    }
 
-    .notification {
-      animation: slideIn 0.3s ease-out;
-    }
-  </style>
-</head>
+      .org-avatar {
+        width: 48px;
+        height: 48px;
+        border-radius: 50%;
+        background: var(--gray-200);
+        background-size: cover;
+        background-position: center;
+      }
 
-<body>
-  <div class="event-publish-screen">
-    <header class="header-event-publish">
-      <a class="back-btn" href="../pages/eventList.html">
-        <img src="../assets/Seta Select.svg" alt="Voltar" />
-      </a>
-      <div class="header-content">
-        <h1 class="page-title">Evento</h1>
-      </div>
-      <div class="header-spacer"></div>
-    </header>
+      .org-name {
+        font-weight: 600;
+        color: var(--gray-900);
+      }
 
-    <div class="event-content">
-      <div class="event-name">
-        <p class="name-event event-title">Carregando...</p>
-        <div class="org-info event-organization">
-          <div class="org-avatar" id="orgAvatar"></div>
-          <div class="org-details" id="orgDetails">
+      .event-img-description {
+        margin-bottom: var(--spacing-lg);
+        display: flex;
+        justify-content: center;
+      }
+
+      .event-img-description img {
+        width: 350px;
+        height: 175px;
+        object-fit: cover;
+        border-radius: 16px;
+      }
+
+      .description {
+        text-align: left;
+        font-size: 16px;
+        padding: 0px 20px;
+      }
+
+      .event-description {
+        display: grid;
+        grid-template-columns: auto 1fr;
+        padding: 0px 20px;
+      }
+
+      .info p,
+      .info-complement p {
+        padding: var(--spacing-xs) 0;
+      }
+
+      .info {
+        color: var(--primary);
+        font-weight: 600;
+      }
+
+      .info-complement {
+        color: var(--gray-900);
+        text-align: right;
+      }
+
+      .map {
+        width: 100%;
+        height: 150px;
+        border-radius: var(--radius-md);
+        background: var(--gray-200);
+        overflow: hidden;
+        position: relative;
+      }
+
+      .map iframe {
+        border: 0;
+        width: 100%;
+        height: 100%;
+        position: absolute;
+        top: 0;
+        left: 0;
+        display: none;
+      }
+
+      .map-placeholder {
+        position: absolute;
+        inset: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: var(--gray-600);
+        font-size: 0.95rem;
+        text-align: center;
+        padding: var(--spacing-sm);
+        pointer-events: none;
+      }
+
+      .friends-going {
+        margin-bottom: var(--spacing-xl);
+      }
+
+      .friends {
+        font-weight: 600;
+        color: var(--primary);
+        padding: 10px 20px 0;
+      }
+
+      .friends-icons {
+        display: flex;
+        gap: var(--spacing-sm);
+        margin-bottom: var(--spacing-sm);
+      }
+
+      /*-----botão-de-confirmação------*/
+
+      .button {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 0 var(--spacing-lg);
+      }
+
+      .cancelar {
+        background-color: #da525f;
+        color: var(--primary-lighter);
+        border: none;
+        border-radius: 16px;
+        height: 40px;
+        text-align: center;
+        padding: 10px 30px;
+        cursor: pointer;
+        transition: background-color 0.3s;
+      }
+
+      .confirm-attendance {
+        background-color: var(--primary-lighter);
+        color: var(--primary);
+        border: none;
+        border-radius: 16px;
+        height: 40px;
+        text-align: center;
+        padding: 10px 30px;
+        cursor: pointer;
+        transition: background-color 0.3s;
+        font-family: "Maitree", serif;
+        font-weight: bold;
+      }
+
+      @media (max-width: 768px) {
+        .header-event-publish {
+          padding: var(--spacing-sm) var(--spacing-md);
+        }
+
+        .logo-icon {
+          width: 36px;
+          height: 36px;
+        }
+
+        .event-content {
+          padding: var(--spacing-md);
+        }
+
+        .event-description {
+          gap: var(--spacing-sm) var(--spacing-md);
+        }
+
+        .map {
+          height: 180px;
+        }
+      }
+
+      @media (max-width: 480px) {
+        .header-event-publish {
+          padding: var(--spacing-sm);
+        }
+
+        .logo-icon {
+          width: 32px;
+          height: 32px;
+        }
+
+        .event-content {
+          padding: var(--spacing-sm);
+        }
+
+        .event-name {
+          gap: var(--spacing-sm);
+        }
+
+        .event-name img {
+          width: 50px;
+          height: 50px;
+        }
+
+        .event-description {
+          gap: var(--spacing-md);
+          padding: var(--spacing-md);
+        }
+
+        .info-complement {
+          padding-left: var(--spacing-md);
+        }
+
+        .map {
+          height: 250px;
+        }
+      }
+
+      @media (max-width: 360px) {
+        .event-description {
+          font-size: 14px;
+        }
+
+        .description {
+          font-size: 14px;
+          padding: 0px 20px;
+        }
+
+        .confirm-attendance {
+          font-size: 14px;
+          padding: var(--spacing-sm) var(--spacing-md);
+        }
+      }
+
+      @media (max-width: 1200px) {
+        .event-publish-screen {
+          max-width: 1200px;
+          margin: 0 auto;
+        }
+      }
+
+      /* Animações de notificação */
+      @keyframes slideIn {
+        from {
+          transform: translateX(400px);
+          opacity: 0;
+        }
+
+        to {
+          transform: translateX(0);
+          opacity: 1;
+        }
+      }
+
+      @keyframes slideOut {
+        from {
+          transform: translateX(0);
+          opacity: 1;
+        }
+
+        to {
+          transform: translateX(400px);
+          opacity: 0;
+        }
+      }
+
+      .notification {
+        animation: slideIn 0.3s ease-out;
+      }
+    </style>
+  </head>
+
+  <body>
+    <div class="event-publish-screen">
+      <header class="header-event-publish">
+        <a class="back-btn" href="../pages/eventList.html">
+          <img src="../assets/Seta Select.svg" alt="Voltar" />
+        </a>
+        <div class="header-content">
+          <h1 class="page-title">Evento</h1>
+        </div>
+        <div class="header-spacer"></div>
+      </header>
+
+      <div class="event-content">
+        <div class="event-name">
+          <p class="name-event event-title">Carregando...</p>
+          <div class="org-info event-organization">
+            <div class="org-avatar" id="orgAvatar"></div>
             <span class="org-name" id="orgName">Organização</span>
-            <span class="org-username" id="orgUsername"></span>
           </div>
         </div>
-      </div>
 
-      <div class="event-img-description">
-        <img id="eventImage" src="" alt="Imagem do evento" onerror="this.src = ''" />
-      </div>
-
-      <p class="description" id="eventDescription">
-        Buscando informações do evento...
-      </p>
-
-      <div class="event-description">
-        <div class="info">
-          <p>Data</p>
-          <p>Horário</p>
-          <p>Valor do ingresso</p>
-          <p>Local</p>
+        <div class="event-img-description">
+          <img
+            id="eventImage"
+            src="../assets/event-img.png"
+            alt="Imagem do evento"
+            onerror="this.src='../assets/event-img.png'"
+          />
         </div>
-        <div class="info-complement">
-          <p id="eventDate">--/--/----</p>
-          <p id="eventTime">--:--</p>
-          <p id="eventPrice">Não informado</p>
-          <p id="eventLocation">Local a definir</p>
+
+        <p class="description" id="eventDescription">
+          Buscando informações do evento...
+        </p>
+
+        <div class="event-description">
+          <div class="info">
+            <p>Data</p>
+            <p>Horário</p>
+            <p>Valor do ingresso</p>
+            <p>Local</p>
+          </div>
+          <div class="info-complement">
+            <p id="eventDate">--/--/----</p>
+            <p id="eventTime">--:--</p>
+            <p id="eventPrice">Não informado</p>
+            <p id="eventLocation">Local a definir</p>
+          </div>
+        </div>
+
+        <div class="map" id="map">
+          <iframe
+            id="eventMapFrame"
+            src=""
+            allowfullscreen
+            loading="lazy"
+            referrerpolicy="no-referrer-when-downgrade"
+          ></iframe>
+          <span class="map-placeholder" id="mapPlaceholder">Mapa do local</span>
+        </div>
+
+        <div class="friends-going">
+          <p class="friends">Amigos que vão</p>
+          <div class="friends-icons"></div>
+          <p class="friends-quantity"></p>
+        </div>
+
+        <div class="button">
+          <button
+            id="btn-confirm"
+            class="confirm-attendance"
+            onclick="confirmPresence()"
+          >
+            Confirmar Presença
+          </button>
         </div>
       </div>
 
-      <div class="map" id="map">
-        <iframe id="eventMapFrame" src="" allowfullscreen loading="lazy"
-          referrerpolicy="no-referrer-when-downgrade"></iframe>
-        <span class="map-placeholder" id="mapPlaceholder">Mapa do local</span>
-      </div>
-
-      <div class="friends-going">
-        <p class="friends">Amigos que vão</p>
-        <div class="friends-icons"></div>
-        <p class="friends-quantity"></p>
-      </div>
-
-      <div class="button">
-        <button id="btn-confirm" class="confirm-attendance" onclick="confirmPresence()">
-          Confirmar Presença
+      <!-- Navigation Bar -->
+      <nav class="navbar">
+        <button class="nav-btn" aria-label="Home">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+            <path
+              d="M3 9L12 2L21 9V20C21 20.5304 20.7893 21.0391 20.4142 21.4142C20.0391 21.7893 19.5304 22 19 22H5C4.46957 22 3.96086 21.7893 3.58579 21.4142C3.21071 21.0391 3 20.5304 3 20V9Z"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
+            <path
+              d="M9 22V12H15V22"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
+          </svg>
         </button>
-      </div>
+        <button class="nav-btn" aria-label="Explorar">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+            <circle
+              cx="11"
+              cy="11"
+              r="8"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
+            <path
+              d="M21 21L16.65 16.65"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
+          </svg>
+        </button>
+        <button class="nav-btn nav-btn-add" aria-label="Adicionar">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+            <line
+              x1="12"
+              y1="5"
+              x2="12"
+              y2="19"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+            />
+            <line
+              x1="5"
+              y1="12"
+              x2="19"
+              y2="12"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+            />
+          </svg>
+        </button>
+        <button class="nav-btn active" aria-label="Calendário">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+            <rect
+              x="3"
+              y="4"
+              width="18"
+              height="18"
+              rx="2"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
+            <line
+              x1="16"
+              y1="2"
+              x2="16"
+              y2="6"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+            />
+            <line
+              x1="8"
+              y1="2"
+              x2="8"
+              y2="6"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+            />
+            <line
+              x1="3"
+              y1="10"
+              x2="21"
+              y2="10"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+            />
+          </svg>
+        </button>
+        <button class="nav-btn" aria-label="Perfil">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+            <path
+              d="M20 21V19C20 17.9391 19.5786 16.9217 18.8284 16.1716C18.0783 15.4214 17.0609 15 16 15H8C6.93913 15 5.92172 15.4214 5.17157 16.1716C4.42143 16.9217 4 17.9391 4 19V21"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
+            <circle
+              cx="12"
+              cy="7"
+              r="4"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
+          </svg>
+        </button>
+      </nav>
     </div>
-
-    <!-- Navigation Bar -->
-    <nav class="navbar">
-      <button class="nav-btn" aria-label="Home">
-        <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
-          <path
-            d="M3 9L12 2L21 9V20C21 20.5304 20.7893 21.0391 20.4142 21.4142C20.0391 21.7893 19.5304 22 19 22H5C4.46957 22 3.96086 21.7893 3.58579 21.4142C3.21071 21.0391 3 20.5304 3 20V9Z"
-            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
-          <path d="M9 22V12H15V22" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-            stroke-linejoin="round" />
-        </svg>
-      </button>
-      <button class="nav-btn" aria-label="Explorar">
-        <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
-          <circle cx="11" cy="11" r="8" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-            stroke-linejoin="round" />
-          <path d="M21 21L16.65 16.65" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-            stroke-linejoin="round" />
-        </svg>
-      </button>
-      <button class="nav-btn nav-btn-add" aria-label="Adicionar">
-        <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
-          <line x1="12" y1="5" x2="12" y2="19" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
-          <line x1="5" y1="12" x2="19" y2="12" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
-        </svg>
-      </button>
-      <button class="nav-btn active" aria-label="Calendário">
-        <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
-          <rect x="3" y="4" width="18" height="18" rx="2" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-            stroke-linejoin="round" />
-          <line x1="16" y1="2" x2="16" y2="6" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
-          <line x1="8" y1="2" x2="8" y2="6" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
-          <line x1="3" y1="10" x2="21" y2="10" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
-        </svg>
-      </button>
-      <button class="nav-btn" aria-label="Perfil">
-        <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
-          <path
-            d="M20 21V19C20 17.9391 19.5786 16.9217 18.8284 16.1716C18.0783 15.4214 17.0609 15 16 15H8C6.93913 15 5.92172 15.4214 5.17157 16.1716C4.42143 16.9217 4 17.9391 4 19V21"
-            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
-          <circle cx="12" cy="7" r="4" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-            stroke-linejoin="round" />
-        </svg>
-      </button>
-    </nav>
-  </div>
-  <script src="../js/config.js"></script>
-  <script src="../js/toast.js"></script>
-  <script src="../js/router.js"></script>
-  <script src="../js/nav-handler.js"></script>
-  <script src="../js/event-detail.js"></script>
-</body>
-
+    <script src="../js/config.js"></script>
+    <script src="../js/toast.js"></script>
+    <script src="../js/router.js"></script>
+    <script src="../js/nav-handler.js"></script>
+    <script src="../js/event-detail.js"></script>
+  </body>
 </html>

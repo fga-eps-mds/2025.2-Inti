@@ -1,47 +1,55 @@
 <!doctype html>
 <html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>MUSA - Perfil</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Julius+Sans+One&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Jost:ital,wght@0,100..900;1,100..900&display=swap"
+      rel="stylesheet"
+    />
+  </head>
 
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>MUSA - Perfil</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Julius+Sans+One&display=swap" rel="stylesheet" />
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="stylesheet" href="../css/style.css" />
-
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Jost:ital,wght@0,100..900;1,100..900&display=swap"
-    rel="stylesheet" />
-</head>
-
-<body>
-  <div class="screen-container">
-    <div class="screen-user">
-      <div id="logout-btn-container" class="logout-container">
-        <button id="btn-logout" class="btn-icon-logout" aria-label="Sair da conta">
-          <img src="../assets/icon-logout.svg" alt="Sair" />
-        </button>
-      </div>
-      <div class="container-header">
-        <p class="user-name"></p>
-        <p class="user-username"></p>
-      </div>
-
-      <div class="profile-photo">
-        <div class="img-perfil-bg"></div>
-        <div class="img-user-icon">
-          <div class="edit-icon">
-            <img src="../assets/edit-icon.svg" alt="edit-icon" class="edit"
-              onclick="window.location.href = 'edit-profile.html'" />
-          </div>
+  <body>
+    <div class="screen-container">
+      <div class="screen-user">
+        <div class="container-header">
+          <p class="user-name">Brunno Gabryel</p>
+          <p class="user-username">@brunninho</p>
         </div>
-        <!-- Hidden file input for profile picture upload -->
-        <input type="file" id="profile-picture-input" accept="image/*" style="display: none" />
-      </div>
-      <!-- Profile picture update button -->
-      <button id="update-profile-picture" style="
+
+        <div class="profile-photo">
+          <div class="img-perfil-bg"></div>
+          <div class="img-user-icon">
+            <div class="edit-icon">
+              <img
+                src="../assets/edit-icon.svg"
+                alt="edit-icon"
+                class="edit"
+                onclick="window.location.href='edit-profile.html'"
+              />
+            </div>
+          </div>
+          <!-- Hidden file input for profile picture upload -->
+          <input
+            type="file"
+            id="profile-picture-input"
+            accept="image/*"
+            style="display: none"
+          />
+        </div>
+        <!-- Profile picture update button -->
+        <button
+          id="update-profile-picture"
+          style="
             display: none;
             margin: 10px auto;
             padding: 8px 16px;
@@ -50,103 +58,199 @@
             border: none;
             border-radius: 8px;
             cursor: pointer;
-          ">
-        Atualizar Foto
-      </button>
-
-      <div class="container-data-user">
-        <div class="profile-item">
-          <div class="profile-seguindo">Seguindo</div>
-          <div class="profile-number following-count">0</div>
-        </div>
-
-        <div class="profile-item">
-          <div class="profile-post">Posts</div>
-          <div class="profile-number posts-count">0</div>
-        </div>
-
-        <div class="profile-item">
-          <div class="profile-seguidores">Seguidores</div>
-          <div class="profile-number followers-count">0</div>
-        </div>
-      </div>
-
-      <div class="contact-info-box">
-        <p class="contact-text">
-          <!-- Contact info will be populated dynamically -->
-        </p>
-      </div>
-
-      <div class="line-navbar"></div>
-
-      <section class="grid-products">
-        <button class="view-btn grid-btn active" data-view="posts" data-url="/profiles/me/posts">
-          <img src="../assets/grid-icon.svg" alt="grid-icon" class="icon" />
+          "
+        >
+          Atualizar Foto
         </button>
 
-        <div class="linha"></div>
+        <div class="container-data-user">
+          <div class="profile-item">
+            <div class="profile-seguindo">Seguindo</div>
+            <div class="profile-number following-count">150</div>
+          </div>
 
-        <button class="view-btn product-btn" data-view="products" data-url="/profiles/me/products">
-          <img src="../assets/product-icon.svg" alt="product-icon" class="products" />
-        </button>
-      </section>
+          <div class="profile-item">
+            <div class="profile-post">Post</div>
+            <div class="profile-number posts-count">45</div>
+          </div>
 
-      <div class="divider"></div>
+          <div class="profile-item">
+            <div class="profile-seguidores">Seguidores</div>
+            <div class="profile-number followers-count">892</div>
+          </div>
+        </div>
 
-      <div class="user-posts-grid">
-        <div class="user-post-item rect-1"></div>
-        <div class="user-post-item rect-2"></div>
-        <div class="user-post-item rect-3"></div>
-        <div class="user-post-item rect-4"></div>
-        <div class="user-post-item rect-5"></div>
+        <div class="contact-info-box">
+          <p class="contact-text">
+            <!-- Contact info will be populated dynamically -->
+          </p>
+        </div>
+
+        <div class="line-navbar"></div>
+
+        <section class="grid-products">
+          <button
+            class="view-btn grid-btn active"
+            data-view="posts"
+            data-url="/profiles/me/posts"
+          >
+            <img src="../assets/grid-icon.svg" alt="grid-icon" class="icon" />
+          </button>
+
+          <div class="linha"></div>
+
+          <button
+            class="view-btn product-btn"
+            data-view="products"
+            data-url="/profiles/me/products"
+          >
+            <img
+              src="../assets/product-icon.svg"
+              alt="product-icon"
+              class="products"
+            />
+          </button>
+        </section>
+
+        <div class="divider"></div>
+
+        <div class="user-posts-grid">
+          <div class="user-post-item rect-1"></div>
+          <div class="user-post-item rect-2"></div>
+          <div class="user-post-item rect-3"></div>
+          <div class="user-post-item rect-4"></div>
+          <div class="user-post-item rect-5"></div>
+        </div>
       </div>
     </div>
-  </div>
-  <nav class="navbar">
-    <button class="nav-btn" aria-label="Home">
-      <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
-        <path
-          d="M3 9L12 2L21 9V20C21 20.5304 20.7893 21.0391 20.4142 21.4142C20.0391 21.7893 19.5304 22 19 22H5C4.46957 22 3.96086 21.7893 3.58579 21.4142C3.21071 21.0391 3 20.5304 3 20V9Z"
-          stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
-        <path d="M9 22V12H15V22" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-          stroke-linejoin="round" />
-      </svg>
-    </button>
-    <button class="nav-btn" aria-label="Explorar">
-      <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
-        <circle cx="11" cy="11" r="8" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-          stroke-linejoin="round" />
-        <path d="M21 21L16.65 16.65" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-          stroke-linejoin="round" />
-      </svg>
-    </button>
-    <button class="nav-btn nav-btn-add" aria-label="Adicionar">
-      <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
-        <line x1="12" y1="5" x2="12" y2="19" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
-        <line x1="5" y1="12" x2="19" y2="12" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
-      </svg>
-    </button>
-    <button class="nav-btn" aria-label="Calendário">
-      <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
-        <rect x="3" y="4" width="18" height="18" rx="2" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-          stroke-linejoin="round" />
-        <line x1="16" y1="2" x2="16" y2="6" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
-        <line x1="8" y1="2" x2="8" y2="6" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
-        <line x1="3" y1="10" x2="21" y2="10" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
-      </svg>
-    </button>
-    <button class="nav-btn active" aria-label="Perfil">
-      <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
-        <path
-          d="M20 21V19C20 17.9391 19.5786 16.9217 18.8284 16.1716C18.0783 15.4214 17.0609 15 16 15H8C6.93913 15 5.92172 15.4214 5.17157 16.1716C4.42143 16.9217 4 17.9391 4 19V21"
-          stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
-        <circle cx="12" cy="7" r="4" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-          stroke-linejoin="round" />
-      </svg>
-    </button>
-  </nav>
-  <!-- Edit Biography Modal -->
-  <div id="edit-biography-modal" style="
+    <nav class="navbar">
+      <button class="nav-btn" aria-label="Home">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+          <path
+            d="M3 9L12 2L21 9V20C21 20.5304 20.7893 21.0391 20.4142 21.4142C20.0391 21.7893 19.5304 22 19 22H5C4.46957 22 3.96086 21.7893 3.58579 21.4142C3.21071 21.0391 3 20.5304 3 20V9Z"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          />
+          <path
+            d="M9 22V12H15V22"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          />
+        </svg>
+      </button>
+      <button class="nav-btn" aria-label="Explorar">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+          <circle
+            cx="11"
+            cy="11"
+            r="8"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          />
+          <path
+            d="M21 21L16.65 16.65"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          />
+        </svg>
+      </button>
+      <button class="nav-btn nav-btn-add" aria-label="Adicionar">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+          <line
+            x1="12"
+            y1="5"
+            x2="12"
+            y2="19"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+          />
+          <line
+            x1="5"
+            y1="12"
+            x2="19"
+            y2="12"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+          />
+        </svg>
+      </button>
+      <button class="nav-btn" aria-label="Calendário">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+          <rect
+            x="3"
+            y="4"
+            width="18"
+            height="18"
+            rx="2"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          />
+          <line
+            x1="16"
+            y1="2"
+            x2="16"
+            y2="6"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+          />
+          <line
+            x1="8"
+            y1="2"
+            x2="8"
+            y2="6"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+          />
+          <line
+            x1="3"
+            y1="10"
+            x2="21"
+            y2="10"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+          />
+        </svg>
+      </button>
+      <button class="nav-btn active" aria-label="Perfil">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+          <path
+            d="M20 21V19C20 17.9391 19.5786 16.9217 18.8284 16.1716C18.0783 15.4214 17.0609 15 16 15H8C6.93913 15 5.92172 15.4214 5.17157 16.1716C4.42143 16.9217 4 17.9391 4 19V21"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          />
+          <circle
+            cx="12"
+            cy="7"
+            r="4"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          />
+        </svg>
+      </button>
+    </nav>
+    <!-- Edit Biography Modal -->
+    <div
+      id="edit-biography-modal"
+      style="
         display: none;
         position: fixed;
         top: 0;
@@ -155,8 +259,10 @@
         height: 100%;
         background-color: rgba(0, 0, 0, 0.5);
         z-index: 2000;
-      ">
-    <div style="
+      "
+    >
+      <div
+        style="
           position: absolute;
           top: 0;
           left: 0;
@@ -165,794 +271,818 @@
           background-color: white;
           padding: 20px;
           overflow-y: auto;
-        ">
-      <div style="max-width: 500px; margin: 0 auto; padding: 20px">
-        <h2 style="color: #592e83; text-align: center; margin-bottom: 20px">
-          Editar Biografia
-        </h2>
+        "
+      >
+        <div style="max-width: 500px; margin: 0 auto; padding: 20px">
+          <h2 style="color: #592e83; text-align: center; margin-bottom: 20px">
+            Editar Biografia
+          </h2>
 
-        <form id="edit-biography-form">
-          <div style="margin-bottom: 15px">
-            <label for="edit-phone" style="display: block; margin-bottom: 5px; color: #592e83">Telefone:</label>
-            <input type="text" id="edit-phone" style="
+          <form id="edit-biography-form">
+            <div style="margin-bottom: 15px">
+              <label
+                for="edit-phone"
+                style="display: block; margin-bottom: 5px; color: #592e83"
+                >Telefone:</label
+              >
+              <input
+                type="text"
+                id="edit-phone"
+                style="
                   width: 100%;
                   padding: 10px;
                   border: 1px solid #ccc;
                   border-radius: 8px;
-                " />
-          </div>
+                "
+              />
+            </div>
 
-          <div style="margin-bottom: 15px">
-            <label for="edit-email" style="display: block; margin-bottom: 5px; color: #592e83">Email:</label>
-            <input type="email" id="edit-email" style="
+            <div style="margin-bottom: 15px">
+              <label
+                for="edit-email"
+                style="display: block; margin-bottom: 5px; color: #592e83"
+                >Email:</label
+              >
+              <input
+                type="email"
+                id="edit-email"
+                style="
                   width: 100%;
                   padding: 10px;
                   border: 1px solid #ccc;
                   border-radius: 8px;
-                " />
-          </div>
+                "
+              />
+            </div>
 
-          <div style="margin-bottom: 15px">
-            <label for="edit-bio" style="display: block; margin-bottom: 5px; color: #592e83">Biografia:</label>
-            <textarea id="edit-bio" rows="5" style="
+            <div style="margin-bottom: 15px">
+              <label
+                for="edit-bio"
+                style="display: block; margin-bottom: 5px; color: #592e83"
+                >Biografia:</label
+              >
+              <textarea
+                id="edit-bio"
+                rows="5"
+                style="
                   width: 100%;
                   padding: 10px;
                   border: 1px solid #ccc;
                   border-radius: 8px;
-                "></textarea>
-          </div>
+                "
+              ></textarea>
+            </div>
 
-          <div style="
+            <div
+              style="
                 display: flex;
                 justify-content: space-between;
                 margin-top: 20px;
-              ">
-            <button type="button" id="cancel-edit-biography" style="
+              "
+            >
+              <button
+                type="button"
+                id="cancel-edit-biography"
+                style="
                   padding: 10px 20px;
                   background-color: #ccc;
                   color: black;
                   border: none;
                   border-radius: 8px;
                   cursor: pointer;
-                ">
-              Cancelar
-            </button>
-            <button type="submit" style="
+                "
+              >
+                Cancelar
+              </button>
+              <button
+                type="submit"
+                style="
                   padding: 10px 20px;
                   background-color: #592e83;
                   color: white;
                   border: none;
                   border-radius: 8px;
                   cursor: pointer;
-                ">
-              Salvar
-            </button>
-          </div>
-        </form>
-      </div>
-    </div>
-  </div>
-
-  <script src="../js/config.js"></script>
-  <script src="../js/router.js"></script>
-  <script src="../js/edit.js"></script>
-  <script src="../js/profile.js"></script>
-  <script src="../js/nav-handler.js"></script>
-
-  <!-- Post Detail Modal -->
-  <div id="postModal" class="modal">
-    <div class="modal-content">
-      <span class="close">&times;</span>
-      <img id="modalPostImage" class="modal-post-image" src="" alt="Post Image" style="display: none" />
-      <div class="modal-post-info">
-        <div class="modal-profile">
-          <div id="modalProfilePic" class="modal-profile-pic"></div>
-          <div id="modalUsername" class="modal-username"></div>
+                "
+              >
+                Salvar
+              </button>
+            </div>
+          </form>
         </div>
-        <p id="modalDescription" class="modal-description"></p>
-        <p id="modalDate" class="modal-date"></p>
-        <p id="modalLikes" class="modal-likes"></p>
       </div>
     </div>
-  </div>
 
-  <style>
-    /* ============================================
+    <script src="../js/config.js"></script>
+    <script src="../js/router.js"></script>
+    <script src="../js/edit.js"></script>
+    <script src="../js/profile.js"></script>
+    <script src="../js/nav-handler.js"></script>
+
+    <!-- Post Detail Modal -->
+    <div id="postModal" class="modal">
+      <div class="modal-content">
+        <span class="close">&times;</span>
+        <img
+          id="modalPostImage"
+          class="modal-post-image"
+          src=""
+          alt="Post Image"
+          style="display: none"
+        />
+        <div class="modal-post-info">
+          <div class="modal-profile">
+            <div id="modalProfilePic" class="modal-profile-pic"></div>
+            <div id="modalUsername" class="modal-username"></div>
+          </div>
+          <p id="modalDescription" class="modal-description"></p>
+          <p id="modalDate" class="modal-date"></p>
+          <p id="modalLikes" class="modal-likes"></p>
+        </div>
+      </div>
+    </div>
+
+    <style>
+      /* ============================================
    RESET & BASE
    ============================================ */
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
-
-    :root {
-      /* Cores principais */
-      --primary: #592e83;
-      --primary-light: #7a4fa3;
-      --primary-lighter: #f2ebfb;
-      --accent: #a38bba;
-
-      /* Tons neutros */
-      --gray-50: #fafafa;
-      --gray-100: #f5f5f5;
-      --gray-200: #e5e5e5;
-      --gray-300: #d4d4d4;
-      --gray-400: #a3a3a3;
-      --gray-500: #737373;
-      --gray-600: #525252;
-      --gray-900: #171717;
-
-      /* Espaçamentos */
-      --spacing-xs: 4px;
-      --spacing-sm: 8px;
-      --spacing-md: 16px;
-      --spacing-lg: 24px;
-      --spacing-xl: 32px;
-
-      /* Bordas */
-      --radius-sm: 8px;
-      --radius-md: 12px;
-      --radius-lg: 16px;
-      --radius-full: 9999px;
-
-      /* Sombras */
-      --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
-      --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
-      --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
-    }
-
-    body {
-      font-family: "Maitree", serif;
-      background: var(--gray-50);
-      color: var(--gray-900);
-      line-height: 1.6;
-      -webkit-font-smoothing: antialiased;
-      -moz-osx-font-smoothing: grayscale;
-      display: flex;
-      flex-direction: column;
-      width: 100%;
-      min-height: 100vh;
-      padding-bottom: 80px;
-    }
-
-    body.modal-open {
-      overflow: hidden;
-    }
-
-    .action-modal {
-      position: fixed;
-      inset: 0;
-      display: none;
-      align-items: flex-end;
-      justify-content: center;
-      background: rgba(0, 0, 0, 0.45);
-      backdrop-filter: blur(4px);
-      z-index: 2000;
-    }
-
-    .action-modal[aria-hidden="false"] {
-      display: flex;
-    }
-
-    .action-modal .modal-content {
-      width: 92%;
-      max-width: 400px;
-      background: #fff;
-      border-radius: 20px 20px 0 0;
-      padding: 25px;
-      margin: 0 auto;
-      box-shadow: 0 -3px 20px rgba(0, 0, 0, 0.22);
-      animation: modal-slide-up 0.28s ease-out;
-    }
-
-    .action-modal .close-modal {
-      background: none;
-      border: none;
-      font-size: 30px;
-      cursor: pointer;
-      float: right;
-      color: #6b6b6b;
-    }
-
-    .action-modal .modal-title {
-      margin: 10px 0 20px;
-      font-size: 20px;
-      text-align: center;
-      font-weight: 600;
-      font-family: "Quicksand", sans-serif;
-    }
-
-    .action-modal .modal-item {
-      width: 100%;
-      padding: 13px;
-      margin: 10px 0;
-      border: none;
-      background: #f1f1f1;
-      border-radius: 14px;
-      font-size: 16px;
-      cursor: pointer;
-      transition: background 0.2s ease;
-      font-family: "Quicksand", sans-serif;
-    }
-
-    .action-modal .modal-item:hover,
-    .action-modal .modal-item:focus-visible {
-      background: #e2e2e2;
-      outline: none;
-    }
-
-    @keyframes modal-slide-up {
-      from {
-        transform: translateY(80px);
-        opacity: 0;
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
       }
 
-      to {
-        transform: translateY(0);
-        opacity: 1;
+      :root {
+        /* Cores principais */
+        --primary: #592e83;
+        --primary-light: #7a4fa3;
+        --primary-lighter: #f2ebfb;
+        --accent: #a38bba;
+
+        /* Tons neutros */
+        --gray-50: #fafafa;
+        --gray-100: #f5f5f5;
+        --gray-200: #e5e5e5;
+        --gray-300: #d4d4d4;
+        --gray-400: #a3a3a3;
+        --gray-500: #737373;
+        --gray-600: #525252;
+        --gray-900: #171717;
+
+        /* Espaçamentos */
+        --spacing-xs: 4px;
+        --spacing-sm: 8px;
+        --spacing-md: 16px;
+        --spacing-lg: 24px;
+        --spacing-xl: 32px;
+
+        /* Bordas */
+        --radius-sm: 8px;
+        --radius-md: 12px;
+        --radius-lg: 16px;
+        --radius-full: 9999px;
+
+        /* Sombras */
+        --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+        --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
       }
-    }
 
-    .container {
-      width: 100%;
-      max-width: 390px;
-      min-height: 100vh;
-      background: white;
-      margin: 0 auto;
-      box-shadow: var(--shadow-lg);
-    }
+      body {
+        font-family: "Maitree", serif;
+        background: var(--gray-50);
+        color: var(--gray-900);
+        line-height: 1.6;
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+        display: flex;
+        flex-direction: column;
+        width: 100%;
+        min-height: 100vh;
+        padding-bottom: 80px;
+      }
 
-    .screen {
-      width: 100%;
-      min-height: 100vh;
-      position: relative;
-      background: white;
-    }
+      body.modal-open {
+        overflow: hidden;
+      }
 
-    .screen-user {
-      width: 100%;
-      align-items: center;
-    }
+      .action-modal {
+        position: fixed;
+        inset: 0;
+        display: none;
+        align-items: flex-end;
+        justify-content: center;
+        background: rgba(0, 0, 0, 0.45);
+        backdrop-filter: blur(4px);
+        z-index: 2000;
+      }
 
-    /* 
+      .action-modal[aria-hidden="false"] {
+        display: flex;
+      }
+
+      .action-modal .modal-content {
+        width: 92%;
+        max-width: 400px;
+        background: #fff;
+        border-radius: 20px 20px 0 0;
+        padding: 25px;
+        margin: 0 auto;
+        box-shadow: 0 -3px 20px rgba(0, 0, 0, 0.22);
+        animation: modal-slide-up 0.28s ease-out;
+      }
+
+      .action-modal .close-modal {
+        background: none;
+        border: none;
+        font-size: 30px;
+        cursor: pointer;
+        float: right;
+        color: #6b6b6b;
+      }
+
+      .action-modal .modal-title {
+        margin: 10px 0 20px;
+        font-size: 20px;
+        text-align: center;
+        font-weight: 600;
+        font-family: "Quicksand", sans-serif;
+      }
+
+      .action-modal .modal-item {
+        width: 100%;
+        padding: 13px;
+        margin: 10px 0;
+        border: none;
+        background: #f1f1f1;
+        border-radius: 14px;
+        font-size: 16px;
+        cursor: pointer;
+        transition: background 0.2s ease;
+        font-family: "Quicksand", sans-serif;
+      }
+
+      .action-modal .modal-item:hover,
+      .action-modal .modal-item:focus-visible {
+        background: #e2e2e2;
+        outline: none;
+      }
+
+      @keyframes modal-slide-up {
+        from {
+          transform: translateY(80px);
+          opacity: 0;
+        }
+
+        to {
+          transform: translateY(0);
+          opacity: 1;
+        }
+      }
+
+      .container {
+        width: 100%;
+        max-width: 390px;
+        min-height: 100vh;
+        background: white;
+        margin: 0 auto;
+        box-shadow: var(--shadow-lg);
+      }
+
+      .screen {
+        width: 100%;
+        min-height: 100vh;
+        position: relative;
+        background: white;
+      }
+
+      .screen-user {
+        width: 100%;
+        align-items: center;
+      }
+
+      /* 
   TELA DE USER
 */
-    .profile-photo {
-      position: relative;
-      width: 75px;
-      height: 75px;
-      margin: 0 auto;
-      margin-bottom: 10px;
-    }
-
-    .img-user-icon {
-      width: 75px;
-      height: 75px;
-      border-radius: 50%;
-      background-image: url("../assets/profilePic.svg");
-      background-size: cover;
-      background-position: center;
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-    }
-
-    .container-header {
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-      font-family: "Jost", sans-serif;
-      font-weight: 300;
-    }
-
-    .user-name {
-      font-size: 24px;
-    }
-
-    .user-username {
-      font-size: 12px;
-      font-weight: normal;
-    }
-
-    .container-data-user {
-      margin-top: 0px;
-      display: flex;
-      justify-content: space-around;
-      align-items: center;
-      font-family: "Jost", sans-serif;
-    }
-
-    .profile-item {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      text-align: center;
-    }
-
-    .profile-number {
-      font-size: 14px;
-      margin-bottom: 5px;
-    }
-
-    .profile-seguindo,
-    .profile-post,
-    .profile-seguidores {
-      font-size: 14px;
-      font-weight: 600;
-    }
-
-    .contact-info-box {
-      background-color: #d9d9d9;
-      align-items: center;
-      border-radius: 12px;
-      width: 364;
-      height: 93;
-    }
-
-    .contact-text {
-      font-family: "Times New Roman", Times, serif;
-      font-size: 14px;
-      padding: 10px 20px;
-      border-radius: 6px;
-      text-align: left;
-    }
-
-    .contact-text:last-child {
-      margin-bottom: 0;
-    }
-
-    .screen-container {
-      display: flex;
-      padding-top: 16px;
-      padding-left: 16px;
-      padding-right: 16px;
-      flex: 1;
-    }
-
-    .grid-products {
-      height: 55px;
-      width: 100%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      flex-wrap: wrap;
-      gap: 25px;
-      margin: 0 0;
-    }
-
-    .icon,
-    .products {
-      width: 25px;
-      height: 25px;
-      flex-shrink: 0;
-    }
-
-    .linha {
-      width: 1px;
-      height: 35px;
-      background-color: var(--primary);
-      flex-shrink: 0;
-    }
-
-    .edit {
-      width: 30px;
-      height: 30px;
-      z-index: 2;
-    }
-
-    .edit-icon {
-      width: 30px;
-      height: 30px;
-      border-radius: 8px;
-      margin-top: 50px;
-      margin-left: 60px;
-      align-items: center;
-    }
-
-    .follow-icon {
-      width: 29px;
-      height: 29px;
-      background-color: #fcf9ff;
-      border-radius: 8px;
-      margin-top: 50px;
-      margin-left: 80px;
-      align-items: center;
-    }
-
-    .divider {
-      width: 100%;
-      height: 2px;
-      background-color: #d9d9d9;
-    }
-
-    /* ============================================
-   NAVIGATION BAR (copiado de style.css)
-   ============================================ */
-    .navbar {
-      position: fixed;
-      bottom: 0;
-      left: 50%;
-      transform: translateX(-50%);
-      width: 100%;
-      height: 70px;
-      background: white;
-      display: flex;
-      align-items: center;
-      justify-content: space-around;
-      padding: 0 var(--spacing-md);
-      border-top: 1px solid var(--gray-200);
-      z-index: 1000;
-    }
-
-    .nav-btn {
-      background: none;
-      border: none;
-      cursor: pointer;
-      padding: var(--spacing-sm);
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      color: var(--gray-400);
-      transition: all 0.2s ease;
-      position: relative;
-      min-width: 50px;
-      height: 50px;
-    }
-
-    .nav-btn:hover {
-      color: var(--primary);
-    }
-
-    .nav-btn.active {
-      color: var(--primary);
-    }
-
-    .nav-btn.active::after {
-      content: "";
-      position: absolute;
-      bottom: -16px;
-      left: 50%;
-      transform: translateX(-50%);
-      width: 32px;
-      height: 3px;
-      background: var(--primary);
-      border-radius: var(--radius-full);
-    }
-
-    .nav-btn svg {
-      width: 24px;
-      height: 24px;
-    }
-
-    /* Botão de adicionar centralizado */
-    .nav-btn-add {
-      width: 54px;
-      height: 54px;
-      background: var(--primary);
-      border-radius: var(--radius-full);
-      color: white;
-      margin: 0 var(--spacing-xs);
-      box-shadow: var(--shadow-md);
-    }
-
-    .nav-btn-add:hover {
-      background: var(--primary-light);
-      color: white;
-      transform: scale(1.05);
-    }
-
-    section button.view-btn {
-      border: none;
-      background: transparent;
-      display: flex;
-      flex: 1;
-      justify-content: center;
-      align-items: center;
-      height: 40px;
-    }
-
-    /* Alternativa: layout quadrado igual Instagram */
-    .user-posts-grid {
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: 10px;
-      padding-top: 20px;
-    }
-
-    .user-post-item {
-      aspect-ratio: 1/1;
-      height: auto;
-      border-radius: 16px;
-    }
-
-    .rect-1,
-    .rect-2,
-    .rect-3,
-    .rect-4,
-    .rect-5 {
-      aspect-ratio: 1/1 !important;
-      /* Força todos serem quadrados */
-    }
-
-    .user-post-item:hover {
-      transform: scale(1.02);
-    }
-
-    .post-overlay {
-      position: absolute;
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      background: linear-gradient(to top,
-          rgba(0, 0, 0, 0.7) 0%,
-          transparent 50%);
-      opacity: 0;
-      transition: opacity 0.3s ease;
-      display: flex;
-      flex-direction: column;
-      justify-content: flex-end;
-      padding: 8px;
-      color: white;
-    }
-
-    .user-post-item:hover .post-overlay {
-      opacity: 1;
-    }
-
-    .post-stats {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      margin-bottom: 4px;
-    }
-
-    .post-likes {
-      font-size: 12px;
-      font-weight: bold;
-    }
-
-    .post-description {
-      font-size: 10px;
-      margin: 0;
-      line-height: 1.2;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      display: -webkit-box;
-      -webkit-line-clamp: 2;
-      -webkit-box-orient: vertical;
-    }
-
-    .no-posts {
-      grid-column: 1 / -1;
-      text-align: center;
-      padding: 40px;
-      color: #666;
-      font-style: italic;
-    }
-
-    /* Modal styles */
-    .modal {
-      display: none;
-      position: fixed;
-      z-index: 10000;
-      left: 0;
-      top: 0;
-      width: 100%;
-      height: 100%;
-      background-color: rgba(0, 0, 0, 0.8);
-      animation: fadeIn 0.3s ease;
-    }
-
-    .modal-content {
-      background-color: #fff;
-      margin: 5% auto;
-      padding: 0;
-      border-radius: 10px;
-      width: 90%;
-      max-width: 500px;
-      position: relative;
-      animation: slideIn 0.3s ease;
-    }
-
-    .close {
-      color: #aaa;
-      float: right;
-      font-size: 28px;
-      font-weight: bold;
-      position: absolute;
-      top: 10px;
-      right: 15px;
-      z-index: 10001;
-      cursor: pointer;
-    }
-
-    .close:hover,
-    .close:focus {
-      color: black;
-      text-decoration: none;
-      cursor: pointer;
-    }
-
-    .modal-post-image {
-      width: 100%;
-      height: auto;
-      max-height: 400px;
-      object-fit: cover;
-      border-radius: 10px 10px 0 0;
-    }
-
-    .modal-post-info {
-      padding: 15px;
-    }
-
-    .modal-profile {
-      display: flex;
-      align-items: center;
-      margin-bottom: 15px;
-    }
-
-    .modal-profile-pic {
-      width: 40px;
-      height: 40px;
-      border-radius: 50%;
-      background-size: cover;
-      background-position: center;
-      margin-right: 10px;
-    }
-
-    .modal-username {
-      font-weight: bold;
-    }
-
-    .modal-description {
-      margin: 10px 0;
-      line-height: 1.4;
-    }
-
-    .modal-date {
-      color: #666;
-      font-size: 0.9em;
-      margin-bottom: 10px;
-    }
-
-    .modal-likes {
-      font-weight: bold;
-      color: #333;
-    }
-
-    @keyframes fadeIn {
-      from {
-        opacity: 0;
+      .profile-photo {
+        position: relative;
+        width: 75px;
+        height: 75px;
+        margin: 0 auto;
+        margin-bottom: 10px;
       }
 
-      to {
-        opacity: 1;
-      }
-    }
-
-    @keyframes slideIn {
-      from {
-        transform: translateY(-50px);
-        opacity: 0;
-      }
-
-      to {
-        transform: translateY(0);
-        opacity: 1;
-      }
-    }
-
-    /* ============================================
-   RESPONSIVIDADE
-   ============================================ */
-    @media (max-width: 390px) {
-      .container {
-        max-width: 100%;
+      .img-user-icon {
+        width: 75px;
+        height: 75px;
+        border-radius: 50%;
+        background-image: url("../assets/profilePic.svg");
+        background-size: cover;
+        background-position: center;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
       }
 
-      .contact-info-box {
-        max-width: 100%;
-        max-height: auto;
+      .container-header {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        font-family: "Jost", sans-serif;
+        font-weight: 300;
       }
 
-      .events-grid {
-        gap: var(--spacing-md);
-        padding: var(--spacing-md);
+      .user-name {
+        font-size: 24px;
       }
 
-      .header-home {
-        padding: var(--spacing-md);
-      }
-
-      .filter-nav {
-        padding: var(--spacing-md);
+      .user-username {
+        font-size: 12px;
+        font-weight: normal;
       }
 
       .container-data-user {
-        width: 100%;
+        margin-top: 0px;
+        display: flex;
+        justify-content: space-around;
+        align-items: center;
+        font-family: "Jost", sans-serif;
+      }
+
+      .profile-item {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+      }
+
+      .profile-number {
+        font-size: 14px;
+        margin-bottom: 5px;
+      }
+
+      .profile-seguindo,
+      .profile-post,
+      .profile-seguidores {
+        font-size: 14px;
+        font-weight: 600;
+      }
+
+      .contact-info-box {
+        background-color: #d9d9d9;
+        align-items: center;
+        border-radius: 12px;
+        width: 364;
+        height: 93;
+      }
+
+      .contact-text {
+        font-family: "Times New Roman", Times, serif;
+        font-size: 14px;
+        padding: 10px 20px;
+        border-radius: 6px;
+        text-align: left;
+      }
+
+      .contact-text:last-child {
+        margin-bottom: 0;
+      }
+
+      .screen-container {
+        display: flex;
+        padding-top: 16px;
+        padding-left: 16px;
+        padding-right: 16px;
+        flex: 1;
       }
 
       .grid-products {
-        max-width: 100%;
-        padding: 15px 15px;
-      }
-
-      .divider {
+        height: 55px;
         width: 100%;
-      }
-    }
-
-    @media (min-width: 768px) {
-      .events-grid {
-        grid-template-columns: repeat(3, 1fr);
-        max-width: 800px;
-        margin: 0 auto;
-      }
-
-      .grid-products {
-        height: 60px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-wrap: wrap;
+        gap: 25px;
+        margin: 0 0;
       }
 
       .icon,
       .products {
+        width: 25px;
+        height: 25px;
+        flex-shrink: 0;
+      }
+
+      .linha {
+        width: 1px;
+        height: 35px;
+        background-color: var(--primary);
+        flex-shrink: 0;
+      }
+
+      .edit {
         width: 30px;
         height: 30px;
+        z-index: 2;
       }
 
-      .linha {
-        height: 40px;
-        width: 2px;
+      .edit-icon {
+        width: 30px;
+        height: 30px;
+        border-radius: 8px;
+        margin-top: 50px;
+        margin-left: 60px;
+        align-items: center;
+      }
+
+      .follow-icon {
+        width: 29px;
+        height: 29px;
+        background-color: #fcf9ff;
+        border-radius: 8px;
+        margin-top: 50px;
+        margin-left: 80px;
+        align-items: center;
       }
 
       .divider {
         width: 100%;
+        height: 2px;
+        background-color: #d9d9d9;
       }
-    }
 
-    @media (min-width: 1024px) {
-      .grid-products {
+      /* ============================================
+   NAVIGATION BAR (copiado de style.css)
+   ============================================ */
+      .navbar {
+        position: fixed;
+        bottom: 0;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 100%;
         height: 70px;
-        gap: 150px;
+        background: white;
+        display: flex;
+        align-items: center;
+        justify-content: space-around;
+        padding: 0 var(--spacing-md);
+        border-top: 1px solid var(--gray-200);
+        z-index: 1000;
       }
 
-      .icon,
-      .products {
-        width: 35px;
-        height: 35px;
+      .nav-btn {
+        background: none;
+        border: none;
+        cursor: pointer;
+        padding: var(--spacing-sm);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        color: var(--gray-400);
+        transition: all 0.2s ease;
+        position: relative;
+        min-width: 50px;
+        height: 50px;
       }
 
-      .linha {
-        height: 45px;
-        width: 2px;
+      .nav-btn:hover {
+        color: var(--primary);
       }
 
-      .divider {
+      .nav-btn.active {
+        color: var(--primary);
+      }
+
+      .nav-btn.active::after {
+        content: "";
+        position: absolute;
+        bottom: -16px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 32px;
+        height: 3px;
+        background: var(--primary);
+        border-radius: var(--radius-full);
+      }
+
+      .nav-btn svg {
+        width: 24px;
+        height: 24px;
+      }
+
+      /* Botão de adicionar centralizado */
+      .nav-btn-add {
+        width: 54px;
+        height: 54px;
+        background: var(--primary);
+        border-radius: var(--radius-full);
+        color: white;
+        margin: 0 var(--spacing-xs);
+        box-shadow: var(--shadow-md);
+      }
+
+      .nav-btn-add:hover {
+        background: var(--primary-light);
+        color: white;
+        transform: scale(1.05);
+      }
+
+      section button.view-btn {
+        border: none;
+        background: transparent;
+        display: flex;
+        flex: 1;
+        justify-content: center;
+        align-items: center;
+        height: 40px;
+      }
+
+      /* Alternativa: layout quadrado igual Instagram */
+      .user-posts-grid {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 10px;
+        padding-top: 20px;
+      }
+
+      .user-post-item {
+        aspect-ratio: 1/1;
+        height: auto;
+        border-radius: 16px;
+      }
+
+      .rect-1,
+      .rect-2,
+      .rect-3,
+      .rect-4,
+      .rect-5 {
+        aspect-ratio: 1/1 !important;
+        /* Força todos serem quadrados */
+      }
+
+      .user-post-item:hover {
+        transform: scale(1.02);
+      }
+
+      .post-overlay {
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: linear-gradient(
+          to top,
+          rgba(0, 0, 0, 0.7) 0%,
+          transparent 50%
+        );
+        opacity: 0;
+        transition: opacity 0.3s ease;
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-end;
+        padding: 8px;
+        color: white;
+      }
+
+      .user-post-item:hover .post-overlay {
+        opacity: 1;
+      }
+
+      .post-stats {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        margin-bottom: 4px;
+      }
+
+      .post-likes {
+        font-size: 12px;
+        font-weight: bold;
+      }
+
+      .post-description {
+        font-size: 10px;
+        margin: 0;
+        line-height: 1.2;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+      }
+
+      .no-posts {
+        grid-column: 1 / -1;
+        text-align: center;
+        padding: 40px;
+        color: #666;
+        font-style: italic;
+      }
+
+      /* Modal styles */
+      .modal {
+        display: none;
+        position: fixed;
+        z-index: 10000;
+        left: 0;
+        top: 0;
         width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.8);
+        animation: fadeIn 0.3s ease;
       }
-    }
-  </style>
-  <div id="modal-logout-confirm" class="modal-logout-overlay">
-    <div class="modal-logout-content">
-      <h3>Sair da conta</h3>
-      <p>Tem certeza de que deseja sair da conta?</p>
 
-      <div class="modal-logout-actions">
-        <button id="btn-cancel-logout" class="btn-logout-cancel">
-          Cancelar
-        </button>
-        <button id="btn-confirm-logout" class="btn-logout-confirm">
-          Sair
-        </button>
-      </div>
-    </div>
-  </div>
+      .modal-content {
+        background-color: #fff;
+        margin: 5% auto;
+        padding: 0;
+        border-radius: 10px;
+        width: 90%;
+        max-width: 500px;
+        position: relative;
+        animation: slideIn 0.3s ease;
+      }
 
-  <script src="../js/auth.js"></script>
-</body>
+      .close {
+        color: #aaa;
+        float: right;
+        font-size: 28px;
+        font-weight: bold;
+        position: absolute;
+        top: 10px;
+        right: 15px;
+        z-index: 10001;
+        cursor: pointer;
+      }
 
+      .close:hover,
+      .close:focus {
+        color: black;
+        text-decoration: none;
+        cursor: pointer;
+      }
+
+      .modal-post-image {
+        width: 100%;
+        height: auto;
+        max-height: 400px;
+        object-fit: cover;
+        border-radius: 10px 10px 0 0;
+      }
+
+      .modal-post-info {
+        padding: 15px;
+      }
+
+      .modal-profile {
+        display: flex;
+        align-items: center;
+        margin-bottom: 15px;
+      }
+
+      .modal-profile-pic {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        background-size: cover;
+        background-position: center;
+        margin-right: 10px;
+      }
+
+      .modal-username {
+        font-weight: bold;
+      }
+
+      .modal-description {
+        margin: 10px 0;
+        line-height: 1.4;
+      }
+
+      .modal-date {
+        color: #666;
+        font-size: 0.9em;
+        margin-bottom: 10px;
+      }
+
+      .modal-likes {
+        font-weight: bold;
+        color: #333;
+      }
+
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+        }
+
+        to {
+          opacity: 1;
+        }
+      }
+
+      @keyframes slideIn {
+        from {
+          transform: translateY(-50px);
+          opacity: 0;
+        }
+
+        to {
+          transform: translateY(0);
+          opacity: 1;
+        }
+      }
+
+      /* ============================================
+   RESPONSIVIDADE
+   ============================================ */
+      @media (max-width: 390px) {
+        .container {
+          max-width: 100%;
+        }
+
+        .contact-info-box {
+          max-width: 100%;
+          max-height: auto;
+        }
+
+        .events-grid {
+          gap: var(--spacing-md);
+          padding: var(--spacing-md);
+        }
+
+        .header-home {
+          padding: var(--spacing-md);
+        }
+
+        .filter-nav {
+          padding: var(--spacing-md);
+        }
+
+        .container-data-user {
+          width: 100%;
+        }
+
+        .grid-products {
+          max-width: 100%;
+          padding: 15px 15px;
+        }
+
+        .divider {
+          width: 100%;
+        }
+      }
+
+      @media (min-width: 768px) {
+        .events-grid {
+          grid-template-columns: repeat(3, 1fr);
+          max-width: 800px;
+          margin: 0 auto;
+        }
+
+        .grid-products {
+          height: 60px;
+        }
+
+        .icon,
+        .products {
+          width: 30px;
+          height: 30px;
+        }
+
+        .linha {
+          height: 40px;
+          width: 2px;
+        }
+
+        .divider {
+          width: 100%;
+        }
+      }
+
+      @media (min-width: 1024px) {
+        .grid-products {
+          height: 70px;
+          gap: 150px;
+        }
+
+        .icon,
+        .products {
+          width: 35px;
+          height: 35px;
+        }
+
+        .linha {
+          height: 45px;
+          width: 2px;
+        }
+
+        .divider {
+          width: 100%;
+        }
+      }
+    </style>
+  </body>
 </html>
