@@ -11,6 +11,8 @@
       rel="stylesheet"
     />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="stylesheet" href="../css/style.css" />
+
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
       href="https://fonts.googleapis.com/css2?family=Jost:ital,wght@0,100..900;1,100..900&display=swap"
@@ -21,6 +23,15 @@
   <body>
     <div class="screen-container">
       <div class="screen-user">
+        <div id="logout-btn-container" class="logout-container">
+          <button
+            id="btn-logout"
+            class="btn-icon-logout"
+            aria-label="Sair da conta"
+          >
+            <img src="../assets/icon-logout.svg" alt="Sair" />
+          </button>
+        </div>
         <div class="container-header">
           <p class="user-name">Brunno Gabryel</p>
           <p class="user-username">@brunninho</p>
@@ -1084,5 +1095,22 @@
         }
       }
     </style>
+    <div id="modal-logout-confirm" class="modal-logout-overlay">
+      <div class="modal-logout-content">
+        <h3>Sair da conta</h3>
+        <p>Tem certeza de que deseja sair da conta?</p>
+
+        <div class="modal-logout-actions">
+          <button id="btn-cancel-logout" class="btn-logout-cancel">
+            Cancelar
+          </button>
+          <button id="btn-confirm-logout" class="btn-logout-confirm">
+            Sair
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <script src="../js/auth.js"></script>
   </body>
 </html>
