@@ -1314,18 +1314,27 @@ body.modal-open {
       PRODUCTS DETAIL
       ============================================ */
 
+#header-product-detail {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+}
+
 /* Header tweaks */
 .back-btn {
   background: none;
   border: none;
-  font-size: 26px;
-  color: var(--primary);
   cursor: pointer;
-  width: 36px;
-  height: 36px;
+  width: 16px;
+  height: 23px;
   display: flex;
   align-items: center;
   justify-content: center;
+  position: absolute;
+  left: var(--spacing-lg);
+  top: 50%;
+  transform: translateY(-50%);
 }
 
 /* Seller section */
@@ -1385,6 +1394,7 @@ body.modal-open {
   color: var(--primary);
   font-size: 22px;
   margin-bottom: 12px;
+  padding-left: 8px;
 }
 
 .product-image {
@@ -1401,9 +1411,9 @@ body.modal-open {
 
 .product-price {
   margin-top: 10px;
-  font-family: "Libre Bodoni", serif;
+  font-family: "Maitree", serif;
   font-size: 20px;
-  font-weight: 700;
+  font-weight: bold;
   color: var(--gray-900);
 }
 
