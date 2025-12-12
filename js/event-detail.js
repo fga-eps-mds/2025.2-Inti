@@ -1,5 +1,6 @@
 let currentEventId = null;
 let currentProfileId = null;
+let currentProfileUsername = null;
 let isUserSubscribed = false;
 let attendanceButton = null;
 let attendanceRequestInFlight = false;
@@ -30,6 +31,9 @@ document.addEventListener("DOMContentLoaded", async () => {
         .getMyProfile()
         .then((data) => {
           currentProfileId = extractProfileId(data);
+          currentProfileUsername = sanitizeUsernameValue(
+            extractProfileUsername(data)
+          );
           return data;
         })
         .catch((error) => {
@@ -70,22 +74,32 @@ function renderEventDetails(event) {
   const orgSection = document.querySelector(".event-organization");
   if (orgSection) {
     const orgNameElement = document.getElementById("orgName");
+    const orgUsernameElement = document.getElementById("orgUsername");
     const orgAvatarElement = document.getElementById("orgAvatar");
-    if (event?.organization) {
+    const organizer = getOrganizerInfo(event);
+
+    if (organizer) {
       if (orgNameElement) {
-        orgNameElement.textContent =
-          event.organization.name || event.organization.username || "";
+        orgNameElement.textContent = organizer.name;
       }
-      if (orgAvatarElement && event.organization.profilePictureUrl) {
-        const avatarUrl = buildAbsoluteUrl(
-          event.organization.profilePictureUrl
-        );
-        if (avatarUrl) {
-          orgAvatarElement.style.backgroundImage = `url('${avatarUrl}')`;
+      if (orgUsernameElement) {
+        orgUsernameElement.textContent = organizer.username || "";
+      }
+      if (orgAvatarElement) {
+        if (organizer.avatarUrl) {
+          orgAvatarElement.style.backgroundImage = `url('${organizer.avatarUrl}')`;
+        } else {
+          orgAvatarElement.style.backgroundImage = "";
         }
       }
+      bindOrganizerNavigation(organizer);
+      orgSection.style.display = "flex";
     } else {
+      bindOrganizerNavigation(null);
       orgSection.style.display = "none";
+      if (orgUsernameElement) orgUsernameElement.textContent = "";
+      if (orgAvatarElement) orgAvatarElement.style.backgroundImage = "";
+      if (orgNameElement) orgNameElement.textContent = "";
     }
   }
 
@@ -179,6 +193,150 @@ function updateMap(latitude, longitude, hasCoords) {
   }
 }
 
+function getOrganizerInfo(event) {
+  if (!event || typeof event !== "object") return null;
+  const organization = event.organization || event.organizer || {};
+
+  const id =
+    event.organizerId ||
+    event.organizerProfileId ||
+    organization.id ||
+    organization.profileId ||
+    organization.userId ||
+    null;
+
+  const usernameValue =
+    event.organizerUsername || organization.username || organization.handle;
+
+  const rawUsername = sanitizeUsernameValue(usernameValue);
+  const displayUsername = normalizeHandle(rawUsername);
+
+  const name =
+    event.organizerName ||
+    organization.name ||
+    organization.displayName ||
+    rawUsername ||
+    null;
+
+  const avatarPath =
+    event.organizerProfilePictureUrl ||
+    organization.profilePictureUrl ||
+    organization.avatarUrl ||
+    null;
+
+  if (!name && !rawUsername && !id && !avatarPath) {
+    return null;
+  }
+
+  return {
+    id,
+    username: displayUsername,
+    rawUsername,
+    name: name || "Organização",
+    avatarUrl: buildOrganizerAvatarUrl(avatarPath),
+  };
+}
+
+function normalizeHandle(handle) {
+  const sanitized = sanitizeUsernameValue(handle);
+  if (!sanitized) return null;
+  return `@${sanitized}`;
+}
+
+function sanitizeUsernameValue(value) {
+  if (!value || typeof value !== "string") return null;
+  const trimmed = value.trim();
+  if (!trimmed) return null;
+  return trimmed.startsWith("@") ? trimmed.slice(1) : trimmed;
+}
+
+function buildOrganizerAvatarUrl(pathOrUrl) {
+  if (!pathOrUrl || typeof pathOrUrl !== "string") return null;
+  const trimmed = pathOrUrl.trim();
+  if (!trimmed) return null;
+  if (trimmed.startsWith("http")) return trimmed;
+
+  const withoutSlash = trimmed.replace(/^\/+/, "");
+  const normalizedPath = withoutSlash.startsWith("images/")
+    ? `/${withoutSlash}`
+    : `/images/${withoutSlash}`;
+
+  return buildAbsoluteUrl(normalizedPath);
+}
+
+function bindOrganizerNavigation(organizer) {
+  const avatarElement = document.getElementById("orgAvatar");
+  const detailsElement = document.getElementById("orgDetails");
+  const targets = [avatarElement, detailsElement].filter(Boolean);
+
+  targets.forEach((element) => {
+    element.onclick = null;
+    element.onkeydown = null;
+    element.classList.remove("org-link");
+    element.removeAttribute("role");
+    element.removeAttribute("tabindex");
+  });
+
+  if (!organizer) {
+    return;
+  }
+
+  const handleNavigate = () => navigateToOrganizerProfile(organizer);
+
+  targets.forEach((element) => {
+    element.classList.add("org-link");
+    element.setAttribute("role", "button");
+    element.setAttribute("tabindex", "0");
+    element.onclick = handleNavigate;
+    element.onkeydown = (event) => {
+      if (event.key === "Enter" || event.key === " ") {
+        event.preventDefault();
+        handleNavigate();
+      }
+    };
+  });
+}
+
+function navigateToOrganizerProfile(organizer) {
+  if (!organizer) return;
+
+  const organizerUsername = sanitizeUsernameValue(organizer.rawUsername);
+  const isCurrentUser = isOrganizerCurrentUser(
+    organizerUsername,
+    organizer.id
+  );
+
+  if (isCurrentUser) {
+    window.location.href = "profile.html";
+    return;
+  }
+
+  if (organizerUsername) {
+    const targetUrl = `public-profile.html?username=${encodeURIComponent(
+      organizerUsername
+    )}`;
+    window.location.href = targetUrl;
+    return;
+  }
+
+  notifyError("Não foi possível abrir o perfil do organizador.");
+}
+
+function isOrganizerCurrentUser(organizerUsername, organizerId) {
+  const usernameMatch =
+    organizerUsername &&
+    currentProfileUsername &&
+    organizerUsername.toLowerCase() ===
+      currentProfileUsername.toLowerCase();
+
+  const idMatch =
+    organizerId &&
+    currentProfileId &&
+    String(organizerId) === String(currentProfileId);
+
+  return Boolean(usernameMatch || idMatch);
+}
+
 function buildAbsoluteUrl(pathOrUrl) {
   if (!pathOrUrl || typeof pathOrUrl !== "string") return null;
   const trimmed = pathOrUrl.trim();
@@ -196,6 +354,17 @@ function extractProfileId(profile) {
     profile.userId ||
     profile.uuid ||
     profile.profile?.id ||
+    null
+  );
+}
+
+function extractProfileUsername(profile) {
+  if (!profile || typeof profile !== "object") return null;
+  return (
+    profile.username ||
+    profile.handle ||
+    profile.user?.username ||
+    profile.profile?.username ||
     null
   );
 }

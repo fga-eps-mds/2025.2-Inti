@@ -246,11 +246,39 @@
         background: var(--gray-200);
         background-size: cover;
         background-position: center;
+        flex-shrink: 0;
+      }
+
+      .org-details {
+        display: flex;
+        flex-direction: column;
+        gap: 2px;
+        min-width: 0;
       }
 
       .org-name {
         font-weight: 600;
         color: var(--gray-900);
+        line-height: 1.2;
+      }
+
+      .org-username {
+        font-size: 0.85rem;
+        color: var(--gray-600);
+        line-height: 1.2;
+      }
+
+      .org-username:empty {
+        display: none;
+      }
+
+      .org-link {
+        cursor: pointer;
+      }
+
+      .org-link:focus-visible {
+        outline: 2px solid var(--primary);
+        outline-offset: 2px;
       }
 
       .event-img-description {
@@ -507,7 +535,10 @@
           <p class="name-event event-title">Carregando...</p>
           <div class="org-info event-organization">
             <div class="org-avatar" id="orgAvatar"></div>
-            <span class="org-name" id="orgName">Organização</span>
+            <div class="org-details" id="orgDetails">
+              <span class="org-name" id="orgName">Organização</span>
+              <span class="org-username" id="orgUsername"></span>
+            </div>
           </div>
         </div>
 
