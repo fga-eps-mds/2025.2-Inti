@@ -131,6 +131,29 @@ class EventControllerTest {
         verify(eventService).getListEvent();
     }
 
+    @Test
+    void deleteAllEvents_withOrganizationProfile_shouldInvokeService() {
+        Profile organization = buildProfile(ProfileType.organization);
+        mockSecurityContext(organization);
+
+        ResponseEntity<Void> response = eventController.deleteAllEvents();
+
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NO_CONTENT);
+        verify(eventService).deleteAllEvents();
+    }
+
+    @Test
+    void deleteAllEvents_withNonOrganizationProfile_shouldThrowForbidden() {
+        Profile userProfile = buildProfile(ProfileType.user);
+        mockSecurityContext(userProfile);
+
+        ResponseStatusException exception = assertThrows(ResponseStatusException.class,
+                () -> eventController.deleteAllEvents());
+
+        assertThat(exception.getStatusCode()).isEqualTo(HttpStatus.FORBIDDEN);
+        verify(eventService, never()).deleteAllEvents();
+    }
+
     private void mockSecurityContext(Object principal) {
         Authentication authentication = mock(Authentication.class);
         when(authentication.getPrincipal()).thenReturn(principal);
@@ -180,6 +203,9 @@ class EventControllerTest {
                 BigDecimal.ONE,
                 BigDecimal.TEN,
                 Instant.now().plusSeconds(3600),
-                registered);
+                registered,
+                UUID.randomUUID(),
+                "orgTest",
+                "https://images/org.png");
     }
 }

@@ -3,6 +3,7 @@ package br.mds.inti.service;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -31,6 +32,7 @@ import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.http.HttpStatus;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.web.server.ResponseStatusException;
 
@@ -125,6 +127,10 @@ class EventServiceTest {
         assertThat(response.registered()).isTrue();
         assertThat(response.imageUrl()).isEqualTo("/images/detail.png");
         assertThat(response.id()).isEqualTo(eventId);
+        Profile organizer = event.getProfile();
+        assertThat(response.organizerId()).isEqualTo(organizer.getId());
+        assertThat(response.organizerUsername()).isEqualTo(organizer.getUsername());
+        assertThat(response.organizerProfilePictureUrl()).isEqualTo(organizer.getProfilePictureUrl());
     }
 
     @Test
@@ -140,6 +146,10 @@ class EventServiceTest {
 
         assertThat(response.registered()).isFalse();
         assertThat(response.imageUrl()).isNull();
+        Profile organizer = event.getProfile();
+        assertThat(response.organizerId()).isEqualTo(organizer.getId());
+        assertThat(response.organizerUsername()).isEqualTo(organizer.getUsername());
+        assertThat(response.organizerProfilePictureUrl()).isEqualTo(organizer.getProfilePictureUrl());
     }
 
     @Test
@@ -153,6 +163,10 @@ class EventServiceTest {
 
         assertThat(response.registered()).isFalse();
         verify(eventParticipantsRepository, never()).existsByEventIdAndProfileId(any(), any());
+        Profile organizer = event.getProfile();
+        assertThat(response.organizerId()).isEqualTo(organizer.getId());
+        assertThat(response.organizerUsername()).isEqualTo(organizer.getUsername());
+        assertThat(response.organizerProfilePictureUrl()).isEqualTo(organizer.getProfilePictureUrl());
     }
 
     @Test
@@ -230,6 +244,7 @@ class EventServiceTest {
         event.setTitle(title);
         event.setBlobName(blobName);
         event.setEventTime(eventTime);
+        event.setProfile(buildOrganizerProfile());
         event.setFinishedAt(eventTime.plus(15, ChronoUnit.MINUTES));
         return event;
     }
@@ -244,6 +259,7 @@ class EventServiceTest {
         event.setTitle("Detalhe");
         event.setBlobName(blobName);
         event.setEventTime(eventTime);
+        event.setProfile(buildOrganizerProfile());
         event.setDescription("Descricao");
         event.setStreetAddress("Rua 1");
         event.setAdministrativeRegion("Centro");
@@ -272,5 +288,50 @@ class EventServiceTest {
                 "Perto",
                 BigDecimal.ONE,
                 BigDecimal.TEN);
+    }
+
+    private Profile buildOrganizerProfile() {
+        Profile organizer = new Profile();
+        organizer.setId(UUID.randomUUID());
+        organizer.setUsername("org-" + organizer.getId().toString().substring(0, 8));
+        organizer.setProfilePictureUrl("https://images.example/" + organizer.getId());
+        return organizer;
+    }
+
+    @Test
+    void deleteAllEvents_shouldDeleteBlobsParticipantsAndEvents() {
+        Event eventWithBlob = buildEvent("Evento 1", "blob-a.png", Instant.now().plus(1, ChronoUnit.DAYS));
+        Event eventWithoutBlob = buildEvent("Evento 2", null, Instant.now().plus(2, ChronoUnit.DAYS));
+
+        when(eventRepository.findAll()).thenReturn(List.of(eventWithBlob, eventWithoutBlob));
+
+        eventService.deleteAllEvents();
+
+        verify(blobService).deleteImage("blob-a.png");
+        verify(eventParticipantsRepository).deleteAllInBatch();
+        verify(eventRepository).deleteAllInBatch();
+    }
+
+    @Test
+    void deleteAllEvents_whenRepositoryReturnsEmpty_shouldDoNothing() {
+        when(eventRepository.findAll()).thenReturn(Collections.emptyList());
+
+        eventService.deleteAllEvents();
+
+        verify(blobService, never()).deleteImage(any());
+        verify(eventParticipantsRepository, never()).deleteAllInBatch();
+        verify(eventRepository, never()).deleteAllInBatch();
+    }
+
+    @Test
+    void deleteAllEvents_whenBlobMissing_shouldIgnoreNotFound() {
+        Event event = buildEvent("Evento", "missing.png", Instant.now().plus(3, ChronoUnit.DAYS));
+        when(eventRepository.findAll()).thenReturn(List.of(event));
+        doThrow(new ResponseStatusException(HttpStatus.NOT_FOUND)).when(blobService).deleteImage("missing.png");
+
+        eventService.deleteAllEvents();
+
+        verify(eventParticipantsRepository).deleteAllInBatch();
+        verify(eventRepository).deleteAllInBatch();
     }
 }
