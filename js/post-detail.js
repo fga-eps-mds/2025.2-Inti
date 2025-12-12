@@ -219,7 +219,7 @@ function renderPost(post) {
   // Update like button state
   if (post.liked) {
     document.querySelector(".like button").classList.add("liked");
-    if (likeBtn) likeBtn.src = "../assets/img_Like1.svg";
+    if (likeBtn) likeBtn.src = "../assets/img_Like2.svg";
   } else {
     document.querySelector(".like button").classList.remove("liked");
     if (likeBtn) likeBtn.src = "../assets/img_Like1.svg";
@@ -327,7 +327,7 @@ async function handleLikeClick(event) {
     } else {
       await apiService.likePost(postId);
       likeBtn.classList.add("liked");
-      likeBtn.querySelector("img").src = "../assets/img_Like1.svg";
+      likeBtn.querySelector("img").src = "../assets/img_Like2.svg";
     }
 
     // Recarregar contagem de likes
