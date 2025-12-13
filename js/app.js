@@ -27,12 +27,10 @@ document.addEventListener("DOMContentLoaded", function () {
 
 //adiciona verificação de publicação
 let popup = document.getElementById("alerta");
-if (popup) {
-  popup.addEventListener(
-    "click",
-    function () {
-      alert("Publicado com sucesso!");
-    },
-    true
-  );
-}
+popup.addEventListener(
+  "click",
+  function () {
+    alert("Publicado com sucesso!");
+  },
+  true
+);

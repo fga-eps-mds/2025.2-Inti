@@ -25,24 +25,20 @@ function initializeSearchUI() {
   searchInput.addEventListener("input", (event) => {
     const query = event.target.value.trim();
     if (!query) {
-      resultsContainer.innerHTML =
-        '<div class="initial-message">Digite um username para buscar</div>';
+      cancelActiveSearch();
+      renderInitialMessage();
       return;
     }
     debouncedSearch(query);
   });
 
-  // Allow pressing Enter in the input to trigger the search
-  searchInput.addEventListener("keydown", async (e) => {
-    if (e.key === "Enter") {
-      e.preventDefault();
-      const query = searchInput.value.trim();
-      if (!query) {
-        resultsContainer.innerHTML =
-          '<div class="initial-message">Digite um username para buscar</div>';
-        return;
-      }
-      await performSearch(query);
+  searchInput.addEventListener("keydown", (event) => {
+    if (event.key !== "Enter") return;
+    event.preventDefault();
+    const query = searchInput.value.trim();
+    if (!query) {
+      renderInitialMessage();
+      return;
     }
     performSearch(query);
   });
@@ -51,8 +47,7 @@ function initializeSearchUI() {
     searchBtn.addEventListener("click", () => {
       const query = searchInput.value.trim();
       if (!query) {
-        resultsContainer.innerHTML =
-          '<div class="initial-message">Digite um username para buscar</div>';
+        renderInitialMessage();
         return;
       }
       performSearch(query);
@@ -98,33 +93,19 @@ async function performSearch(query) {
 }
 
 function displayResults(users) {
-  const backendUrl =
-    typeof apiService !== "undefined" && apiService.baseURL
-      ? apiService.baseURL
-      : "https://20252-inti-production.up.railway.app";
+  if (!resultsContainer) return;
 
   resultsContainer.innerHTML = users
     .map((user) => {
-      // Support different field names returned by backend (camelCase or snake_case)
+      const username = sanitizeUsername(user.username || user.userName || "");
+      const displayName =
+        user.name || user.displayName || username || "Usuário";
       const picField =
         user.profilePictureUrl ||
         user.profile_picture_url ||
         user.imageUrl ||
         user.profile_image;
-
-      let profilePicUrl = "";
-      if (picField) {
-        // If backend already returned a full URL
-        if (/^https?:\/\//i.test(picField)) {
-          profilePicUrl = picField;
-        } else if (picField.startsWith("/")) {
-          // Path starting with slash (e.g. /images/xxx.jpg)
-          profilePicUrl = `${backendUrl}${picField}`;
-        } else {
-          // Bare filename — hit the /images endpoint
-          profilePicUrl = `${backendUrl}/images/${picField}`;
-        }
-      }
+      const profilePicUrl = buildProfilePictureUrl(picField);
 
       const avatarStyle = profilePicUrl
         ? `background-image: url('${profilePicUrl}')`
