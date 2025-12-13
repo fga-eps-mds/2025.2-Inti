@@ -41,6 +41,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/auth/**", "/images/**", "/geo/reverse").permitAll()
                         .requestMatchers(HttpMethod.GET, "/org/*").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/org/*/events").authenticated()
                         .requestMatchers(HttpMethod.POST, "/org/*/follow").authenticated()
                         .requestMatchers(HttpMethod.DELETE, "/org/*/unfollow").authenticated()
                         .requestMatchers("/org/**").hasRole("ORGANIZATION")
