@@ -91,6 +91,7 @@ class OrganizationServiceTest {
         assertEquals(mockOrganization.getFollowersCount(), result.followersCount());
         assertEquals(mockPosts.getTotalElements(), result.totalPosts());
         assertEquals(1, result.posts().size());
+        assertEquals(ProfileType.organization, result.type());
     }
 
     @Test
@@ -107,6 +108,7 @@ class OrganizationServiceTest {
         assertEquals(mockOrganization.getName(), result.name());
         assertEquals(mockOrganization.getUsername(), result.username());
         assertEquals(0L, result.totalPosts());
+        assertEquals(ProfileType.organization, result.type());
         verify(profileRepository).findByUsername(username);
     }
 
