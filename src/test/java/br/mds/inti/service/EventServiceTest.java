@@ -3,6 +3,7 @@ package br.mds.inti.service;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
@@ -110,6 +111,35 @@ class EventServiceTest {
 
         assertThat(myEvents).hasSize(1);
         assertThat(myEvents.get(0).title()).isEqualTo("Ativo");
+    }
+
+    @Test
+    void getEventsCreatedByOrganization_shouldReturnActiveEventsMappedAsMyEvent() {
+        Profile organizer = buildProfile();
+        Event event = buildEvent("Meu Evento", "banner.png", Instant.now().plus(3, ChronoUnit.DAYS));
+
+        when(eventRepository.findActiveEventsByOrganizer(eq(organizer.getId()), any()))
+                .thenReturn(List.of(event));
+
+        List<MyEvent> result = eventService.getEventsCreatedByOrganization(organizer);
+
+        assertThat(result).hasSize(1);
+        MyEvent myEvent = result.get(0);
+        assertThat(myEvent.title()).isEqualTo("Meu Evento");
+        assertThat(myEvent.imageUrl()).isEqualTo("/images/banner.png");
+        assertThat(myEvent.id()).isEqualTo(event.getId());
+        verify(eventRepository).findActiveEventsByOrganizer(eq(organizer.getId()), any());
+    }
+
+    @Test
+    void getEventsCreatedByOrganization_whenRepositoryReturnsEmpty_shouldReturnEmptyList() {
+        Profile organizer = buildProfile();
+        when(eventRepository.findActiveEventsByOrganizer(eq(organizer.getId()), any())).thenReturn(Collections.emptyList());
+
+        List<MyEvent> result = eventService.getEventsCreatedByOrganization(organizer);
+
+        assertThat(result).isEmpty();
+        verify(eventRepository).findActiveEventsByOrganizer(eq(organizer.getId()), any());
     }
 
     @Test

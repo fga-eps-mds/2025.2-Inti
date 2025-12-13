@@ -1,10 +1,13 @@
 package br.mds.inti.controller;
 
 import br.mds.inti.model.dto.FollowResponse;
+import br.mds.inti.model.dto.MyEvent;
 import br.mds.inti.model.dto.ProfileResponse;
 import br.mds.inti.model.dto.UpdateUserRequest;
 import br.mds.inti.model.entity.Profile;
+import br.mds.inti.model.enums.ProfileType;
 import br.mds.inti.service.FollowService;
+import br.mds.inti.service.EventService;
 import br.mds.inti.service.OrganizationService;
 import jakarta.validation.constraints.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,6 +20,7 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.io.IOException;
+import java.util.List;
 
 @RestController
 @RequestMapping("/org")
@@ -27,6 +31,9 @@ public class OrganizationController {
 
     @Autowired
     private FollowService followService;
+
+    @Autowired
+    private EventService eventService;
 
     @GetMapping
     public ResponseEntity<ProfileResponse> getMe(@RequestParam("size") Integer size,
@@ -84,5 +91,20 @@ public class OrganizationController {
         FollowResponse response = followService.unfollowProfile(username);
 
         return ResponseEntity.ok().body(response);
+    }
+
+    @GetMapping("/events")
+    public ResponseEntity<List<MyEvent>> getOrganizationEvents() {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        if(auth == null ||  !(auth.getPrincipal() instanceof Profile profile)) {
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Unauthorized");
+        }
+
+        if (profile.getType() != ProfileType.organization) {
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "User type is not an organization");
+        }
+
+        List<MyEvent> events = eventService.getEventsCreatedByOrganization(profile);
+        return ResponseEntity.ok(events);
     }
 }
