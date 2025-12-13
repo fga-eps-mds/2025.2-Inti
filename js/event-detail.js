@@ -45,6 +45,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     isUserSubscribed = inferUserSubscription(event, currentProfileId);
     renderEventDetails(event);
     updateAttendanceButton();
+    loadEventAttendees(eventId);
   } catch (error) {
     console.error("Error loading event details:", error);
     const isAuthError =
@@ -465,6 +466,101 @@ async function confirmPresence() {
     attendanceRequestInFlight = false;
     updateAttendanceButton();
   }
+}
+
+async function loadEventAttendees(eventId) {
+  if (!eventId || !window.apiService) return;
+
+  const attendeesSection = document.getElementById("attendeesSection");
+  const attendeesContainer = document.getElementById("attendeesContainer");
+  const attendeesCount = document.getElementById("attendeesCount");
+
+  try {
+    const response = await apiService.getEventAttendees(eventId);
+    const attendees = response?.attendees || [];
+
+    if (attendees.length === 0) {
+      if (attendeesSection) attendeesSection.style.display = "none";
+      return;
+    }
+
+    if (attendeesSection) attendeesSection.style.display = "block";
+    renderAttendees(attendees, attendeesContainer, attendeesCount);
+  } catch (error) {
+    console.error("Erro ao carregar participantes:", error);
+    if (attendeesSection) attendeesSection.style.display = "none";
+  }
+}
+
+function renderAttendees(attendees, container, countElement) {
+  if (!container) return;
+
+  container.innerHTML = "";
+
+  attendees.forEach((attendee) => {
+    const avatar = document.createElement("div");
+    avatar.className = "attendee-avatar";
+    avatar.setAttribute("data-username", `@${attendee.username || "user"}`);
+    avatar.setAttribute("role", "button");
+    avatar.setAttribute("tabindex", "0");
+
+    const profilePictureUrl = attendee.profilePictureUrl;
+    if (profilePictureUrl) {
+      const imageUrl = profilePictureUrl.startsWith("http")
+        ? profilePictureUrl
+        : `${apiService.baseURL}/images/${profilePictureUrl}`;
+      avatar.style.backgroundImage = `url('${imageUrl}')`;
+    } else {
+      avatar.style.backgroundColor = getRandomAvatarColor();
+      avatar.style.display = "flex";
+      avatar.style.alignItems = "center";
+      avatar.style.justifyContent = "center";
+      avatar.style.color = "white";
+      avatar.style.fontWeight = "600";
+      avatar.textContent = (attendee.username || "U").charAt(0).toUpperCase();
+    }
+
+    avatar.addEventListener("click", () => {
+      if (attendee.username) {
+        window.location.href = `public-profile.html?username=${encodeURIComponent(
+          attendee.username
+        )}`;
+      }
+    });
+
+    avatar.addEventListener("keydown", (event) => {
+      if (event.key === "Enter" || event.key === " ") {
+        event.preventDefault();
+        if (attendee.username) {
+          window.location.href = `public-profile.html?username=${encodeURIComponent(
+            attendee.username
+          )}`;
+        }
+      }
+    });
+
+    container.appendChild(avatar);
+  });
+
+  if (countElement) {
+    const count = attendees.length;
+    countElement.textContent =
+      count === 1
+        ? "1 pessoa confirmou presença"
+        : `${count} pessoas confirmaram presença`;
+  }
+}
+
+function getRandomAvatarColor() {
+  const colors = [
+    "#592e83",
+    "#7a4fa3",
+    "#a38bba",
+    "#FF6B6B",
+    "#4ECDC4",
+    "#45B7D1",
+  ];
+  return colors[Math.floor(Math.random() * colors.length)];
 }
 
 window.confirmPresence = confirmPresence;
