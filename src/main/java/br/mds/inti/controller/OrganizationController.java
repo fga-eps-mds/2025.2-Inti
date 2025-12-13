@@ -110,4 +110,16 @@ public class OrganizationController {
         List<MyEvent> events = eventService.getEventsCreatedByOrganization(profile);
         return ResponseEntity.ok(events);
     }
+
+    @GetMapping("/{username}/events")
+    public ResponseEntity<List<MyEvent>> getOrganizationEventsByUsername(@PathVariable String username) {
+        Profile organization = organizationService.getOrganization(username);
+
+        if (organization.getType() != ProfileType.organization) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "O perfil informado não é uma organização");
+        }
+
+        List<MyEvent> events = eventService.getEventsCreatedByOrganization(organization);
+        return ResponseEntity.ok(events);
+    }
 }
