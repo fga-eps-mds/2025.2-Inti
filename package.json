@@ -1,28 +1,13 @@
 {
-  "name": "inti",
+  "name": "musa-demo",
   "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
+  "description": "MUSA - Demo para investidores",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "cypress:open": "cypress open",
+    "cypress:run": "cypress run",
+    "demo": "cypress open --e2e --browser chrome"
   },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/fga-eps-mds/2025.2-Inti.git"
-  },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "type": "commonjs",
-  "bugs": {
-    "url": "https://github.com/fga-eps-mds/2025.2-Inti/issues"
-  },
-  "homepage": "https://github.com/fga-eps-mds/2025.2-Inti#readme",
   "devDependencies": {
-    "prettier": "^3.6.2"
-  },
-  "dependencies": {
-    "cors": "^2.8.5",
-    "express": "^4.18.2"
+    "cypress": "^13.6.2"
   }
 }
