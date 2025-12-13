@@ -17,6 +17,7 @@ function checkAuth() {
 
 // Global variable to store profile data
 let currentProfileData = null;
+let postsGridElement = null;
 
 const POSTS_PAGE_SIZE = 12;
 const MAX_POST_PAGES = 12; // safety guard to avoid infinite loops
@@ -29,6 +30,13 @@ const productsState = {
   initialized: false,
   active: false,
   hasLoadedProfileProducts: false,
+};
+
+const eventsState = {
+  container: null,
+  loading: false,
+  loaded: false,
+  events: [],
 };
 
 // Load profile data
@@ -113,6 +121,8 @@ function updateProfileUI(data) {
   if (postsCount) postsCount.textContent = resolveTotalPosts(data);
   if (followersCount) followersCount.textContent = data.followersCount || 0;
   if (followingCount) followingCount.textContent = data.followingCount || 0;
+
+  toggleEventsTabVisibility(isOrganizationProfile(data));
 
   // Update bio and contact info if available
   const contactText = document.querySelector(".contact-text");
@@ -209,6 +219,25 @@ function getRandomColor() {
   return colors[Math.floor(Math.random() * colors.length)];
 }
 
+function toggleEventsTabVisibility(shouldShow) {
+  const eventsTab = document.querySelector(".event-btn");
+  const eventsDivider = document.querySelector(".linha-events");
+  if (!eventsTab) return;
+
+  if (shouldShow) {
+    eventsTab.style.display = "flex";
+    if (eventsDivider) eventsDivider.style.display = "block";
+  } else {
+    eventsTab.style.display = "none";
+    if (eventsDivider) eventsDivider.style.display = "none";
+    hideEventsGrid();
+  }
+}
+
+function isOrganizationProfile(profile = {}) {
+  return (profile.type || "").toLowerCase() === "organization";
+}
+
 function resolveTotalPosts(profile = {}) {
   if (profile.totalPosts !== undefined && profile.totalPosts !== null) {
     const total = Number(profile.totalPosts);
@@ -231,43 +260,60 @@ function logout() {
 document.addEventListener("DOMContentLoaded", () => {
   loadProfile();
 
-  // Tab switching functionality
-  const publicacoesTab = document.querySelector(".grid-btn"); // Using existing class from HTML
-  const produtosTab = document.querySelector(".product-btn"); // Using existing class from HTML
-  const postsGrid = document.querySelector(".user-posts-grid");
+  const publicacoesTab = document.querySelector(".grid-btn");
+  const produtosTab = document.querySelector(".product-btn");
+  const eventosTab = document.querySelector(".event-btn");
+  postsGridElement = document.querySelector(".user-posts-grid");
 
-  // Create a container for products if it doesn't exist
-  let productsGrid = document.querySelector(".user-products-grid");
-  if (!productsGrid && postsGrid) {
-    productsGrid = document.createElement("div");
-    productsGrid.className = "user-products-grid";
-    postsGrid.parentNode.insertBefore(productsGrid, postsGrid.nextSibling);
-  }
+  const productsGrid = document.querySelector(".user-products-grid");
+  const eventsGrid = document.querySelector(".user-events-grid");
 
   if (productsGrid) {
     initializeProductsGrid(productsGrid);
   }
 
-  if (publicacoesTab && produtosTab) {
-    publicacoesTab.addEventListener("click", () => {
-      publicacoesTab.classList.add("active");
-      produtosTab.classList.remove("active");
-      if (postsGrid) postsGrid.style.display = "grid";
-      hideProductsGrid();
-    });
+  if (eventsGrid) {
+    initializeEventsGrid(eventsGrid);
+  }
 
+  const viewButtons = document.querySelectorAll(".view-btn");
+  const setActiveTab = (button) => {
+    viewButtons.forEach((btn) => {
+      if (!btn) return;
+      if (btn === button) btn.classList.add("active");
+      else btn.classList.remove("active");
+    });
+  };
+
+  if (publicacoesTab) {
+    publicacoesTab.addEventListener("click", () => {
+      setActiveTab(publicacoesTab);
+      showPostsGrid();
+    });
+  }
+
+  if (produtosTab) {
     produtosTab.addEventListener("click", () => {
-      produtosTab.classList.add("active");
-      publicacoesTab.classList.remove("active");
-      if (postsGrid) postsGrid.style.display = "none";
-      activateProductsTab();
+      setActiveTab(produtosTab);
+      showProductsGrid();
+    });
+  }
+
+  if (eventosTab) {
+    eventosTab.addEventListener("click", () => {
+      setActiveTab(eventosTab);
+      showEventsGrid();
     });
   }
 
   const params = new URLSearchParams(window.location.search);
-  const shouldShowProducts = params.get("view") === "products";
-  if (shouldShowProducts && produtosTab) {
+  const viewParam = params.get("view");
+  if (viewParam === "products" && produtosTab) {
     produtosTab.click();
+  } else if (viewParam === "events" && eventosTab) {
+    eventosTab.click();
+  }
+  if (viewParam) {
     const cleanUrl = new URL(window.location.href);
     cleanUrl.searchParams.delete("view");
     window.history.replaceState({}, "", cleanUrl.pathname + cleanUrl.search);
@@ -284,9 +330,11 @@ function initializeProductsGrid(grid) {
   grid.style.marginTop = "16px";
 }
 
-function activateProductsTab() {
+function showProductsGrid() {
   productsState.active = true;
   if (!productsState.container) return;
+  hideEventsGrid();
+  if (postsGridElement) postsGridElement.style.display = "none";
   productsState.container.style.display = "grid";
 
   const hasRenderedProducts = Boolean(
@@ -617,6 +665,209 @@ function handleProductsScroll() {
   if (scrolledToBottom) {
     loadNextProductsPage();
   }
+}
+
+function initializeEventsGrid(grid) {
+  eventsState.container = grid;
+  if (!grid) return;
+  grid.style.display = "none";
+  grid.style.gridTemplateColumns = "1fr";
+  grid.style.gap = "12px";
+  grid.style.marginTop = "16px";
+}
+
+function showPostsGrid() {
+  if (postsGridElement) {
+    postsGridElement.style.display = "grid";
+  }
+  hideProductsGrid();
+  hideEventsGrid();
+}
+
+function showEventsGrid() {
+  if (!eventsState.container) return;
+  hideProductsGrid();
+  if (postsGridElement) {
+    postsGridElement.style.display = "none";
+  }
+  eventsState.container.style.display = "grid";
+
+  if (!eventsState.loaded && !eventsState.loading) {
+    loadOrganizationEvents();
+  }
+}
+
+function hideEventsGrid() {
+  if (!eventsState.container) return;
+  eventsState.container.style.display = "none";
+}
+
+async function loadOrganizationEvents() {
+  if (!isOrganizationProfile(currentProfileData)) {
+    showEventsEmptyState("Eventos disponíveis apenas para organizadores.");
+    eventsState.loaded = true;
+    return;
+  }
+
+  if (!eventsState.container || eventsState.loading || eventsState.loaded) {
+    return;
+  }
+
+  eventsState.loading = true;
+  setEventsLoadingIndicator(true);
+
+  try {
+    const response = await apiService.getOrganizationEvents();
+    eventsState.events = Array.isArray(response) ? response : [];
+
+    if (!eventsState.events.length) {
+      showEventsEmptyState("Nenhum evento cadastrado.");
+      return;
+    }
+
+    renderEventCards(eventsState.events);
+  } catch (error) {
+    console.error("Erro ao carregar eventos:", error);
+    showEventsEmptyState("Erro ao carregar eventos.");
+  } finally {
+    eventsState.loading = false;
+    eventsState.loaded = true;
+    setEventsLoadingIndicator(false);
+  }
+}
+
+function renderEventCards(events = []) {
+  if (!eventsState.container) return;
+  removeEventsEmptyState();
+  eventsState.container.innerHTML = "";
+
+  events.forEach((event) => {
+    const card = createEventCard(event);
+    eventsState.container.appendChild(card);
+  });
+}
+
+function createEventCard(event = {}) {
+  const card = document.createElement("div");
+  card.className = "user-event-card";
+  card.style.background = "#f2ebfb";
+  card.style.borderRadius = "12px";
+  card.style.padding = "12px";
+  card.style.display = "flex";
+  card.style.flexDirection = "column";
+  card.style.gap = "8px";
+  card.tabIndex = 0;
+
+  const imageWrapper = document.createElement("div");
+  imageWrapper.className = "event-card-image";
+  imageWrapper.style.width = "100%";
+  imageWrapper.style.height = "140px";
+  imageWrapper.style.borderRadius = "10px";
+  imageWrapper.style.backgroundColor = "#d9d9d9";
+  imageWrapper.style.backgroundSize = "cover";
+  imageWrapper.style.backgroundPosition = "center";
+
+  const imageUrl = buildFullImageUrl(event.imageUrl || event.imgLink || "");
+  if (imageUrl) {
+    setBackgroundImageWithBearer(imageWrapper, imageUrl, apiService.token);
+  } else {
+    imageWrapper.style.display = "flex";
+    imageWrapper.style.alignItems = "center";
+    imageWrapper.style.justifyContent = "center";
+    imageWrapper.style.color = "#592e83";
+    imageWrapper.textContent = "SEM IMAGEM";
+  }
+
+  const infoWrapper = document.createElement("div");
+  infoWrapper.className = "event-card-info";
+  infoWrapper.style.display = "flex";
+  infoWrapper.style.flexDirection = "column";
+  infoWrapper.style.gap = "4px";
+
+  const title = document.createElement("p");
+  title.className = "event-card-title";
+  title.textContent = event.title || event.name || "Evento";
+  title.style.fontWeight = "600";
+  title.style.color = "#592e83";
+
+  const date = document.createElement("p");
+  date.className = "event-card-date";
+  date.textContent = formatEventDate(
+    event.date || event.data || event.eventTime
+  );
+  date.style.fontSize = "0.9rem";
+  date.style.color = "#4b4b4b";
+
+  infoWrapper.appendChild(title);
+  infoWrapper.appendChild(date);
+
+  card.appendChild(imageWrapper);
+  card.appendChild(infoWrapper);
+
+  if (event.id) {
+    card.addEventListener("click", () => navigateToEventDetail(event.id));
+    card.addEventListener("keydown", (evt) => {
+      if (evt.key === "Enter" || evt.key === " ") {
+        evt.preventDefault();
+        navigateToEventDetail(event.id);
+      }
+    });
+  }
+
+  return card;
+}
+
+function formatEventDate(rawDate) {
+  if (!rawDate) return "Data a definir";
+  const date = new Date(rawDate);
+  if (Number.isNaN(date.getTime())) return "Data a definir";
+  const datePart = date.toLocaleDateString("pt-BR");
+  const timePart = date.toLocaleTimeString("pt-BR", {
+    hour: "2-digit",
+    minute: "2-digit",
+  });
+  return `${datePart} às ${timePart}`;
+}
+
+function setEventsLoadingIndicator(isLoading) {
+  if (!eventsState.container) return;
+  if (isLoading && !eventsState.loaded) {
+    eventsState.container.innerHTML =
+      '<p class="events-loading">Carregando eventos...</p>';
+  } else if (!isLoading) {
+    const loadingEl = eventsState.container.querySelector(".events-loading");
+    if (loadingEl) loadingEl.remove();
+  }
+}
+
+function showEventsEmptyState(message) {
+  if (!eventsState.container) return;
+  eventsState.container.innerHTML = `<p class="events-empty">${message}</p>`;
+}
+
+function removeEventsEmptyState() {
+  if (!eventsState.container) return;
+  const emptyEl = eventsState.container.querySelector(".events-empty");
+  if (emptyEl) emptyEl.remove();
+}
+
+function buildFullImageUrl(path) {
+  if (!path || typeof path !== "string") return null;
+  if (path.startsWith("http")) return path;
+  const base = apiService?.baseURL || "";
+  if (!base) return path;
+  return path.startsWith("/") ? `${base}${path}` : `${base}/${path}`;
+}
+
+function navigateToEventDetail(eventId) {
+  if (!eventId) return;
+  const route = getAdjustedRoute
+    ? getAdjustedRoute("pages/event-detail.html")
+    : "pages/event-detail.html";
+  const separator = route.includes("?") ? "&" : "?";
+  window.location.href = `${route}${separator}id=${encodeURIComponent(
+    eventId
+  )}`;
 }
 
 // Expose logout globally

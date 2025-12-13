@@ -261,6 +261,17 @@ class ApiService {
     return this.request(`/event/${eventId}`);
   }
 
+  async getOrganizationEvents() {
+    return this.request("/org/events");
+  }
+
+  async getOrganizationEventsByUsername(username) {
+    if (!username) {
+      throw new Error("Username é obrigatório para buscar eventos.");
+    }
+    return this.request(`/org/${encodeURIComponent(username)}/events`);
+  }
+
   async attendEvent(eventId) {
     return this.request(`/event/${eventId}/attendees`, {
       method: "POST",

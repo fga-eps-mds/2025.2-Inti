@@ -7,19 +7,39 @@ let currentPublicProfileUsername = null;
 let publicProfileProductsCache = null;
 let publicProfileProductsPromise = null;
 let publicProfileProductsLoaded = false;
+let postsGridElement = null;
+let productsGridElement = null;
+
+const publicEventsState = {
+  container: null,
+  loading: false,
+  loaded: false,
+  events: [],
+};
+
+let pendingViewParam = null;
 
 document.addEventListener("DOMContentLoaded", () => {
   if (!AUTH_TOKEN) {
     console.error("Token não encontrado.");
-    // Redirect to login if needed, or just show error
     window.location.href = "../index.html";
     return;
   }
 
   const urlParams = new URLSearchParams(window.location.search);
   const username = urlParams.get("username");
+  pendingViewParam = urlParams.get("view");
+
+  if (pendingViewParam) {
+    const cleanUrl = new URL(window.location.href);
+    cleanUrl.searchParams.delete("view");
+    window.history.replaceState({}, "", cleanUrl.pathname + cleanUrl.search);
+  }
+
   currentPublicProfileUsername = username;
   currentPublicProfileId = null;
+
+  initializeViewTabs();
 
   if (!username) {
     showError("Nenhum username informado!");
@@ -66,6 +86,7 @@ async function fetchProfileData(username) {
     publicProfileProductsCache = null;
     publicProfileProductsLoaded = false;
     publicProfileProductsPromise = null;
+    resetPublicEventsState();
 
     populateProfileData(profileData);
   } catch (error) {
@@ -116,26 +137,13 @@ function populateProfileData(data) {
 
   initializeFollowButton(data);
 
+  toggleEventsTabVisibility(isOrganizationProfile(data));
+
   console.log("Chamando populateUserPosts com:", data.posts);
   populateUserPosts(data.posts || []);
 
-  // Setup tab switching
-  const viewBtns = document.querySelectorAll(".view-btn");
-  viewBtns.forEach((btn) => {
-    btn.addEventListener("click", () => {
-      // Remove active class from all
-      viewBtns.forEach((b) => b.classList.remove("active"));
-      // Add active to clicked
-      btn.classList.add("active");
-
-      const view = btn.dataset.view;
-      if (view === "posts") {
-        populateUserPosts(data.posts || []);
-      } else if (view === "products") {
-        showPublicProfileProducts();
-      }
-    });
-  });
+  showPostsGrid();
+  applyPendingViewParam();
 }
 
 function initializeFollowButton(data) {
@@ -269,17 +277,38 @@ function updateProfileCounters(data) {
   });
 }
 
+function toggleEventsTabVisibility(shouldShow) {
+  const eventsTab = document.querySelector(".event-btn");
+  const eventsDivider = document.querySelector(".linha-events");
+  if (!eventsTab) return;
+
+  if (shouldShow) {
+    eventsTab.style.display = "flex";
+    if (eventsDivider) eventsDivider.style.display = "block";
+  } else {
+    eventsTab.style.display = "none";
+    if (eventsDivider) eventsDivider.style.display = "none";
+    hideEventsGrid();
+  }
+}
+
+function isOrganizationProfile(profile = {}) {
+  const type = typeof profile.type === "string" ? profile.type : "";
+  return type.toLowerCase() === "organization";
+}
+
 function populateUserPosts(posts) {
-  const postsGrid = document.querySelector(".user-posts-grid");
+  const postsGrid =
+    postsGridElement || document.querySelector(".user-posts-grid");
 
   if (!postsGrid) {
     console.error("Elemento .user-posts-grid não encontrado");
     return;
   }
 
+  postsGridElement = postsGrid;
   postsGrid.style.gridTemplateColumns = "";
   postsGrid.style.gap = "";
-  postsGrid.style.display = "";
 
   postsGrid.innerHTML = "";
 
@@ -299,6 +328,148 @@ function populateUserPosts(posts) {
     const postItem = createPostElement(post, index);
     postsGrid.appendChild(postItem);
   });
+}
+
+function initializeViewTabs() {
+  postsGridElement = document.querySelector(".user-posts-grid");
+  productsGridElement = document.querySelector(".user-products-grid");
+  const eventsGrid = document.querySelector(".user-events-grid");
+
+  if (eventsGrid) {
+    initializeEventsGrid(eventsGrid);
+  } else {
+    publicEventsState.container = null;
+  }
+
+  const postsBtn = document.querySelector(".grid-btn");
+  const productsBtn = document.querySelector(".product-btn");
+  const eventsBtn = document.querySelector(".event-btn");
+  const viewButtons = Array.from(document.querySelectorAll(".view-btn"));
+
+  const setActiveTab = (button) => {
+    viewButtons.forEach((btn) => {
+      if (!btn) return;
+      if (btn === button) btn.classList.add("active");
+      else btn.classList.remove("active");
+    });
+  };
+
+  if (postsBtn) {
+    postsBtn.addEventListener("click", () => {
+      setActiveTab(postsBtn);
+      showPostsGrid();
+    });
+  }
+
+  if (productsBtn) {
+    productsBtn.addEventListener("click", () => {
+      setActiveTab(productsBtn);
+      showProductsGrid();
+    });
+  }
+
+  if (eventsBtn) {
+    eventsBtn.addEventListener("click", () => {
+      setActiveTab(eventsBtn);
+      showEventsGrid();
+    });
+  }
+
+  if (postsBtn) {
+    setActiveTab(postsBtn);
+  }
+}
+
+function showPostsGrid() {
+  postsGridElement =
+    postsGridElement || document.querySelector(".user-posts-grid");
+  if (postsGridElement) {
+    postsGridElement.style.display = "grid";
+  }
+  if (productsGridElement) {
+    productsGridElement.style.display = "none";
+  }
+  hideEventsGrid();
+}
+
+function showProductsGrid() {
+  postsGridElement =
+    postsGridElement || document.querySelector(".user-posts-grid");
+  if (postsGridElement) {
+    postsGridElement.style.display = "none";
+  }
+
+  productsGridElement =
+    productsGridElement || document.querySelector(".user-products-grid");
+  if (productsGridElement) {
+    productsGridElement.style.display = "grid";
+  }
+  hideEventsGrid();
+  showPublicProfileProducts();
+}
+
+function initializeEventsGrid(grid) {
+  publicEventsState.container = grid;
+  if (!grid) return;
+  grid.style.display = "none";
+  grid.style.gridTemplateColumns = "1fr";
+  grid.style.gap = "12px";
+  grid.style.marginTop = "16px";
+}
+
+function showEventsGrid() {
+  if (!publicEventsState.container) return;
+  if (!isOrganizationProfile(currentPublicProfile)) {
+    showPublicEventsEmptyState("Eventos disponíveis apenas para organizações.");
+    publicEventsState.loaded = true;
+    return;
+  }
+
+  if (postsGridElement) {
+    postsGridElement.style.display = "none";
+  }
+  if (productsGridElement) {
+    productsGridElement.style.display = "none";
+  }
+
+  publicEventsState.container.style.display = "grid";
+
+  if (!publicEventsState.loaded && !publicEventsState.loading) {
+    loadPublicOrganizationEvents();
+  }
+}
+
+function hideEventsGrid() {
+  if (!publicEventsState.container) return;
+  publicEventsState.container.style.display = "none";
+}
+
+function applyPendingViewParam() {
+  if (!pendingViewParam) return;
+
+  const postsBtn = document.querySelector(".grid-btn");
+  const productsBtn = document.querySelector(".product-btn");
+  const eventsBtn = document.querySelector(".event-btn");
+  const targetView = pendingViewParam;
+  pendingViewParam = null;
+
+  if (targetView === "products" && productsBtn) {
+    productsBtn.click();
+    return;
+  }
+
+  if (
+    targetView === "events" &&
+    eventsBtn &&
+    eventsBtn.style.display !== "none"
+  ) {
+    eventsBtn.click();
+    return;
+  }
+
+  if (targetView === "posts" && postsBtn) {
+    postsBtn.click();
+  }
 }
 
 function createPostElement(post, index) {
@@ -330,15 +501,17 @@ function createPostElement(post, index) {
 }
 
 async function showPublicProfileProducts() {
-  const postsGrid = document.querySelector(".user-posts-grid");
-  if (!postsGrid) return;
+  const productsGrid =
+    productsGridElement || document.querySelector(".user-products-grid");
+  if (!productsGrid) return;
+  productsGridElement = productsGrid;
 
   if (publicProfileProductsLoaded) {
     populateUserProducts(publicProfileProductsCache || []);
     return;
   }
 
-  postsGrid.innerHTML = '<p class="no-posts">Carregando produtos...</p>';
+  productsGrid.innerHTML = '<p class="no-posts">Carregando produtos...</p>';
 
   try {
     const products = await fetchPublicProfileProducts();
@@ -354,7 +527,224 @@ async function showPublicProfileProducts() {
       return;
     }
 
-    postsGrid.innerHTML = '<p class="no-posts">Erro ao carregar produtos.</p>';
+    productsGrid.innerHTML =
+      '<p class="no-posts">Erro ao carregar produtos.</p>';
+  }
+}
+
+async function loadPublicOrganizationEvents() {
+  if (publicEventsState.loading || publicEventsState.loaded) return;
+  const eventsGrid = publicEventsState.container;
+
+  if (!eventsGrid) return;
+
+  if (!isOrganizationProfile(currentPublicProfile)) {
+    showPublicEventsEmptyState("Este perfil não é uma organização.");
+    publicEventsState.loaded = true;
+    return;
+  }
+
+  const username =
+    currentPublicProfile?.username || currentPublicProfileUsername || null;
+  if (!username) {
+    showPublicEventsEmptyState("Organização não encontrada.");
+    publicEventsState.loaded = true;
+    return;
+  }
+
+  publicEventsState.loading = true;
+  setPublicEventsLoadingIndicator(true);
+
+  try {
+    const response = await fetch(
+      `${BACKEND_URL}/org/${encodeURIComponent(username)}/events`,
+      {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${AUTH_TOKEN}`,
+          "Content-Type": "application/json",
+        },
+      }
+    );
+
+    if (!response.ok) {
+      throw new Error(`Erro ao buscar eventos: ${response.status}`);
+    }
+
+    const data = await response.json();
+    const events = normalizeEventsResponse(data);
+    publicEventsState.events = events;
+
+    if (!events.length) {
+      showPublicEventsEmptyState("Nenhum evento publicado.");
+      return;
+    }
+
+    renderPublicEventCards(events);
+  } catch (error) {
+    console.error("Erro ao carregar eventos públicos:", error);
+    showPublicEventsEmptyState("Erro ao carregar eventos.");
+  } finally {
+    publicEventsState.loading = false;
+    publicEventsState.loaded = true;
+    setPublicEventsLoadingIndicator(false);
+  }
+}
+
+function renderPublicEventCards(events = []) {
+  const eventsGrid = publicEventsState.container;
+  if (!eventsGrid) return;
+
+  removePublicEventsEmptyState();
+  eventsGrid.innerHTML = "";
+
+  const orderedEvents = [...events].sort((a, b) => {
+    const dateA = a?.date || a?.data || a?.eventTime;
+    const dateB = b?.date || b?.data || b?.eventTime;
+    const timeA = dateA ? new Date(dateA).getTime() : Number.MAX_SAFE_INTEGER;
+    const timeB = dateB ? new Date(dateB).getTime() : Number.MAX_SAFE_INTEGER;
+    return timeA - timeB;
+  });
+
+  orderedEvents.forEach((event) => {
+    const card = createPublicEventCard(event);
+    eventsGrid.appendChild(card);
+  });
+}
+
+function createPublicEventCard(event = {}) {
+  const card = document.createElement("div");
+  card.className = "user-event-card";
+  card.style.background = "#f2ebfb";
+  card.style.borderRadius = "12px";
+  card.style.padding = "12px";
+  card.style.display = "flex";
+  card.style.flexDirection = "column";
+  card.style.gap = "8px";
+  card.tabIndex = 0;
+
+  const imageWrapper = document.createElement("div");
+  imageWrapper.className = "event-card-image";
+  imageWrapper.style.width = "100%";
+  imageWrapper.style.height = "140px";
+  imageWrapper.style.borderRadius = "10px";
+  imageWrapper.style.backgroundColor = "#d9d9d9";
+  imageWrapper.style.backgroundSize = "cover";
+  imageWrapper.style.backgroundPosition = "center";
+
+  const imageUrl = buildPublicEventImageUrl(
+    event.imageUrl || event.imgLink || event.bannerUrl || ""
+  );
+  if (imageUrl) {
+    setBackgroundImageWithBearer(imageWrapper, imageUrl, AUTH_TOKEN);
+  } else {
+    imageWrapper.style.display = "flex";
+    imageWrapper.style.alignItems = "center";
+    imageWrapper.style.justifyContent = "center";
+    imageWrapper.style.color = "#592e83";
+    imageWrapper.textContent = "SEM IMAGEM";
+  }
+
+  const infoWrapper = document.createElement("div");
+  infoWrapper.className = "event-card-info";
+  infoWrapper.style.display = "flex";
+  infoWrapper.style.flexDirection = "column";
+  infoWrapper.style.gap = "4px";
+
+  const title = document.createElement("p");
+  title.className = "event-card-title";
+  title.textContent = event.title || event.name || "Evento";
+  title.style.fontWeight = "600";
+  title.style.color = "#592e83";
+
+  const date = document.createElement("p");
+  date.className = "event-card-date";
+  date.textContent = formatPublicEventDate(
+    event.date || event.data || event.eventTime
+  );
+  date.style.fontSize = "0.9rem";
+  date.style.color = "#4b4b4b";
+
+  infoWrapper.appendChild(title);
+  infoWrapper.appendChild(date);
+
+  card.appendChild(imageWrapper);
+  card.appendChild(infoWrapper);
+
+  if (event.id) {
+    card.addEventListener("click", () => navigateToPublicEventDetail(event.id));
+    card.addEventListener("keydown", (evt) => {
+      if (evt.key === "Enter" || evt.key === " ") {
+        evt.preventDefault();
+        navigateToPublicEventDetail(event.id);
+      }
+    });
+  }
+
+  return card;
+}
+
+function formatPublicEventDate(rawDate) {
+  if (!rawDate) return "Data a definir";
+  const date = new Date(rawDate);
+  if (Number.isNaN(date.getTime())) return "Data a definir";
+  const datePart = date.toLocaleDateString("pt-BR");
+  const timePart = date.toLocaleTimeString("pt-BR", {
+    hour: "2-digit",
+    minute: "2-digit",
+  });
+  return `${datePart} às ${timePart}`;
+}
+
+function setPublicEventsLoadingIndicator(isLoading) {
+  const eventsGrid = publicEventsState.container;
+  if (!eventsGrid) return;
+
+  if (isLoading && !publicEventsState.loaded) {
+    eventsGrid.innerHTML =
+      '<p class="events-loading">Carregando eventos...</p>';
+  } else if (!isLoading) {
+    const loadingEl = eventsGrid.querySelector(".events-loading");
+    if (loadingEl) loadingEl.remove();
+  }
+}
+
+function showPublicEventsEmptyState(message) {
+  const eventsGrid = publicEventsState.container;
+  if (!eventsGrid) return;
+  eventsGrid.innerHTML = `<p class="events-empty">${message}</p>`;
+}
+
+function removePublicEventsEmptyState() {
+  const eventsGrid = publicEventsState.container;
+  if (!eventsGrid) return;
+  const emptyEl = eventsGrid.querySelector(".events-empty");
+  if (emptyEl) emptyEl.remove();
+}
+
+function buildPublicEventImageUrl(path) {
+  if (!path || typeof path !== "string") return "";
+  if (path.startsWith("http")) return path;
+  const normalizedPath = path.startsWith("/") ? path : `/${path}`;
+  return `${BACKEND_URL}${normalizedPath}`;
+}
+
+function navigateToPublicEventDetail(eventId) {
+  if (!eventId) return;
+  const basePath = "./event-detail.html";
+  const separator = basePath.includes("?") ? "&" : "?";
+  window.location.href = `${basePath}${separator}id=${encodeURIComponent(
+    eventId
+  )}`;
+}
+
+function resetPublicEventsState() {
+  publicEventsState.loading = false;
+  publicEventsState.loaded = false;
+  publicEventsState.events = [];
+  if (publicEventsState.container) {
+    publicEventsState.container.innerHTML = "";
+    publicEventsState.container.style.display = "none";
   }
 }
 
@@ -419,6 +809,16 @@ function normalizeProductsResponse(response) {
   if (Array.isArray(response.content)) return response.content;
   if (Array.isArray(response.data)) return response.data;
   if (Array.isArray(response.items)) return response.items;
+  return [];
+}
+
+function normalizeEventsResponse(response) {
+  if (!response) return [];
+  if (Array.isArray(response)) return response;
+  if (Array.isArray(response.content)) return response.content;
+  if (Array.isArray(response.data)) return response.data;
+  if (Array.isArray(response.items)) return response.items;
+  if (Array.isArray(response.events)) return response.events;
   return [];
 }
 
@@ -586,18 +986,19 @@ function extractExplicitProfileId(entity) {
 }
 
 function populateUserProducts(products) {
-  const postsGrid = document.querySelector(".user-posts-grid");
+  const productsGrid =
+    productsGridElement || document.querySelector(".user-products-grid");
 
-  if (!postsGrid) return;
+  if (!productsGrid) return;
 
-  postsGrid.style.display = "grid";
-  postsGrid.style.gridTemplateColumns = "repeat(2, minmax(0, 1fr))";
-  postsGrid.style.gap = "10px";
+  productsGridElement = productsGrid;
+  productsGrid.style.gridTemplateColumns = "repeat(2, minmax(0, 1fr))";
+  productsGrid.style.gap = "10px";
 
-  postsGrid.innerHTML = "";
+  productsGrid.innerHTML = "";
 
   if (!products || products.length === 0) {
-    postsGrid.innerHTML = '<p class="no-posts">Nenhum produto ainda</p>';
+    productsGrid.innerHTML = '<p class="no-posts">Nenhum produto ainda</p>';
     return;
   }
 
@@ -612,7 +1013,7 @@ function populateUserProducts(products) {
 
   sortedProducts.forEach((product) => {
     const card = createPublicProductCard(product);
-    postsGrid.appendChild(card);
+    productsGrid.appendChild(card);
   });
 }
 
