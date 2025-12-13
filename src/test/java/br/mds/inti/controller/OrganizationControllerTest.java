@@ -76,11 +76,12 @@ class OrganizationControllerTest {
                 "testorg",
                 "org@example.com",
                 "9980223030",
+                ProfileType.organization,
                 "http://example.com/logo.jpg",
                 "Org description",
                 100,
                 50,
-            0L,
+                0L,
                 Boolean.FALSE,
                 List.of());
 

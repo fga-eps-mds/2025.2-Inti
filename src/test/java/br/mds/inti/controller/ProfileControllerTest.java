@@ -4,6 +4,7 @@ import br.mds.inti.model.dto.FollowResponse;
 import br.mds.inti.model.dto.ProfileResponse;
 import br.mds.inti.model.dto.ProfileSearchResponse;
 import br.mds.inti.model.dto.UpdateUserRequest;
+import br.mds.inti.model.enums.ProfileType;
 import br.mds.inti.service.FollowService;
 import br.mds.inti.service.ProfileService;
 import org.junit.jupiter.api.BeforeEach;
@@ -50,11 +51,12 @@ class ProfileControllerTest {
                 "testuser",
                 "emailtest@gmail.com",
                 "9980223030",
+                ProfileType.user,
                 "http://example.com/avatar.jpg",
                 "Test bio",
                 10,
                 5,
-            0L,
+                0L,
                 Boolean.FALSE,
                 List.of());
 

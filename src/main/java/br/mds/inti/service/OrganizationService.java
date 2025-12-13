@@ -41,16 +41,19 @@ public class OrganizationService {
         Page<PostResponse> post = postService.getPostByIdProfile(profile.getId(), PageRequest.of(page, size));
         long totalPosts = post.getTotalElements();
 
-        return new ProfileResponse(profile.getId(), profile.getName(), profile.getUsername(), profile.getPublicEmail(), profile.getPhone(),
-            postService.generateImageUrl(profile.getProfilePictureUrl()),
-            profile.getBio(), profile.getFollowersCount(), profile.getFollowingCount(), totalPosts, Boolean.FALSE, post.getContent());
+        return new ProfileResponse(profile.getId(), profile.getName(), profile.getUsername(), profile.getPublicEmail(),
+                profile.getPhone(), profile.getType(),
+                postService.generateImageUrl(profile.getProfilePictureUrl()),
+                profile.getBio(), profile.getFollowersCount(), profile.getFollowingCount(), totalPosts, Boolean.FALSE,
+                post.getContent());
     }
 
     public ProfileResponse getOrganizationByUsername(String username, int page, int size) {
         Profile publicProfile = profileRepository.findByUsername(username)
                 .orElseThrow(() -> new ProfileNotFoundException(username));
 
-        if(!publicProfile.getType().equals(ProfileType.organization)) throw new ProfileNotFoundException("O perfil de username " + username + " não é uma organização");
+        if (!publicProfile.getType().equals(ProfileType.organization))
+            throw new ProfileNotFoundException("O perfil de username " + username + " não é uma organização");
 
         Page<PostResponse> post = postService.getPostByIdProfile(publicProfile.getId(), PageRequest.of(page, size));
         long totalPosts = post.getTotalElements();
@@ -64,11 +67,12 @@ public class OrganizationService {
             }
         }
 
-        return new ProfileResponse(publicProfile.getId(), publicProfile.getName(), publicProfile.getUsername(), publicProfile.getPublicEmail(),
-            publicProfile.getPhone(),
-            postService.generateImageUrl(publicProfile.getProfilePictureUrl()), publicProfile.getBio(),
-            publicProfile.getFollowersCount(),
-            publicProfile.getFollowingCount(), totalPosts, isFollowing, post.getContent());
+        return new ProfileResponse(publicProfile.getId(), publicProfile.getName(), publicProfile.getUsername(),
+                publicProfile.getPublicEmail(),
+                publicProfile.getPhone(), publicProfile.getType(),
+                postService.generateImageUrl(publicProfile.getProfilePictureUrl()), publicProfile.getBio(),
+                publicProfile.getFollowersCount(),
+                publicProfile.getFollowingCount(), totalPosts, isFollowing, post.getContent());
     }
 
     public Profile getOrganization(String username) {
