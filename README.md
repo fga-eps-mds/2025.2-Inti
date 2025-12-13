@@ -12,7 +12,7 @@
 Repositório principal do aplicativo **MUSA** desenvolvido pelo grupo `Inti` da turma 2025.2 da disciplina de Métodos de Desenvolvimento de Software (MDS) da Faculdade de Ciências e Tecnologia em Engenharias da Universidade de Brasília (FCTE - UnB).
 
 ---
-
+https://github.com/fga-eps-mds/MUSA-APP-docs
 ## Sobre o Projeto
 
 O **MUSA** é uma aplicação web moderna desenvolvida com HTML5, CSS3 e JavaScript puro, seguindo o padrão **SPA (Single Page Application)**. A arquitetura foi projetada para ser **web-centric**, garantindo um _single-source-of-truth_ (fonte única de verdade) para o código.
