@@ -301,10 +301,7 @@ function navigateToOrganizerProfile(organizer) {
   if (!organizer) return;
 
   const organizerUsername = sanitizeUsernameValue(organizer.rawUsername);
-  const isCurrentUser = isOrganizerCurrentUser(
-    organizerUsername,
-    organizer.id
-  );
+  const isCurrentUser = isOrganizerCurrentUser(organizerUsername, organizer.id);
 
   if (isCurrentUser) {
     window.location.href = "profile.html";
@@ -326,8 +323,7 @@ function isOrganizerCurrentUser(organizerUsername, organizerId) {
   const usernameMatch =
     organizerUsername &&
     currentProfileUsername &&
-    organizerUsername.toLowerCase() ===
-      currentProfileUsername.toLowerCase();
+    organizerUsername.toLowerCase() === currentProfileUsername.toLowerCase();
 
   const idMatch =
     organizerId &&

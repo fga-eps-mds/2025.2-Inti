@@ -64,6 +64,13 @@
     <script src="js/router.js"></script>
     <script src="js/nav-handler.js"></script>
     <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        if (isAuthenticated() && apiService.token) {
+          console.log("User already authenticated, redirecting to home...");
+          window.location.href = "pages/home.html";
+          return;
+        }
+      });
       document
         .getElementById("showPassword")
         .addEventListener("change", function () {

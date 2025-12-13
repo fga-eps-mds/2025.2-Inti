@@ -139,9 +139,7 @@ async function carregarFeed(page = 0, append = false) {
           <div class="like">
             <button class="like-button" data-post-id="${item.id}" data-liked="${isLiked}">
               <img src="${
-                isLiked
-                  ? "../assets/img_Like2.svg"
-                  : "../assets/img_Like1.svg"
+                isLiked ? "../assets/img_Like2.svg" : "../assets/img_Like1.svg"
               }" alt="">
             </button>
             <p class="likes-count" data-post-id="${item.id}">${item.likes}</p>
@@ -440,9 +438,7 @@ function updateLikeUI(postId, isLiked) {
 
     const img = button.querySelector("img");
     if (img) {
-      img.src = isLiked
-        ? "../assets/img_Like2.svg"
-        : "../assets/img_Like1.svg";
+      img.src = isLiked ? "../assets/img_Like2.svg" : "../assets/img_Like1.svg";
     }
   });
 

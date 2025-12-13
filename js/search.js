@@ -20,7 +20,10 @@ function initializeSearchUI() {
     return;
   }
 
-  const debouncedSearch = debounce((value) => performSearch(value), DEBOUNCE_DELAY);
+  const debouncedSearch = debounce(
+    (value) => performSearch(value),
+    DEBOUNCE_DELAY
+  );
 
   searchInput.addEventListener("input", (event) => {
     const query = event.target.value.trim();
@@ -165,7 +168,9 @@ function buildProfilePictureUrl(picField) {
     return backendUrl ? `${backendUrl}${picField}` : picField;
   }
 
-  return backendUrl ? `${backendUrl}/images/${picField}` : `/images/${picField}`;
+  return backendUrl
+    ? `${backendUrl}/images/${picField}`
+    : `/images/${picField}`;
 }
 
 function sanitizeUsername(username) {
@@ -255,7 +260,10 @@ function getCurrentUsername() {
       null;
     return username ? username.trim() : null;
   } catch (error) {
-    console.warn("Não foi possível ler o usuário atual do armazenamento:", error);
+    console.warn(
+      "Não foi possível ler o usuário atual do armazenamento:",
+      error
+    );
     return null;
   }
 }
