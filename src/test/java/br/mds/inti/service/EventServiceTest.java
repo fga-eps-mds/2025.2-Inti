@@ -134,7 +134,8 @@ class EventServiceTest {
     @Test
     void getEventsCreatedByOrganization_whenRepositoryReturnsEmpty_shouldReturnEmptyList() {
         Profile organizer = buildProfile();
-        when(eventRepository.findActiveEventsByOrganizer(eq(organizer.getId()), any())).thenReturn(Collections.emptyList());
+        when(eventRepository.findActiveEventsByOrganizer(eq(organizer.getId()), any()))
+                .thenReturn(Collections.emptyList());
 
         List<MyEvent> result = eventService.getEventsCreatedByOrganization(organizer);
 
