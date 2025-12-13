@@ -6,6 +6,142 @@
     <title>Publicação - Produto</title>
     <link rel="stylesheet" href="../css/style.css" />
     <link rel="stylesheet" href="../css/product-details.css" />
+    <style>
+      /* Delete Product Modal Styles */
+      .delete-modal {
+        position: fixed;
+        inset: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border: none;
+        padding: 0;
+        margin: 0;
+        max-width: 100%;
+        max-height: 100%;
+        background-color: transparent;
+      }
+
+      .delete-modal::backdrop {
+        background-color: transparent;
+      }
+
+      .delete-modal[open] {
+        display: flex;
+      }
+
+      .delete-modal:not([open]) {
+        display: none;
+      }
+
+      .delete-modal-content {
+        background-color: white;
+        border-radius: 12px;
+        padding: 24px;
+        width: 90%;
+        max-width: 320px;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+        animation: slideIn 0.3s ease-out;
+      }
+
+      @keyframes slideIn {
+        from {
+          transform: scale(0.95) translateY(10px);
+          opacity: 0;
+        }
+
+        to {
+          transform: scale(1) translateY(0);
+          opacity: 1;
+        }
+      }
+
+      .delete-modal-title {
+        color: #592e83;
+        font-size: 18px;
+        font-weight: 600;
+        margin: 0 0 12px 0;
+        font-family: "Jost", sans-serif;
+      }
+
+      .delete-modal-message {
+        color: #737373;
+        font-size: 14px;
+        line-height: 1.5;
+        margin: 0 0 20px 0;
+        font-family: "Jost", sans-serif;
+      }
+
+      .delete-modal-buttons {
+        display: flex;
+        gap: 12px;
+        justify-content: flex-end;
+      }
+
+      .delete-modal-buttons button {
+        padding: 10px 16px;
+        border: none;
+        border-radius: 8px;
+        cursor: pointer;
+        font-size: 14px;
+        font-weight: 600;
+        font-family: "Jost", sans-serif;
+        transition: all 0.2s ease;
+      }
+
+      .delete-btn-cancel {
+        background-color: #e5e5e5;
+        color: #171717;
+      }
+
+      .delete-btn-cancel:hover {
+        background-color: #d4d4d4;
+      }
+
+      .delete-btn-cancel:active {
+        background-color: #c4c4c4;
+      }
+
+      .delete-btn-confirm {
+        background-color: #d32f2f;
+        color: white;
+      }
+
+      .delete-btn-confirm:hover {
+        background-color: #b71c1c;
+      }
+
+      .delete-btn-confirm:active {
+        background-color: #9a0f0f;
+      }
+
+      /* Delete Product Button Styles */
+      .delete-product-btn {
+        background: none;
+        border: none;
+        padding: 0;
+        margin: 0;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: opacity 0.2s ease;
+      }
+
+      .delete-product-btn:hover {
+        opacity: 0.7;
+      }
+
+      .delete-product-btn:active {
+        opacity: 0.5;
+      }
+
+      .delete-product-btn img {
+        width: 24px;
+        height: 24px;
+        display: block;
+      }
+    </style>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
@@ -13,23 +149,21 @@
       rel="stylesheet"
     />
   </head>
+
   <body>
     <div class="container">
       <div class="screen product-screen">
-        <header class="header-home">
+        <header class="header-home" id="header-product-detail">
           <button class="back-btn" id="backBtn" aria-label="Voltar">
-            &lt;
+            <img src="../assets/Seta Select.svg" alt="" />
           </button>
 
           <div
             class="page-title-header"
             style="display: flex; flex-direction: column; align-items: center"
           >
-            <img src="../assets/MUSA-M.svg" alt="M" class="logo-icon" />
             <p class="page-title">Publicação</p>
           </div>
-
-          <div style="width: 36px"></div>
         </header>
 
         <!-- Vendedor (dados preenchidos via JS) -->
@@ -46,7 +180,28 @@
 
         <!-- Destaque do Produto (dados preenchidos via JS) -->
         <section class="product-highlight">
-          <h2 class="product-title"></h2>
+          <div
+            style="
+              display: flex;
+              justify-content: space-between;
+              align-items: flex-start;
+            "
+          >
+            <h2 class="product-title"></h2>
+            <button
+              id="deleteProductBtn"
+              class="delete-product-btn"
+              aria-label="Deletar produto"
+              title="Deletar produto"
+            >
+              <img
+                src="../assets/icon_delete.svg"
+                alt=""
+                width="24"
+                height="24"
+              />
+            </button>
+          </div>
 
           <div
             class="product-image"
@@ -191,9 +346,29 @@
       </div>
     </div>
 
+    <!-- Delete Product Confirmation Modal -->
+    <dialog id="deleteProductModal" class="delete-modal">
+      <div class="delete-modal-content">
+        <h2 class="delete-modal-title">Deletar Produto?</h2>
+        <p class="delete-modal-message">
+          Tem certeza de que deseja deletar este produto? Esta ação não pode ser
+          desfeita.
+        </p>
+        <div class="delete-modal-buttons">
+          <button id="cancelDeleteBtn" class="delete-btn-cancel">
+            Cancelar
+          </button>
+          <button id="confirmDeleteBtn" class="delete-btn-confirm">
+            Confirmar
+          </button>
+        </div>
+      </div>
+    </dialog>
+
     <script src="../js/config.js"></script>
     <script src="../js/toast.js"></script>
     <script src="../js/product-details.js"></script>
+    <script src="../js/delete-product-modal.js"></script>
     <script src="../js/nav-handler.js"></script>
   </body>
 </html>
