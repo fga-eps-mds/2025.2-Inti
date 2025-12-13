@@ -354,18 +354,68 @@
 
       .friends-going {
         margin-bottom: var(--spacing-xl);
+        padding: 0 20px;
       }
 
       .friends {
         font-weight: 600;
         color: var(--primary);
-        padding: 10px 20px 0;
+        margin-bottom: var(--spacing-sm);
       }
 
       .friends-icons {
         display: flex;
         gap: var(--spacing-sm);
+        flex-wrap: wrap;
         margin-bottom: var(--spacing-sm);
+      }
+
+      .attendee-avatar {
+        width: 48px;
+        height: 48px;
+        border-radius: 50%;
+        background-color: var(--gray-200);
+        background-size: cover;
+        background-position: center;
+        cursor: pointer;
+        transition:
+          transform 0.2s,
+          box-shadow 0.2s;
+        position: relative;
+        flex-shrink: 0;
+      }
+
+      .attendee-avatar:hover {
+        transform: scale(1.1);
+        box-shadow: 0 4px 8px rgba(89, 46, 131, 0.3);
+      }
+
+      .attendee-avatar::after {
+        content: attr(data-username);
+        position: absolute;
+        bottom: -25px;
+        left: 50%;
+        transform: translateX(-50%);
+        background: rgba(0, 0, 0, 0.8);
+        color: white;
+        padding: 4px 8px;
+        border-radius: 4px;
+        font-size: 12px;
+        white-space: nowrap;
+        opacity: 0;
+        pointer-events: none;
+        transition: opacity 0.2s;
+        z-index: 10;
+      }
+
+      .attendee-avatar:hover::after {
+        opacity: 1;
+      }
+
+      .friends-quantity {
+        font-size: 14px;
+        color: var(--gray-600);
+        font-style: italic;
       }
 
       /*-----botão-de-confirmação------*/
@@ -580,10 +630,10 @@
           <span class="map-placeholder" id="mapPlaceholder">Mapa do local</span>
         </div>
 
-        <div class="friends-going">
+        <div class="friends-going" id="attendeesSection" style="display: none">
           <p class="friends">Amigos que vão</p>
-          <div class="friends-icons"></div>
-          <p class="friends-quantity"></p>
+          <div class="friends-icons" id="attendeesContainer"></div>
+          <p class="friends-quantity" id="attendeesCount"></p>
         </div>
 
         <div class="button">

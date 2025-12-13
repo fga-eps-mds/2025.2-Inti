@@ -272,6 +272,10 @@ class ApiService {
       method: "DELETE",
     });
   }
+
+  async getEventAttendees(eventId) {
+    return this.request(`/event/following?eventId=${eventId}`);
+  }
 }
 
 // Export singleton instance
