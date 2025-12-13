@@ -40,7 +40,8 @@ public class OrganizationController {
             @RequestParam("page") Integer page) {
 
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        if(auth == null ||  !(auth.getPrincipal() instanceof Profile profile)) throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Unauthorized");
+        if (auth == null || !(auth.getPrincipal() instanceof Profile profile))
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Unauthorized");
 
         return ResponseEntity.ok().body(organizationService.getOrganization(page, size, profile));
     }
@@ -55,7 +56,8 @@ public class OrganizationController {
     public ResponseEntity<Void> setMyOrgnizationPhoto(MultipartFile myImage) {
         try {
             Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-            if(auth == null ||  !(auth.getPrincipal() instanceof Profile profile)) throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Unauthorized");
+            if (auth == null || !(auth.getPrincipal() instanceof Profile profile))
+                throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Unauthorized");
 
             organizationService.setPhoto(myImage, profile);
             return ResponseEntity.status(HttpStatus.CREATED).build();
@@ -70,7 +72,8 @@ public class OrganizationController {
     public ResponseEntity<Void> updateOrganization(@NotNull @ModelAttribute UpdateUserRequest updateUserRequest) {
         try {
             Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-            if(auth == null ||  !(auth.getPrincipal() instanceof Profile profile)) throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Unauthorized");
+            if (auth == null || !(auth.getPrincipal() instanceof Profile profile))
+                throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Unauthorized");
 
             organizationService.updateOrganization(updateUserRequest, profile);
             return ResponseEntity.status(HttpStatus.CREATED).build();
@@ -96,7 +99,7 @@ public class OrganizationController {
     @GetMapping("/events")
     public ResponseEntity<List<MyEvent>> getOrganizationEvents() {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        if(auth == null ||  !(auth.getPrincipal() instanceof Profile profile)) {
+        if (auth == null || !(auth.getPrincipal() instanceof Profile profile)) {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Unauthorized");
         }
 
@@ -105,6 +108,18 @@ public class OrganizationController {
         }
 
         List<MyEvent> events = eventService.getEventsCreatedByOrganization(profile);
+        return ResponseEntity.ok(events);
+    }
+
+    @GetMapping("/{username}/events")
+    public ResponseEntity<List<MyEvent>> getOrganizationEventsByUsername(@PathVariable String username) {
+        Profile organization = organizationService.getOrganization(username);
+
+        if (organization.getType() != ProfileType.organization) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "O perfil informado não é uma organização");
+        }
+
+        List<MyEvent> events = eventService.getEventsCreatedByOrganization(organization);
         return ResponseEntity.ok(events);
     }
 }

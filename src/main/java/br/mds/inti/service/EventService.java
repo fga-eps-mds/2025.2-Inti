@@ -159,18 +159,18 @@ public class EventService {
 
         return events.stream()
                 .filter(this::isEventActive)
-            .map(this::toMyEvent)
+                .map(this::toMyEvent)
                 .toList();
     }
 
-        public List<MyEvent> getEventsCreatedByOrganization(Profile profile) {
+    public List<MyEvent> getEventsCreatedByOrganization(Profile profile) {
         List<Event> events = eventRepository.findActiveEventsByOrganizer(profile.getId(), Instant.now());
 
         return events.stream()
-            .filter(this::isEventActive)
-            .map(this::toMyEvent)
-            .toList();
-        }
+                .filter(this::isEventActive)
+                .map(this::toMyEvent)
+                .toList();
+    }
 
     public List<FollowingAttendeeDTO> getEventsFromFollowing(Profile profile, UUID eventId) {
         Optional<List<FollowingAttendeeDTO>> followedByProfile = profileRepository.findFriendsGoingToEvent(eventId,

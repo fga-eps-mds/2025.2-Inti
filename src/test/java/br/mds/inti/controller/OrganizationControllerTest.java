@@ -267,4 +267,40 @@ class OrganizationControllerTest {
         assertEquals(HttpStatus.FORBIDDEN, exception.getStatusCode());
         verify(eventService, never()).getEventsCreatedByOrganization(any());
     }
+
+    @Test
+    void getOrganizationEventsByUsername_ShouldReturnEvents() {
+        String username = "publicorg";
+        Profile organization = new Profile();
+        organization.setType(ProfileType.organization);
+
+        List<MyEvent> events = List.of(new MyEvent(UUID.randomUUID(), "Show", "/images/show.png", LocalDateTime.now()));
+
+        when(organizationService.getOrganization(username)).thenReturn(organization);
+        when(eventService.getEventsCreatedByOrganization(organization)).thenReturn(events);
+
+        ResponseEntity<List<MyEvent>> response = organizationController.getOrganizationEventsByUsername(username);
+
+        assertNotNull(response);
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        assertEquals(events, response.getBody());
+        verify(organizationService).getOrganization(username);
+        verify(eventService).getEventsCreatedByOrganization(organization);
+    }
+
+    @Test
+    void getOrganizationEventsByUsername_WhenProfileIsNotOrganization_ShouldThrowNotFound() {
+        String username = "notorg";
+        Profile profile = new Profile();
+        profile.setType(ProfileType.user);
+
+        when(organizationService.getOrganization(username)).thenReturn(profile);
+
+        ResponseStatusException exception = assertThrows(
+                ResponseStatusException.class,
+                () -> organizationController.getOrganizationEventsByUsername(username));
+
+        assertEquals(HttpStatus.NOT_FOUND, exception.getStatusCode());
+        verify(eventService, never()).getEventsCreatedByOrganization(any());
+    }
 }
