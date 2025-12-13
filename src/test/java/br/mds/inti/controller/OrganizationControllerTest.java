@@ -2,11 +2,13 @@
 package br.mds.inti.controller;
 
 import br.mds.inti.model.dto.FollowResponse;
+import br.mds.inti.model.dto.MyEvent;
 import br.mds.inti.model.dto.ProfileResponse;
 import br.mds.inti.model.dto.UpdateUserRequest;
 import br.mds.inti.model.entity.Profile;
 import br.mds.inti.model.enums.ProfileType;
 import br.mds.inti.service.FollowService;
+import br.mds.inti.service.EventService;
 import br.mds.inti.service.OrganizationService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -25,6 +27,7 @@ import org.springframework.web.server.ResponseStatusException;
 
 import java.io.IOException;
 import java.time.Instant;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
 
@@ -50,6 +53,9 @@ class OrganizationControllerTest {
     @Mock
     private Authentication authentication;
 
+    @Mock
+    private EventService eventService;
+
     private ProfileResponse mockOrgResponse;
     private FollowResponse mockFollowResponse;
     private Profile mockProfileMe;
@@ -67,7 +73,7 @@ class OrganizationControllerTest {
         mockProfileMe.setPassword("password");
         mockProfileMe.setFollowersCount(10);
         mockProfileMe.setFollowingCount(5);
-        mockProfileMe.setType(ProfileType.user);
+        mockProfileMe.setType(ProfileType.organization);
         mockProfileMe.setCreatedAt(Instant.now());
 
         mockOrgResponse = new ProfileResponse(
@@ -228,5 +234,37 @@ class OrganizationControllerTest {
         assertEquals(HttpStatus.BAD_REQUEST, exception.getStatusCode());
         assertEquals("Error trying to update organization", exception.getReason());
         verify(organizationService).updateOrganization(eq(updateRequest), any());
+    }
+
+    @Test
+    void getOrganizationEvents_ShouldReturnEventsCreatedByOrganization() {
+        when(securityContext.getAuthentication()).thenReturn(authentication);
+        when(authentication.getPrincipal()).thenReturn(mockProfileMe);
+        SecurityContextHolder.setContext(securityContext);
+
+        List<MyEvent> events = List.of(new MyEvent(UUID.randomUUID(), "Show", "/images/show.png", LocalDateTime.now()));
+        when(eventService.getEventsCreatedByOrganization(mockProfileMe)).thenReturn(events);
+
+        ResponseEntity<List<MyEvent>> response = organizationController.getOrganizationEvents();
+
+        assertNotNull(response);
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        assertEquals(events, response.getBody());
+        verify(eventService).getEventsCreatedByOrganization(mockProfileMe);
+    }
+
+    @Test
+    void getOrganizationEvents_WhenProfileIsNotOrganization_ShouldThrowForbidden() {
+        mockProfileMe.setType(ProfileType.user);
+        when(securityContext.getAuthentication()).thenReturn(authentication);
+        when(authentication.getPrincipal()).thenReturn(mockProfileMe);
+        SecurityContextHolder.setContext(securityContext);
+
+        ResponseStatusException exception = assertThrows(
+                ResponseStatusException.class,
+                () -> organizationController.getOrganizationEvents());
+
+        assertEquals(HttpStatus.FORBIDDEN, exception.getStatusCode());
+        verify(eventService, never()).getEventsCreatedByOrganization(any());
     }
 }

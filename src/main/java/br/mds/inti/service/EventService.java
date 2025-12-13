@@ -159,13 +159,18 @@ public class EventService {
 
         return events.stream()
                 .filter(this::isEventActive)
-                .map(event -> new MyEvent(
-                        event.getId(),
-                        event.getTitle(),
-                        generateImageUrl(event.getBlobName()),
-                        event.getEventTime().atZone(ZoneId.of("America/Sao_Paulo")).toLocalDateTime()))
+            .map(this::toMyEvent)
                 .toList();
     }
+
+        public List<MyEvent> getEventsCreatedByOrganization(Profile profile) {
+        List<Event> events = eventRepository.findActiveEventsByOrganizer(profile.getId(), Instant.now());
+
+        return events.stream()
+            .filter(this::isEventActive)
+            .map(this::toMyEvent)
+            .toList();
+        }
 
     public List<FollowingAttendeeDTO> getEventsFromFollowing(Profile profile, UUID eventId) {
         Optional<List<FollowingAttendeeDTO>> followedByProfile = profileRepository.findFriendsGoingToEvent(eventId,
@@ -206,5 +211,13 @@ public class EventService {
     private boolean isEventActive(Event event) {
         Instant finishedAt = event.getFinishedAt();
         return finishedAt == null || finishedAt.isAfter(Instant.now());
+    }
+
+    private MyEvent toMyEvent(Event event) {
+        return new MyEvent(
+                event.getId(),
+                event.getTitle(),
+                generateImageUrl(event.getBlobName()),
+                event.getEventTime().atZone(ZoneId.of("America/Sao_Paulo")).toLocalDateTime());
     }
 }
